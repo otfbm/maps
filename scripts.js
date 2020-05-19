@@ -4,6 +4,9 @@ import Token from './token.js';
 import InputParser from './input-parser.js';
 
 async function drawBoard(){
+    const metaURL = document.getElementById('meta-url');
+    metaURL.setAttribute('content', window.location.href);
+
     // const canvas = document.getElementById("canvas");
     const canvas = new OffscreenCanvas(800, 800);
     const ctx = canvas.getContext("2d");
@@ -49,6 +52,10 @@ async function drawBoard(){
     const imageURL = URL.createObjectURL(blob);
     img.src = imageURL;
     container.appendChild(img);
+
+    
+    const metaImage = document.getElementById('meta-image');
+    metaImage.setAttribute('content', imageURL);
 }
 
 drawBoard();
