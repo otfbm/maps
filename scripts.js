@@ -3,10 +3,12 @@ import Room from './room.js';
 import Token from './token.js';
 import InputParser from './input-parser.js';
 
-function drawBoard(){
-    const canvas = document.getElementById("canvas");
+async function drawBoard(){
+    // const canvas = document.getElementById("canvas");
+    const canvas = new OffscreenCanvas(800, 800);
     const ctx = canvas.getContext("2d");
     const {board, rooms, tokens} = new InputParser(new URL(document.location));
+    const img = new Image();
     
     const GRID_SIZE = 40;
     const BOARD_WIDTH = board[0] * GRID_SIZE;
@@ -41,6 +43,12 @@ function drawBoard(){
             color,
         }).draw();
     }
+
+    const container = document.getElementById('container');
+    const blob = await canvas.convertToBlob();
+    const imageURL = URL.createObjectURL(blob);
+    img.src = imageURL;
+    container.appendChild(img);
 }
 
 drawBoard();
