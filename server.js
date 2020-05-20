@@ -10,8 +10,8 @@ const { createCanvas, loadImage } = canvas;
 
 const server = fastify({ logger: true });
 
-server.get('/', (request, reply) => {
-    const {board, rooms, tokens} = new InputParser(request.query);
+server.get('/*', (request, reply) => {
+    const {board, rooms, tokens} = new InputParser(request.params, request.query);
     
     const BOARD_WIDTH = board[0] * GRID_SIZE;
     const BOARD_HEIGHT = board[1] * GRID_SIZE;

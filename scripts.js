@@ -21,7 +21,7 @@ export default async function drawBoard(ctx, width, height, rooms, tokens, grids
         }).draw();
     }
 
-    for (const {name, position, color} of tokens) {
+    for (const {name, position, color, size} of tokens) {
         new Token({
             ctx,
             name,
@@ -29,6 +29,7 @@ export default async function drawBoard(ctx, width, height, rooms, tokens, grids
             gridsize,
             padding,
             color,
+            size,
         }).draw();
     }
 }

@@ -1,8 +1,35 @@
+const lookups = new Map([
+    ['g', 'forestgreen'],
+    ['r', 'firebrick'],
+    ['b', 'cornflowerblue'],
+    ['y', 'gold'],
+    ['p', 'darkviolet'],
+    ['c', 'deepskyblue'],
+    ['d', 'darkgoldenrod'],
+    ['T', 'tiny'],
+    ['S', 'small'],
+    ['M', 'medium'],
+    ['L', 'large'],
+    ['H', 'huge'],
+    ['G', 'gargantuan'],
+]);
+
+const colors = ['g', 'r', 'b', 'y', 'p', 'c', 'd'];
+const sizes = ['T', 'S', 'M', 'L', 'H', 'G'];
+
 export default class InputParser {
-    constructor(query) {
-        const board = query.board || query.b;
-        const [width, height] = board.split('x');
-        this.board = [parseInt(width, 10), parseInt(height, 10)];
+    constructor(params, query) {
+        const path = params['*'];
+        const parts = path.split('/');
+        
+        this.board = [10, 10];
+        if (parts[0].includes('x')) {
+            const first = parts.shift();
+            this.board = this.parseBoard(first);
+            this.tokens = this.parseTokens(parts);
+        } else {
+            this.tokens = this.parseTokens(parts);
+        }
 
         const rooms = query.rooms || query.r;
         this.rooms = this.parseRooms(rooms);
@@ -10,7 +37,12 @@ export default class InputParser {
         // const walls = query.walls || query.w;
         // this.walls = this.parseWalls(walls);
 
-        this.tokens = this.parseTokens(query.tokens || query.t);
+        // this.tokens = this.parseTokens(params.tokens);
+    }
+
+    parseBoard(board) {
+        const [ width, height ] = board.split('x');
+        return [parseInt(width, 10), parseInt(height, 10)];
     }
 
     parseRooms(rooms = '') {
@@ -37,15 +69,34 @@ export default class InputParser {
     //     return w;
     // }
 
-    parseTokens(tokens = '') {
+    parseTokens(tokens) {
         const t = [];
-        if (!tokens) return t;
-        for (const token of tokens.split('|')) {
-            const [position, name, color] = token.split('-');
+        for (const token of tokens) {
+            const [flags, name] = token.split('-');
+
+            let color = ''
+            if (colors.includes(flags[2])) {
+                color = lookups.get(flags[2]);
+            }
+
+            if (colors.includes(flags[3]) && !color) {
+                color = lookups.get(flags[3]);
+            }
+
+            let size = 'medium';
+            if (sizes.includes(flags[2])) {
+                size = lookups.get(flags[2]);
+            }
+
+            if (sizes.includes(flags[3])) {
+                size = lookups.get(flags[3]);
+            }
+
             t.push({
                 name: name || '',
-                position,
-                color: color || '',
+                position: [flags[0], flags[1]],
+                color,
+                size,
             });
         }
         return t;
