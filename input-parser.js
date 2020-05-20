@@ -70,35 +70,44 @@ export default class InputParser {
     // }
 
     parseTokens(tokens) {
-        const t = [];
+        const tok = [];
         for (const token of tokens) {
-            const [flags, name] = token.split('-');
-
-            let color = ''
-            if (colors.includes(flags[2])) {
-                color = lookups.get(flags[2]);
+            let [t, l] = token.split('-');
+            const position = [t[0]];
+            t = t.slice(1);
+            if (Number.isNaN(parseInt(t[1],10))) {
+                position.push(t[0]);
+                t = t.slice(1);
+            } else {
+                position.push(parseInt(`${t[0]}${t[1]}`, 10));
+                t = t.slice(2);
             }
 
-            if (colors.includes(flags[3]) && !color) {
-                color = lookups.get(flags[3]);
+            let color = ''
+            if (colors.includes(t[0])) {
+                color = lookups.get(t[0]);
+            }
+
+            if (colors.includes(t[1]) && !color) {
+                color = lookups.get(t[1]);
             }
 
             let size = 'medium';
-            if (sizes.includes(flags[2])) {
-                size = lookups.get(flags[2]);
+            if (sizes.includes(t[0])) {
+                size = lookups.get(t[0]);
             }
 
-            if (sizes.includes(flags[3])) {
-                size = lookups.get(flags[3]);
-            }
+            if (sizes.includes(t[1])) {
+                size = lookups.get(t[1]);
+            }            
 
-            t.push({
-                name: name || '',
-                position: [flags[0], flags[1]],
+            tok.push({
+                name: l || '',
+                position,
                 color,
                 size,
             });
         }
-        return t;
+        return tok;
     }
 }

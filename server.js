@@ -4,7 +4,7 @@ import InputParser from './input-parser.js';
 import drawBoard from './scripts.js';
 
 const GRID_SIZE = 40;
-const PADDING = 10;
+const PADDING = 15;
 
 const { createCanvas, loadImage } = canvas;
 
