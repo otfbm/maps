@@ -88,8 +88,8 @@ export default class Board {
         this.ctx.fillStyle = 'slategray';
         this.ctx.fillText(
             '1 square = 5ft', 
-            this.width - this.padding - 35,
-            this.height + this.padding + 10,
+            this.width - this.padding - 10,
+            this.height + this.padding + 7,
         );
     }
 }
