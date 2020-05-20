@@ -44,7 +44,7 @@ export default class InputParser {
             const [position, name, color] = token.split('-');
             t.push({
                 name: name || '',
-                position: (position.split(',') || []).map(p => parseInt(p, 10)),
+                position,
                 color: color || '',
             });
         }
