@@ -28,4 +28,4 @@ server.get('/', (request, reply) => {
     reply.type('image/png').send(buff);
 });
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000, '0.0.0.0');
