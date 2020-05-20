@@ -1,18 +1,16 @@
 export default class InputParser {
-    constructor(url) {
-        const search = url.searchParams;
-
-        const board = search.get('board') || search.get('b');
+    constructor(query) {
+        const board = query.board || query.b;
         const [width, height] = board.split('x');
         this.board = [parseInt(width, 10), parseInt(height, 10)];
 
-        const rooms = search.get('rooms') || search.get('r');
+        const rooms = query.rooms || query.r;
         this.rooms = this.parseRooms(rooms);
         
-        // const walls = search.get('walls') || search.get('w');
+        // const walls = query.walls || query.w;
         // this.walls = this.parseWalls(walls);
 
-        this.tokens = this.parseTokens(search.get('tokens') || search.get('t'));
+        this.tokens = this.parseTokens(query.tokens || query.t);
     }
 
     parseRooms(rooms = '') {
@@ -46,7 +44,7 @@ export default class InputParser {
             const [position, name, color] = token.split('-');
             t.push({
                 name: name || '',
-                position: position.split(',') || [],
+                position: (position.split(',') || []).map(p => parseInt(p, 10)),
                 color: color || '',
             });
         }

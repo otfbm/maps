@@ -22,12 +22,12 @@ export default class Token {
         this.ctx.stroke();
 
         this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
         this.ctx.fillText(
             this.name, 
             this.padding + 5 + this.left * this.gridsize - this.gridsize,
             this.padding + (this.gridsize * 0.5) + 3 + (this.top - 1) * this.gridsize,
         );
         this.ctx.stroke();
-        this.ctx.strokeStyle = '';
     }
 }

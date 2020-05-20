@@ -13,6 +13,9 @@ export default class Board {
     draw() {
         this.ctx.beginPath();
 
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.fillRect(0, 0, this.width * this.gridsize, this.height * this.gridsize);
+
         for (let i = 0; i <= this.width; i += this.gridsize) {
             this.ctx.moveTo(0.5 + i + this.padding, this.padding);
             this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);

@@ -1,29 +1,14 @@
 import Board from './board.js';
 import Room from './room.js';
 import Token from './token.js';
-import InputParser from './input-parser.js';
 
-async function drawBoard(){
-    const metaURL = document.getElementById('meta-url');
-    metaURL.setAttribute('content', window.location.href);
-
-    // const canvas = document.getElementById("canvas");
-    const canvas = new OffscreenCanvas(800, 800);
-    const ctx = canvas.getContext("2d");
-    const {board, rooms, tokens} = new InputParser(new URL(document.location));
-    const img = new Image();
-    
-    const GRID_SIZE = 40;
-    const BOARD_WIDTH = board[0] * GRID_SIZE;
-    const BOARD_HEIGHT = board[1] * GRID_SIZE;
-    const PADDING = 10;
-
+export default async function drawBoard(ctx, width, height, rooms, tokens, gridsize, padding){
     new Board({
         ctx,
-        width: BOARD_WIDTH,
-        height: BOARD_HEIGHT, 
-        gridsize: GRID_SIZE,
-        padding: PADDING,
+        width,
+        height, 
+        gridsize,
+        padding,
     }).draw();
 
     for (const { width, height } of rooms) {
@@ -31,8 +16,8 @@ async function drawBoard(){
             ctx,
             width,
             height,
-            gridsize: GRID_SIZE,
-            padding: PADDING,
+            gridsize,
+            padding,
         }).draw();
     }
 
@@ -41,21 +26,9 @@ async function drawBoard(){
             ctx,
             name,
             position,
-            gridsize: GRID_SIZE,
-            padding: PADDING,
+            gridsize,
+            padding,
             color,
         }).draw();
     }
-
-    const container = document.getElementById('container');
-    const blob = await canvas.convertToBlob();
-    const imageURL = URL.createObjectURL(blob);
-    img.src = imageURL;
-    container.appendChild(img);
-
-    
-    const metaImage = document.getElementById('meta-image');
-    metaImage.setAttribute('content', imageURL);
 }
-
-drawBoard();
