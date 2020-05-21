@@ -1,5 +1,34 @@
 import Token from "./token.js";
 
+const letters = new Map([
+    ['a', 1],
+    ['b', 2],
+    ['c', 3],
+    ['d', 4],
+    ['e', 5],
+    ['f', 6],
+    ['g', 7],
+    ['h', 8],
+    ['i', 9],
+    ['j', 10],
+    ['k', 11],
+    ['l', 12],
+    ['m', 13],
+    ['n', 14],
+    ['o', 15],
+    ['p', 16],
+    ['q', 17],
+    ['r', 18],
+    ['s', 19],
+    ['t', 20],
+    ['u', 21],
+    ['v', 22],
+    ['w', 23],
+    ['x', 24],
+    ['y', 25],
+    ['z', 26],
+]);
+
 const lookups = new Map([
     ['g', 'forestgreen'],
     ['r', 'firebrick'],
@@ -20,9 +49,8 @@ const colors = ['g', 'r', 'b', 'y', 'p', 'c', 'd'];
 const sizes = ['T', 'S', 'M', 'L', 'H', 'G'];
 
 export default class InputParser {
-    constructor(params, query) {
-        const path = params['*'];
-        const parts = path.split('/');
+    constructor(pathname) {
+        const parts = pathname.split('/');
         
         this.board = [10, 10];
         if (parts[0].includes('x')) {
@@ -33,8 +61,8 @@ export default class InputParser {
             this.tokens = this.parseTokens(parts);
         }
 
-        const rooms = query.rooms || query.r;
-        this.rooms = this.parseRooms(rooms);
+        // const rooms = query.rooms || query.r;
+        // this.rooms = this.parseRooms(rooms);
         
         // const walls = query.walls || query.w;
         // this.walls = this.parseWalls(walls);
@@ -55,6 +83,10 @@ export default class InputParser {
             r.push({ width: parseInt(width, 10), height: parseInt(height, 10) });
         }
         return r;
+    }
+
+    fromLetter(letter) {
+        return letters.get(letter.toLowerCase());
     }
 
     // parseWalls(walls = '') {
@@ -103,14 +135,11 @@ export default class InputParser {
                 size = lookups.get(t[1]);
             }            
 
-            tok.push(new Token({
-                name: l || '',
-                x: position[0],
-                y: position[1],
-                color,
-                size,
-                type: 'token',
-            }));
+            tok.push({
+                x: this.fromLetter(position[0]),
+                y: parseInt(position[1], 10),
+                item: new Token({ name: l || '', color, size }),
+            });
         }
         return tok;
     }

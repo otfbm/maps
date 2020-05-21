@@ -30,14 +30,50 @@ const letters = new Map([
 ]);
 
 export default class Board {
-    constructor({ state, width, height, gridsize, padding, ctx, strokeStyle = "#CCCCCC" }) {
-        this.state = state;
+    constructor({ width, height, gridsize, padding, ctx, strokeStyle = "#CCCCCC" }) {
         this.width = width;
         this.height = height;
         this.gridsize = gridsize;
         this.ctx = ctx;
         this.padding = padding;
         this.strokeStyle = strokeStyle;
+        this.state = []
+
+        for (let x = 0; x < width; x++) {
+            let arr = [];
+            for (let y = 0; y < height; y++) {
+                arr[y] = null;
+            }
+            this.state[x] = arr;
+        }
+    }
+
+    placeItem(x, y, item) {
+        this.state[x][y] = item;
+    }
+
+    get(x, y) {
+        return this.state[x][y] || null;
+    }
+
+    [Symbol.iterator]() {
+        let x = 0;
+        let y = 0;
+        return {
+            next: () => {
+                if (x < this.state.length || (y && y < this.state[x].length)) {
+                    const value = { value: { x, y, item: this.get(x, y) }, done: false };
+                    if (y < this.state[x].length - 1) y++;
+                    else {
+                        x++;
+                        y = 0;
+                    }
+                    return value;
+                } else {
+                    return { done: true };
+                }
+            }
+        }
     }
 
     draw() {
@@ -93,9 +129,9 @@ export default class Board {
             this.height + this.padding + 7,
         );
 
-        for (const item of this.state) {
+        for (const {x,y,item} of this) {
             if (item) {
-                item.draw(this.ctx, this.gridsize, this.padding);
+                item.draw(this.ctx, x, y, this.gridsize, this.padding);
             }
         }
     }
