@@ -1,3 +1,5 @@
+import Token from "./token.js";
+
 const lookups = new Map([
     ['g', 'forestgreen'],
     ['r', 'firebrick'],
@@ -101,12 +103,14 @@ export default class InputParser {
                 size = lookups.get(t[1]);
             }            
 
-            tok.push({
+            tok.push(new Token({
                 name: l || '',
-                position,
+                x: position[0],
+                y: position[1],
                 color,
                 size,
-            });
+                type: 'token',
+            }));
         }
         return tok;
     }

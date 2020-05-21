@@ -30,7 +30,8 @@ const letters = new Map([
 ]);
 
 export default class Board {
-    constructor({ width, height, gridsize, padding, ctx, strokeStyle = "#CCCCCC" }) {
+    constructor({ state, width, height, gridsize, padding, ctx, strokeStyle = "#CCCCCC" }) {
+        this.state = state;
         this.width = width;
         this.height = height;
         this.gridsize = gridsize;
@@ -91,5 +92,11 @@ export default class Board {
             this.width - this.padding - 10,
             this.height + this.padding + 7,
         );
+
+        for (const item of this.state) {
+            if (item) {
+                item.draw(this.ctx, this.gridsize, this.padding);
+            }
+        }
     }
 }

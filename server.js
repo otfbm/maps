@@ -2,6 +2,11 @@ import fastify from 'fastify';
 import canvas from 'canvas';
 import InputParser from './input-parser.js';
 import drawBoard from './scripts.js';
+import path from 'path';
+import fastifyStatic from 'fastify-static';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const GRID_SIZE = 40;
 const PADDING = 15;
@@ -10,7 +15,13 @@ const { createCanvas, loadImage } = canvas;
 
 const server = fastify({ logger: true });
 
+server.register(fastifyStatic, {
+    root: path.join(__dirname, 'icons'),
+    prefix: '/icons/',
+});
+
 server.get('/*', (request, reply) => {
+    if (request.params['*'] === 'favicon.ico') return reply.send('');
     const {board, rooms, tokens} = new InputParser(request.params, request.query);
     
     const BOARD_WIDTH = board[0] * GRID_SIZE;

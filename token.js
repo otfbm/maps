@@ -37,13 +37,10 @@ const sizes = new Map([
 ]);
 
 export default class Token {
-    constructor({name, position, color, size, ctx, gridsize, padding}) {
+    constructor({name, x, y, color, size, ctx, gridsize, padding}) {
         this.name = name;
-        this.left = this.fromLetter(position[0]);
-        this.top = position[1];
-        this.ctx = ctx;
-        this.gridsize = gridsize;
-        this.padding = padding;
+        this.x = this.fromLetter(x);
+        this.y = parseInt(y, 10);
         this.color = color || 'black';
         this.size = sizes.get(size).size;
         this.offset = sizes.get(size).offset;
@@ -53,33 +50,33 @@ export default class Token {
         return letters.get(letter.toLowerCase());
     }
 
-    draw() {
-        this.ctx.beginPath();
-        this.ctx.fillStyle = this.color;
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeStyle = 'black';
-        this.ctx.arc(
-            this.padding + (this.gridsize * this.offset) + (this.left - 1) * this.gridsize,
-            this.padding + (this.gridsize * this.offset) + (this.top - 1) * this.gridsize, 
-            this.gridsize * this.size, // radius is half the gridsize
+    draw(ctx, gridsize, padding) {
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'black';
+        ctx.arc(
+            padding + (gridsize * this.offset) + (this.x - 1) * gridsize,
+            padding + (gridsize * this.offset) + (this.y - 1) * gridsize, 
+            gridsize * this.size, // radius is half the gridsize
             0, 
             2 * Math.PI,
         );
-        this.ctx.fill();
-        this.ctx.stroke();
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeStyle = 'slategrey';
-        this.ctx.stroke();
+        ctx.fill();
+        ctx.stroke();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'slategrey';
+        ctx.stroke();
 
-        this.ctx.beginPath();
-        this.ctx.fillStyle = '#ffffff';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.fillText(
+        ctx.beginPath();
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
             this.name, 
-            this.padding + (this.gridsize * this.offset) + (this.left - 1) * this.gridsize,
-            this.padding + (this.gridsize * this.offset) + (this.top - 1) * this.gridsize, 
+            padding + (gridsize * this.offset) + (this.x - 1) * gridsize,
+            padding + (gridsize * this.offset) + (this.y - 1) * gridsize, 
         );
-        this.ctx.stroke();
+        ctx.stroke();
     }
 }
