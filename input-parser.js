@@ -49,15 +49,22 @@ const colors = ['g', 'r', 'b', 'y', 'p', 'c', 'd'];
 const sizes = ['T', 'S', 'M', 'L', 'H', 'G'];
 
 export default class InputParser {
-    constructor(pathname) {
-        const parts = pathname.split('/');
-        
+    constructor(pathname = '') {
+        let parts = [];
         this.board = [10, 10];
+        this.tokens = [];
+        
+        if (pathname[0] === '/') parts = pathname.substr(1).split('/');
+        else parts = pathname.split('/');
+        
         if (parts[0].includes('x')) {
             const first = parts.shift();
             this.board = this.parseBoard(first);
+
+            if (!parts[0]) return;
             this.tokens = this.parseTokens(parts);
         } else {
+            if (!parts[0]) return;
             this.tokens = this.parseTokens(parts);
         }
 
@@ -85,8 +92,8 @@ export default class InputParser {
         return r;
     }
 
-    fromLetter(letter) {
-        return letters.get(letter.toLowerCase());
+    fromLetter(letter = '') {
+        return letters.get(letter.toLowerCase()) || null;
     }
 
     // parseWalls(walls = '') {

@@ -1,54 +1,120 @@
 import tap from "tap";
 import InputParser from "../input-parser.js";
 
-tap.test("board parsing", (t) => {
-  const defaultBoard = new InputParser({ "*": "" }, {}).board;
-  t.same(defaultBoard, [10, 10]);
+const clone = (item) => JSON.parse(JSON.stringify(item));
 
-  const oneByOne = new InputParser({ "*": "1x1" }, {}).board;
-  t.same(oneByOne, [1, 1]);
+tap.test("board parsing", (t) => {
+  t.same(new InputParser("").board, [10, 10]);
+  t.same(new InputParser("1x1").board, [1, 1]);
+  t.same(new InputParser("/1x1").board, [1, 1]);
+  t.same(new InputParser("/1x1/").board, [1, 1]);
   t.end();
 });
 
 tap.test("token parsing", (t) => {
-  const defaultTokens = new InputParser({ "*": "" }, {}).tokens;
-  t.same(defaultTokens, [
+  t.same(clone(new InputParser("").tokens), [], 'default tokens should match');
+  t.same(clone(new InputParser("/").tokens), [], 'default tokens should match');
+  t.same(clone(new InputParser("/5x5").tokens), [], 'default tokens should match');
+  t.same(clone(new InputParser("/7x7/").tokens), [], 'default tokens should match');
+  t.same(clone(new InputParser("6x6/B2").tokens), [
     {
-      name: "",
-      position: [undefined, undefined],
-      color: "",
-      size: "medium",
+      x: 2,
+      y: 2,
+      item: {
+        name: "",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
     },
-  ]);
+  ], 'basic tokens should match');
 
-  const withColor = new InputParser({ "*": "B2r" }, {}).tokens;
-  t.same(withColor, [
+  t.same(clone(new InputParser("/6x6/B2").tokens), [
     {
-      name: "",
-      position: ["B", "2"],
-      color: "firebrick",
-      size: "medium",
+      x: 2,
+      y: 2,
+      item: {
+        name: "",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
     },
-  ]);
+  ], 'basic tokens should match');
 
-  const withName = new InputParser({ "*": "B2-Pizza" }, {}).tokens;
-  t.same(withName, [
+  t.same(clone(new InputParser("/B2").tokens), [
     {
-      name: "Pizza",
-      position: ["B", "2"],
-      color: "",
-      size: "medium",
+      x: 2,
+      y: 2,
+      item: {
+        name: "",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
     },
-  ]);
+  ], 'basic tokens should match');
 
-  const withSize = new InputParser({ "*": "B2L" }, {}).tokens;
-  t.same(withSize, [
+  t.same(clone(new InputParser("/B2/C3").tokens), [
     {
-      name: "",
-      position: ["B", "2"],
-      color: "",
-      size: "large",
+      x: 2,
+      y: 2,
+      item: {
+        name: "",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
     },
-  ]);
+    {
+      x: 3,
+      y: 3,
+      item: {
+        name: "",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
+    },
+  ], 'multiple basic tokens should match');
+
+  t.same(clone(new InputParser("/B2r").tokens), [
+    {
+      x: 2,
+      y: 2,
+      item: {
+        name: "",
+        color: "firebrick",
+        size: 0.5,
+        offset: 0.5,
+      }
+    },
+  ], 'tokens with color should match');
+
+  t.same(clone(new InputParser("/B2-Pizza").tokens), [
+    {
+      x: 2,
+      y: 2,
+      item: {
+        name: "Pizza",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
+    },
+  ], 'tokens with names should match');
+
+  t.same(clone(new InputParser("/B2L").tokens), [
+    {
+      x: 2,
+      y: 2,
+      item: {
+        name: "",
+        color: "black",
+        size: 1,
+        offset: 1,
+      }
+    },
+  ], 'tokens with size should match');
   t.end();
 });
