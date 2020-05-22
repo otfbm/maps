@@ -9,8 +9,9 @@ const { createCanvas, loadImage } = canvas;
 
 export default function main(pathname) {
   const input = new InputParser(pathname);
-  const width = (input.board.width >=52 ? 52 : input.board.width) * GRID_SIZE;
-  const height = (input.board.height >=52 ? 52 : input.board.height) * GRID_SIZE;
+  const gridsize = GRID_SIZE * input.zoom;
+  const width = (input.board.width >=52 ? 52 : input.board.width) * gridsize;
+  const height = (input.board.height >=52 ? 52 : input.board.height) * gridsize;
   const canv = createCanvas(width + 2 * PADDING, height + 2 * PADDING);
   const ctx = canv.getContext("2d");
 
@@ -18,7 +19,7 @@ export default function main(pathname) {
     ctx,
     width,
     height,
-    gridsize: GRID_SIZE,
+    gridsize,
     padding: PADDING,
   });
 

@@ -1,5 +1,6 @@
 const icons = new Map([
   ["$D", "./icons/doorway.svg"],
+  ["$G", "./icons/goblin.png"],
 ]);
 
 export default class IconParser {
