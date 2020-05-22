@@ -8,13 +8,12 @@ const icons = new Map([
 ]);
 
 export default class Icon {
-  constructor({ ctx, name, position, gridsize } = {}) {
+  constructor({ name } = {}) {
     this.name = name;
-    this.position = position;
-    this.gridsize = gridsize;
-    this.icon = icons.get(name);
-    this.ctx = ctx;
-    console.log(this.icon);
+  }
+
+  icon() {
+    return icons.get(this.name);
   }
 
   draw() {
