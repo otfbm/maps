@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "find test -name '*.js' | xargs node"
+    "test": "node test/input-parser.js && node test/board.js"
   },
   "type": "module",
   "keywords": [],
