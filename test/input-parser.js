@@ -116,5 +116,44 @@ tap.test("token parsing", (t) => {
       }
     },
   ], 'tokens with size should match');
+
+  t.same(clone(new InputParser("/A1-ZOM1").tokens), [
+    {
+      x: 1,
+      y: 1,
+      item: {
+        name: "ZOM1",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
+    },
+  ], 'tokens with size should match');
+
+  t.same(clone(new InputParser("/A1-9ZOM1").tokens), [
+    {
+      x: 1,
+      y: 1,
+      item: {
+        name: "9ZOM1",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
+    },
+  ], 'tokens with size should match');
+
+  t.same(clone(new InputParser("/A1-123456").tokens), [
+    {
+      x: 1,
+      y: 1,
+      item: {
+        name: "123456",
+        color: "black",
+        size: 0.5,
+        offset: 0.5,
+      }
+    },
+  ], 'tokens with size should match');
   t.end();
 });
