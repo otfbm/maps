@@ -23,6 +23,8 @@ export default function main(pathname) {
     padding: PADDING,
   });
 
+  board.addBackground(input.background);
+
   for (const { x, y, item } of input.tokens) {
     board.placeItem(x, y, item);
   }
