@@ -1,6 +1,7 @@
 import BoardParser from './parsers/board.js';
 import TokenParser from './parsers/token.js';
 import IconParser from './parsers/icon.js';
+import ZoomParser from "./parsers/zoom.js";
 import Token from "./token.js";
 import Icon from "./icon.js";
 
@@ -10,6 +11,7 @@ export default class InputParser {
     this.board = { width: 10, height: 10 };
     this.tokens = [];
     this.icons = [];
+    this.zoom = 1;
 
     // trim off leading /
     if (pathname[0] === "/") parts = pathname.substr(1)
@@ -20,16 +22,33 @@ export default class InputParser {
     const boardParser = new BoardParser();
     const tokenParser = new TokenParser();
     const iconParser = new IconParser();
+    const zoomParser = new ZoomParser();
 
     for (const part of parts) {
       let parsed = boardParser.parse(part);
-      if (parsed) this.board = parsed;
+      if (parsed) {
+        this.board = parsed;
+        continue;
+      }
 
       parsed = tokenParser.parse(part);
-      if (parsed) this.tokens.push({ x: parsed.x, y: parsed.y, item: new Token(parsed) });
+      if (parsed) {
+        this.tokens.push({ x: parsed.x, y: parsed.y, item: new Token(parsed) });
+        continue;
+      }
 
       parsed = iconParser.parse(part);
-      if (parsed) this.icons.push({ x: parsed.x, y: parsed.y, item: new Icon(parsed) });
+      if (parsed) {
+        this.icons.push({ x: parsed.x, y: parsed.y, item: new Icon(parsed) });
+        continue;
+      }
+
+      console.log(part)
+      parsed = zoomParser.parse(part);
+      if (parsed) {
+        this.zoom = parsed;
+        continue;
+      }
 
       // Extend by adding more parsers here
     } 
