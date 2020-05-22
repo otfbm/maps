@@ -4,10 +4,10 @@ import InputParser from "../input-parser.js";
 const clone = (item) => JSON.parse(JSON.stringify(item));
 
 tap.test("board parsing", (t) => {
-  t.same(new InputParser("").board, [10, 10]);
-  t.same(new InputParser("1x1").board, [1, 1]);
-  t.same(new InputParser("/1x1").board, [1, 1]);
-  t.same(new InputParser("/1x1/").board, [1, 1]);
+  t.same(new InputParser("").board, { width: 10, height: 10 });
+  t.same(new InputParser("1x1").board, { width: 1, height: 1 });
+  t.same(new InputParser("/1x1").board, { width: 1, height: 1 });
+  t.same(new InputParser("/1x1/").board, { width: 1, height: 1 });
   t.end();
 });
 
