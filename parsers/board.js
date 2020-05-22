@@ -6,7 +6,11 @@ export default class BoardParser {
 
         // a number between 1 and 52
         if (/^[1-5][0-9]?x[1-5][0-9]?$/.test(trimmed)) {
-            return trimmed.split('x');
+            const size = trimmed.split('x');
+            return {
+                width: parseInt(size[0], 10),
+                height: parseInt(size[1], 10),
+            }
         }
 
         return false;

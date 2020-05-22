@@ -17,7 +17,6 @@ const flagLookups = new Map([
 const sizes = ['T', 'S', 'M', 'L', 'H', 'G'];
 const colors = ['g', 'r', 'b', 'y', 'p', 'c', 'd'];
 
-
 export default class TokenParser {
   parse(str) {
     let trimmed = str.trim();
