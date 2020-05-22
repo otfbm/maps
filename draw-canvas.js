@@ -9,8 +9,8 @@ const { createCanvas, loadImage } = canvas;
 
 export default function main(pathname) {
   const input = new InputParser(pathname);
-  const width = input.board[0] * GRID_SIZE;
-  const height = input.board[1] * GRID_SIZE;
+  const width = (input.board[0] >=52 ? 52 : input.board[0]) * GRID_SIZE;
+  const height = (input.board[1] >=52 ? 52 : input.board[1]) * GRID_SIZE;
   const canv = createCanvas(width + 2 * PADDING, height + 2 * PADDING);
   const ctx = canv.getContext("2d");
 

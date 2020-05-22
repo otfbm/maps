@@ -1,34 +1,3 @@
-const p = 10;
-
-const letters = new Map([
-  [1, "A"],
-  [2, "B"],
-  [3, "C"],
-  [4, "D"],
-  [5, "E"],
-  [6, "F"],
-  [7, "G"],
-  [8, "H"],
-  [9, "I"],
-  [10, "J"],
-  [11, "K"],
-  [12, "L"],
-  [13, "M"],
-  [14, "N"],
-  [15, "O"],
-  [16, "P"],
-  [17, "Q"],
-  [18, "R"],
-  [19, "S"],
-  [20, "T"],
-  [21, "U"],
-  [22, "V"],
-  [23, "W"],
-  [24, "X"],
-  [25, "Y"],
-  [26, "Z"],
-]);
-
 export default class Board {
   constructor({
     width,
@@ -107,8 +76,9 @@ export default class Board {
       this.ctx.fillStyle = "slategray";
       this.ctx.textAlign = "center";
       this.ctx.textBaseline = "middle";
+      const character = num > 26 ? String.fromCharCode(num + 70) : String.fromCharCode(num + 64)
       this.ctx.fillText(
-        letters.get(num),
+        character,
         this.padding + i - this.gridsize / 2,
         this.padding - 5
       );
