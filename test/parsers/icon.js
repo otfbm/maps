@@ -32,3 +32,13 @@ test('parsing: 2', (t) => {
     t.same(icon, './icons/doorway.svg');
     t.end();
 });
+
+test('parsing: 3', (t) => {
+    const parser = new IconParser();
+    const { icon, x, y } = parser.parse('/F13$D/');
+    
+    t.equal(x, 6);
+    t.equal(y, 13);
+    t.same(icon, './icons/doorway.svg');
+    t.end();
+});

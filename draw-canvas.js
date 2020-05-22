@@ -26,6 +26,10 @@ export default function main(pathname) {
     board.placeItem(x, y, item);
   }
 
+  for (const { x, y, item } of input.icons) {
+    board.placeItem(x, y, item);
+  }
+
   // TODO: recalculate icons by inspecting the data structure
 
   board.draw();
