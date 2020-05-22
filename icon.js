@@ -1,5 +1,4 @@
 import canvas from "canvas";
-
 const { Image } = canvas;
 
 export default class Icon {

@@ -1,3 +1,6 @@
+import canvas from "canvas";
+const { Image } = canvas;
+
 export default class Board {
   constructor({
     width,
@@ -14,6 +17,7 @@ export default class Board {
     this.padding = padding;
     this.strokeStyle = strokeStyle;
     this.state = [];
+    this.background = null;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -26,6 +30,10 @@ export default class Board {
 
   placeItem(x, y, item) {
     this.state[x][y] = item;
+  }
+
+  addBackground(background) {
+    this.background = background;
   }
 
   get(x, y) {
@@ -54,7 +62,6 @@ export default class Board {
 
   draw() {
     this.ctx.beginPath();
-
     this.ctx.fillStyle = "#ffffff";
     this.ctx.fillRect(
       0,
@@ -62,6 +69,17 @@ export default class Board {
       this.width * this.gridsize,
       this.height * this.gridsize
     );
+
+    if (this.background) {
+      const img = new Image();
+      img.onload = () => {
+        this.ctx.drawImage(img, 0, 0, 2550, 3300);
+      };
+      img.onerror = (err) => {
+        throw err;
+      };
+      img.src = this.background;
+    }
 
     for (let i = 0; i <= this.width; i += this.gridsize) {
       // this.ctx.beginPath();

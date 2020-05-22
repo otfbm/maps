@@ -2,6 +2,7 @@ import BoardParser from './parsers/board.js';
 import TokenParser from './parsers/token.js';
 import IconParser from './parsers/icon.js';
 import ZoomParser from "./parsers/zoom.js";
+import BackgroundParser from "./parsers/background.js";
 import Token from "./token.js";
 import Icon from "./icon.js";
 
@@ -23,6 +24,7 @@ export default class InputParser {
     const tokenParser = new TokenParser();
     const iconParser = new IconParser();
     const zoomParser = new ZoomParser();
+    const backgroundParser = new BackgroundParser();
 
     for (const part of parts) {
       let parsed = boardParser.parse(part);
@@ -43,10 +45,15 @@ export default class InputParser {
         continue;
       }
 
-      console.log(part)
       parsed = zoomParser.parse(part);
       if (parsed) {
         this.zoom = parsed;
+        continue;
+      }
+
+      parsed = backgroundParser.parse(part);
+      if (parsed) {
+        this.background = parsed;
         continue;
       }
 
