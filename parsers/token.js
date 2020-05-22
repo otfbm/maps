@@ -26,7 +26,7 @@ export default class TokenParser {
     if (str.length < 2) return false;
 
     // a string matching a token definition eg. D3rp-asdsa
-    const reg = /^([A-Za-z][0-9])([grbypcdTSMLHG]?[grbypcdTSMLHG]?)(-([A-Za-z]*))?$/;
+    const reg = /^([A-Za-z][0-9][0-9]?)([grbypcdTSMLHG]?[grbypcdTSMLHG]?)(-([A-Za-z]*))?$/;
     if (reg.test(trimmed)) {
       const matches = trimmed.match(reg);
 
@@ -48,7 +48,7 @@ export default class TokenParser {
 
       return {
         x,
-        y: parseInt(coords[1] || "", 10),
+        y: parseInt(coords.substr(1) || "", 10),
         color,
         size,
         name: matches[4] || "",

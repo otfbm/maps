@@ -27,6 +27,18 @@ test('parsing: position 2', (t) => {
     t.end();
 });
 
+test('parsing: position 3', (t) => {
+    const parser = new TokenParser();
+    const { x, y, color, size, name } = parser.parse('D12');
+    
+    t.equal(x, 4);
+    t.equal(y, 12);
+    t.same(color, 'black');
+    t.same(size, 'medium');
+    t.equal(name, '');
+    t.end();
+});
+
 test('parsing: position and 1 flag', (t) => {
     const parser = new TokenParser();
     const { x, y, color, size, name } = parser.parse('/D3r');
