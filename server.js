@@ -7,7 +7,7 @@ server.get("/*", (request, reply) => {
   if (request.params["*"] === "favicon.ico") return reply.send("");
 
   const canvas = drawCanvas(request.params["*"]);
-  const data = canvas.toDataURL({ type: "image/png" });
+  const data = canvas.toDataURL("image/png", 1);
   const stripped = data.replace(/^data:image\/\w+;base64,/, "");
   const buff = new Buffer(stripped, "base64");
 

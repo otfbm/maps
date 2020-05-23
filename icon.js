@@ -14,7 +14,7 @@ export default class Icon {
         (x - 1) * gridsize + 15,
         (y - 1) * gridsize + 15,
         gridsize,
-        gridsize
+        gridsize,
       );
     };
     img.onerror = (err) => {
