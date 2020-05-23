@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "node test/input-parser.js && node test/board.js"
+    "test": "./run-tests.sh"
   },
   "type": "module",
   "keywords": [],
