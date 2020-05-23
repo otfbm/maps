@@ -20,6 +20,7 @@ export default class Board {
     this.state = [];
     this.background = null;
     this.zoom = zoom;
+    this.lines = [];
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -36,6 +37,10 @@ export default class Board {
 
   addBackground(background) {
     this.background = background;
+  }
+
+  addLines(lines) {
+    this.lines = lines;
   }
 
   get(x, y) {
@@ -139,10 +144,27 @@ export default class Board {
       this.height + this.padding + 7
     );
 
+    this.drawLines(this.lines);
+
     for (const { x, y, item } of this) {
       if (item) {
         item.draw(this.ctx, x, y, this.gridsize, this.padding);
       }
     }
+  }
+
+  drawLines(lines) {
+    for (const line of lines) {
+      this.ctx.beginPath();
+      let startPt = line.shift()
+      this.ctx.moveTo(startPt.x * this.gridsize + this.padding, startPt.y * this.gridsize + this.padding);
+      for (const pt of line) {
+        this.ctx.lineTo(pt.x * this.gridsize + this.padding, pt.y * this.gridsize + this.padding);
+      }
+      this.ctx.lineWidth = 2;
+      this.ctx.strokeStyle ="#000000";
+      this.ctx.stroke();
+    }
+    return;
   }
 }

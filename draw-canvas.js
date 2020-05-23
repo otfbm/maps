@@ -35,6 +35,8 @@ export default function main(pathname, backgroundImage) {
     board.placeItem(x, y, item);
   }
 
+  board.addLines(input.lines);
+
   // TODO: recalculate icons by inspecting the data structure
 
   board.draw();
