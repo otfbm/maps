@@ -73,7 +73,7 @@ export default class Board {
     if (this.background) {
       const img = new Image();
       img.onload = () => {
-        this.ctx.drawImage(img, 0, 0, 2550, 3300);
+        this.ctx.drawImage(img, 0, 0);
       };
       img.onerror = (err) => {
         throw err;

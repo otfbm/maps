@@ -1,12 +1,20 @@
 import fastify from "fastify";
 import drawCanvas from "./draw-canvas.js";
+import fetch from 'node-fetch';
 
 const server = fastify({ logger: true });
 
-server.get("/*", (request, reply) => {
+server.get("/*", async (request, reply) => {
   if (request.params["*"] === "favicon.ico") return reply.send("");
 
-  const canvas = drawCanvas(request.params["*"]);
+  let backgroundImage = null;
+  if (request.query.bg) {
+    const res = await fetch(request.query.bg);
+    const buffer = await res.buffer();
+    backgroundImage = `data:${res.headers['content-type']};base64,${buffer.toString('base64')}`;
+  }
+
+  const canvas = drawCanvas(request.params["*"], backgroundImage);
   const data = canvas.toDataURL("image/png", 1);
   const stripped = data.replace(/^data:image\/\w+;base64,/, "");
   const buff = new Buffer(stripped, "base64");
