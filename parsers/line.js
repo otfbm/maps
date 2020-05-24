@@ -18,11 +18,18 @@ export default class LineParser {
   }
 
   parseCoords(str) {
-    const reg = /[A-Z][0-9][0-9]?/g;
+    const reg = /(\$[a-zA-Z])?[a-zA-Z][0-9][0-9]?/g;
     let result = [];
     let coords = str.match(reg) || [];
     for (const pt of coords) {
-      const code = (pt[0] || "").charCodeAt(0);
+      let i = 0;
+      let icon = "";
+      if (pt.charAt(0) === '$') {
+        i = 2;
+        icon = pt.charAt(1);
+      }
+
+      const code = (pt[i] || "").charCodeAt();
       
       let x;
       if (code > 64 && code < 91) {
@@ -33,7 +40,8 @@ export default class LineParser {
 
       result.push( {
         x,
-        y: parseInt(pt.substr(1) || "", 10) - 1,
+        y: parseInt(pt.substr(i + 1) || "", 10) - 1,
+        icon
       });
     }
 
