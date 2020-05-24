@@ -7,7 +7,7 @@ const PADDING = 15;
 
 const { createCanvas, loadImage } = canvas;
 
-export default function main(pathname) {
+export default function main(pathname, backgroundImage) {
   const input = new InputParser(pathname);
   const gridsize = GRID_SIZE * input.zoom;
   const width = (input.board.width >=52 ? 52 : input.board.width) * gridsize;
@@ -23,7 +23,7 @@ export default function main(pathname) {
     padding: PADDING,
   });
 
-  board.addBackground(input.background);
+  board.addBackground(backgroundImage || input.background);
 
   for (const { x, y, item } of input.tokens) {
     board.placeItem(x, y, item);

@@ -13,7 +13,8 @@
   "dependencies": {
     "canvas": "^2.6.1",
     "fastify": "^2.14.1",
-    "fastify-static": "^2.7.0"
+    "fastify-static": "^2.7.0",
+    "node-fetch": "^2.6.0"
   },
   "engines": {
     "node": "13.3.0"
