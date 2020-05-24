@@ -1,6 +1,8 @@
 import canvas from "canvas";
 const { Image } = canvas;
 
+const gutterWidth = 15.0; /* Width of the gutter surrounding the map */
+
 export default class Board {
   constructor({
     width,
@@ -32,8 +34,9 @@ export default class Board {
     this.state[x][y] = item;
   }
 
-  addBackground(background) {
+  addBackground(background, fitImageToGrid) {
     this.background = background;
+    this.fitImageToGrid = fitImageToGrid;
   }
 
   get(x, y) {
@@ -72,8 +75,18 @@ export default class Board {
 
     if (this.background) {
       const img = new Image();
+
       img.onload = () => {
-        this.ctx.drawImage(img, 0, 0);
+        if ( this.fitImageToGrid ) {
+          this.ctx.drawImage(img, gutterWidth, gutterWidth, this.width, this.height);
+        }
+        else {
+          /* When we're not scaling an image to the grid, we should still trim it.
+             This lets us maintain the border without stretching terrain textures */
+          this.ctx.drawImage(img, 
+                            0, 0, this.width, this.height, /* Clip image */
+                            gutterWidth, gutterWidth, this.width, this.height); /* Draw Image */
+        }
       };
       img.onerror = (err) => {
         throw err;

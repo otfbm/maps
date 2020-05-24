@@ -15,6 +15,11 @@ export default function main(pathname, backgroundImage) {
   const canv = createCanvas(width + 2 * PADDING, height + 2 * PADDING);
   const ctx = canv.getContext("2d");
 
+  /* When given a caller-provided image, we expect it to be given to 
+     us in a size appropriate to the grid they're creating, so we can
+     safely scale it. */
+  const fitImageToGrid = null != backgroundImage;
+
   const board = new Board({
     ctx,
     width,
@@ -23,7 +28,7 @@ export default function main(pathname, backgroundImage) {
     padding: PADDING,
   });
 
-  board.addBackground(backgroundImage || input.background);
+  board.addBackground(backgroundImage || input.background, fitImageToGrid);
 
   for (const { x, y, item } of input.tokens) {
     board.placeItem(x, y, item);
