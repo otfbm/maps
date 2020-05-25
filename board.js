@@ -1,13 +1,12 @@
 import canvas from "canvas";
 const { Image } = canvas;
 
-const gutterWidth = 15.0; /* Width of the gutter surrounding the map */
-
 export default class Board {
   constructor({
     width,
     height,
     gridsize,
+    zoom,
     padding,
     ctx,
     strokeStyle = "#CCCCCC",
@@ -20,6 +19,7 @@ export default class Board {
     this.strokeStyle = strokeStyle;
     this.state = [];
     this.background = null;
+    this.zoom = zoom;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -34,9 +34,8 @@ export default class Board {
     this.state[x][y] = item;
   }
 
-  addBackground(background, fitImageToGrid) {
+  addBackground(background) {
     this.background = background;
-    this.fitImageToGrid = fitImageToGrid;
   }
 
   get(x, y) {
@@ -77,16 +76,14 @@ export default class Board {
       const img = new Image();
 
       img.onload = () => {
-        if ( this.fitImageToGrid ) {
-          this.ctx.drawImage(img, gutterWidth, gutterWidth, this.width, this.height);
-        }
-        else {
-          /* When we're not scaling an image to the grid, we should still trim it.
-             This lets us maintain the border without stretching terrain textures */
-          this.ctx.drawImage(img, 
-                            0, 0, this.width, this.height, /* Clip image */
-                            gutterWidth, gutterWidth, this.width, this.height); /* Draw Image */
-        }
+
+        /* We don't want to scale images because we're assuming that any 
+           default maps or user-provided maps meet the specifications we 
+           outlined in the README.
+           Instead of scaling, trim provided image to the map */
+        this.ctx.drawImage(img, 
+                          0, 0, this.width, this.height, /* Clip image */
+                          this.padding, this.padding, this.width * this.zoom, this.height * this.zoom); /* Draw Image */
       };
       img.onerror = (err) => {
         throw err;
