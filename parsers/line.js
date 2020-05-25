@@ -17,20 +17,23 @@ export default class LineParser {
     return false;
   }
 
+  icons = new Map([
+    [']', "door"],
+    ['[', "double-door"]
+  ])
+
   parseCoords(str) {
-    const reg = /(\$[a-zA-Z])?[a-zA-Z][0-9][0-9]?/g;
+    const reg = /[\[\]]?[a-zA-Z][0-9][0-9]?/g;
     let result = [];
     let coords = str.match(reg) || [];
-    for (const pt of coords) {
-      let i = 0;
+    for (let pt of coords) {
       let icon = "";
-      if (pt.charAt(0) === '$') {
-        i = 2;
-        icon = pt.charAt(1);
+      if (this.icons.has(pt.charAt(0))) {
+        icon = this.icons.get(pt.charAt(0));
+        pt = pt.substr(1)
       }
 
-      const code = (pt[i] || "").charCodeAt();
-      
+      const code = (pt[0] || "").charCodeAt();    
       let x;
       if (code > 64 && code < 91) {
         x = code - 65;
@@ -40,7 +43,7 @@ export default class LineParser {
 
       result.push( {
         x,
-        y: parseInt(pt.substr(i + 1) || "", 10) - 1,
+        y: parseInt(pt.substr(1) || "", 10) - 1,
         icon
       });
     }

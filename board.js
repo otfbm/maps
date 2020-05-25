@@ -175,7 +175,7 @@ export default class Board {
         startPt = pt;
       }
 
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.strokeStyle ="#000000";
       ctx.stroke();
     }
@@ -187,10 +187,11 @@ export default class Board {
       ctx.beginPath();   
       ctx.translate(icon.x * this.gridsize + this.padding, icon.y * this.gridsize + this.padding);
       ctx.rotate(icon.angle);
-      if (icon.type === "b") {
+      if (icon.type === "double-door") {
         ctx.rect(unit * -2, unit * -0.5, unit * 2, unit);
         ctx.rect(0, unit * -0.5, unit * 2, unit);
-      } else {
+      } else { 
+        // normal door
         ctx.rect(unit * -1.5, unit * -0.5, unit * 3, unit);
       }
 
