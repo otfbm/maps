@@ -101,3 +101,40 @@ _**Example - Default Background**_
 ```
 http://otfbm.com/E7p-Zombie/I3p-Zombie?bg=https://i.imgur.com/k99s0ch.jpg
 ```
+
+## Drawing walls and doors
+
+You can draw walls and doors directly onto a battlemap using coordinates. To draw a wall, use the `_` character followed by coordinates.
+
+### Basics
+
+**Example**
+
+```
+https://otfbm.com/_B3J3
+```
+
+This will draw a line from B3 to J3
+
+### Multiple lines
+
+You can finish a line and start a new one with the `_` character
+
+*Example*
+
+```
+https://otfbm.com/_B3J3_B6J6
+```
+
+### Single and double doors
+
+You can add single doors with the `]` character and double doors with the `[` character
+
+Here is a complex example:
+
+**Example**
+
+```
+https://otfbm.com/_B1K1K11E11[E6B6A5[A2B1_E1]E4]E6_E4]G4[K4_E6]K6_G1G4
+```
+
