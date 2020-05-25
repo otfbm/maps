@@ -20,7 +20,7 @@ export default class Board {
     ctx,
     strokeStyle = "#CCCCCC",
     darkMode = false,
-    gridOpacity = 100.0
+    gridOpacity = 1.0
   }) {
     this.width = width;
     this.height = height;

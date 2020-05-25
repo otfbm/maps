@@ -155,5 +155,25 @@ tap.test("token parsing", (t) => {
       }
     },
   ], 'tokens with size should match');
+
+  t.same(clone(new InputParser("/opt=d").options), {
+      darkMode: true,
+      gridOpacity: 1.0
+  }, 'tokens with size should match');
+
+  t.same(clone(new InputParser("/opt=gh").options), {
+    darkMode: false,
+    gridOpacity: 0.5
+  }, 'tokens with size should match');
+
+  t.same(clone(new InputParser("/opt=g0").options), {
+    darkMode: false,
+    gridOpacity: 0.0
+  }, 'tokens with size should match');
+
+  t.same(clone(new InputParser("/opt=dg0").options), {
+    darkMode: true,
+    gridOpacity: 0.0
+  }, 'tokens with size should match');
   t.end();
 });
