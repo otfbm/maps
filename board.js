@@ -20,6 +20,7 @@ export default class Board {
     this.state = [];
     this.background = null;
     this.zoom = zoom;
+    this.lines = [];
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -36,6 +37,10 @@ export default class Board {
 
   addBackground(background) {
     this.background = background;
+  }
+
+  addLines(lines) {
+    this.lines = lines;
   }
 
   get(x, y) {
@@ -139,10 +144,63 @@ export default class Board {
       this.height + this.padding + 7
     );
 
+    this.drawLines(this.ctx, this.lines);
+
     for (const { x, y, item } of this) {
       if (item) {
         item.draw(this.ctx, x, y, this.gridsize, this.padding);
       }
+    }
+  }
+
+  drawLines(ctx, lines) {
+    let icons = [];
+
+    for (const line of lines) {
+      ctx.beginPath();
+      let startPt = line.shift()
+      ctx.moveTo(startPt.x * this.gridsize + this.padding, startPt.y * this.gridsize + this.padding);
+
+      while (line.length) {
+        let pt = line.shift();
+        ctx.lineTo(pt.x * this.gridsize + this.padding, pt.y * this.gridsize + this.padding);
+        if (pt.icon !== "") {
+          icons.push({ 
+            angle: Math.atan2(startPt.y - pt.y, startPt.x - pt.x),
+            x: (startPt.x + pt.x) / 2,
+            y: (startPt.y + pt.y) / 2,
+            type: pt.icon
+          });
+        }
+        startPt = pt;
+      }
+
+      ctx.lineWidth = 3;
+      ctx.strokeStyle ="#000000";
+      ctx.stroke();
+    }
+
+    let unit = this.gridsize / 5;
+
+    for (const icon of icons) {
+      ctx.save();
+      ctx.beginPath();   
+      ctx.translate(icon.x * this.gridsize + this.padding, icon.y * this.gridsize + this.padding);
+      ctx.rotate(icon.angle);
+      if (icon.type === "double-door") {
+        ctx.rect(unit * -2, unit * -0.5, unit * 2, unit);
+        ctx.rect(0, unit * -0.5, unit * 2, unit);
+      } else { 
+        // normal door
+        ctx.rect(unit * -1.5, unit * -0.5, unit * 3, unit);
+      }
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle ="#000000";
+      ctx.fillStyle = "white";
+      ctx.fill();   
+      ctx.stroke();
+      ctx.restore();
     }
   }
 }

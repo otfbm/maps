@@ -3,6 +3,7 @@ import TokenParser from './parsers/token.js';
 import IconParser from './parsers/icon.js';
 import ZoomParser from "./parsers/zoom.js";
 import BackgroundParser from "./parsers/background.js";
+import LineParser from "./parsers/line.js";
 import Token from "./token.js";
 import Icon from "./icon.js";
 
@@ -10,6 +11,7 @@ export default class InputParser {
   constructor(pathname = "") {
     let parts = [];
     this.board = { width: 10, height: 10 };
+    this.lines = [];
     this.tokens = [];
     this.icons = [];
     this.zoom = 1;
@@ -25,6 +27,7 @@ export default class InputParser {
     const iconParser = new IconParser();
     const zoomParser = new ZoomParser();
     const backgroundParser = new BackgroundParser();
+    const lineParser = new LineParser();
 
     for (const part of parts) {
       let parsed = boardParser.parse(part);
@@ -54,6 +57,12 @@ export default class InputParser {
       parsed = backgroundParser.parse(part);
       if (parsed) {
         this.background = parsed;
+        continue;
+      }
+
+      parsed = lineParser.parse(part);
+      if (parsed) {
+        this.lines = this.lines.concat(parsed);
         continue;
       }
 

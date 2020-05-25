@@ -21,9 +21,7 @@ export default class Token {
 
   draw(ctx, x, y, gridsize, padding) {
     ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "black";
+    ctx.fillStyle = "white";
     ctx.arc(
       padding + gridsize * this.offset + (x - 1) * gridsize,
       padding + gridsize * this.offset + (y - 1) * gridsize,
@@ -32,10 +30,20 @@ export default class Token {
       2 * Math.PI
     );
     ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
     ctx.stroke();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "slategrey";
-    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(
+      padding + gridsize * this.offset + (x - 1) * gridsize,
+      padding + gridsize * this.offset + (y - 1) * gridsize,
+      gridsize * this.size - 2,
+      0,
+      2 * Math.PI
+    );
+    ctx.fillStyle = this.color;
+    ctx.fill();
 
     ctx.beginPath();
     ctx.fillStyle = "#ffffff";
