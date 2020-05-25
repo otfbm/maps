@@ -138,3 +138,16 @@ Here is a complex example:
 https://otfbm.com/_B1K1K11E11[E6B6A5[A2B1_E1]E4]E6_E4]G4[K4_E6]K6_G1G4
 ```
 
+### Additional Options
+
+Additional options can be accessed by providing `/opt=` in your request.
+
+**Dark Mode** You can use a darker coordinate border by providing the `d` option with the additional options.
+
+**Grid Transparency** You can draw a grid at half transparency by providing the `gh` option, or you can have an invisible grid by providing `g0`;
+
+*Example* - A map drawn with a darker background and no gridlines, with a token in the top left corner.
+
+```
+https://otfbm.com/opt=dg0/A1
+```
