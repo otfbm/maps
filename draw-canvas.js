@@ -14,12 +14,14 @@ export default function main(pathname, backgroundImage) {
   const height = (input.board.height >=52 ? 52 : input.board.height) * gridsize;
   const canv = createCanvas(width + 2 * PADDING, height + 2 * PADDING);
   const ctx = canv.getContext("2d");
+  const zoom = input.zoom;
 
   const board = new Board({
     ctx,
     width,
     height,
     gridsize,
+    zoom,
     padding: PADDING,
   });
 

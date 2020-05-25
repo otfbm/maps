@@ -6,6 +6,7 @@ export default class Board {
     width,
     height,
     gridsize,
+    zoom,
     padding,
     ctx,
     strokeStyle = "#CCCCCC",
@@ -18,6 +19,7 @@ export default class Board {
     this.strokeStyle = strokeStyle;
     this.state = [];
     this.background = null;
+    this.zoom = zoom;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -72,8 +74,16 @@ export default class Board {
 
     if (this.background) {
       const img = new Image();
+
       img.onload = () => {
-        this.ctx.drawImage(img, 0, 0);
+
+        /* We don't want to scale images because we're assuming that any 
+           default maps or user-provided maps meet the specifications we 
+           outlined in the README.
+           Instead of scaling, trim provided image to the map */
+        this.ctx.drawImage(img, 
+                          0, 0, this.width, this.height, /* Clip image */
+                          this.padding, this.padding, this.width * this.zoom, this.height * this.zoom); /* Draw Image */
       };
       img.onerror = (err) => {
         throw err;
