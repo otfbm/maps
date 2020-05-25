@@ -1,8 +1,12 @@
+import { promises as fs } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
+import crypto from 'crypto';
 import fastify from "fastify";
 import drawCanvas from "./draw-canvas.js";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
-export default function createServer () {
+export default function createServer() {
   const server = fastify({ logger: true });
 
   server.get("/*", async (request, reply) => {
@@ -10,9 +14,27 @@ export default function createServer () {
 
     let backgroundImage = null;
     if (request.query.bg) {
-      const res = await fetch(request.query.bg);
-      const buffer = await res.buffer();
-      backgroundImage = `data:${res.headers['content-type']};base64,${buffer.toString('base64')}`;
+      try {
+        const hash = crypto.createHash('md5').update(request.query.bg).digest('hex');
+        const filePath = join(tmpdir(), hash);
+        try {
+          // try to get background image from file system cache
+          const data = await fs.readFile(filePath, backgroundImage, 'utf8');
+          backgroundImage = data.toString();
+        } catch(err) {
+          // fallback to fetching from URL
+          const res = await fetch(request.query.bg);
+          const buffer = await res.buffer();
+          backgroundImage = `data:${
+            res.headers["content-type"]
+          };base64,${buffer.toString("base64")}`;
+
+          // put data URL in file system cache
+          await fs.writeFile(filePath, backgroundImage);
+        }
+      } catch (err) {
+        // noop
+      }
     }
 
     const canvas = drawCanvas(request.params["*"], backgroundImage);
@@ -25,4 +47,3 @@ export default function createServer () {
 
   return server;
 }
-  
