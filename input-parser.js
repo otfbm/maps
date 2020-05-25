@@ -4,6 +4,7 @@ import IconParser from './parsers/icon.js';
 import ZoomParser from "./parsers/zoom.js";
 import BackgroundParser from "./parsers/background.js";
 import LineParser from "./parsers/line.js";
+import OptionsParser from "./parsers/options.js"; 
 import Token from "./token.js";
 import Icon from "./icon.js";
 
@@ -14,6 +15,7 @@ export default class InputParser {
     this.lines = [];
     this.tokens = [];
     this.icons = [];
+    this.options = [];
     this.zoom = 1;
 
     // trim off leading /
@@ -28,6 +30,7 @@ export default class InputParser {
     const zoomParser = new ZoomParser();
     const backgroundParser = new BackgroundParser();
     const lineParser = new LineParser();
+    const optionsParser = new OptionsParser();
 
     for (const part of parts) {
       let parsed = boardParser.parse(part);
@@ -64,6 +67,11 @@ export default class InputParser {
       if (parsed) {
         this.lines = this.lines.concat(parsed);
         continue;
+      }
+
+      parsed = optionsParser.parse(part);
+      if (parsed) {
+        this.options = parsed;
       }
 
       // Extend by adding more parsers here

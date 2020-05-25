@@ -1,6 +1,15 @@
 import canvas from "canvas";
 const { Image } = canvas;
 
+/* Constant definitions for fonts, colors, etc. */
+const boardFont = "14px impact";
+const tokenFont = "12px impact";
+
+const fillLightMode = "#ffffff";
+const fillDarkMode = "282828";
+const textLightMode = "#161616";
+const textDarkMode = "#ffffff";
+
 export default class Board {
   constructor({
     width,
@@ -10,6 +19,8 @@ export default class Board {
     padding,
     ctx,
     strokeStyle = "#CCCCCC",
+    darkMode = false,
+    gridOpacity = 100.0
   }) {
     this.width = width;
     this.height = height;
@@ -21,6 +32,8 @@ export default class Board {
     this.background = null;
     this.zoom = zoom;
     this.lines = [];
+    this.darkMode = darkMode;
+    this.gridOpacity = gridOpacity;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -67,9 +80,75 @@ export default class Board {
     };
   }
 
+  drawText() {
+
+    this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.font = boardFont;
+
+    /* Drawing the Alphabetic coordinate markers */
+    for (let i = 0; i <= this.width; i += this.gridsize) {
+      // this.ctx.beginPath();
+      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
+      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);
+      this.ctx.strokeStyle = this.strokeStyle;
+      
+      /* Keep the first and last lines of the grid opaque */
+      if ( i > 0 && i < this.height )
+        this.ctx.globalAlpha = this.gridOpacity;
+
+      this.ctx.stroke();
+      this.ctx.globalAlpha = 1.0;
+
+      const num = i / this.gridsize;
+      if (num < 1) continue;
+
+      this.ctx.beginPath();
+      const character = num > 26 ? String.fromCharCode(num + 70) : String.fromCharCode(num + 64)
+
+      this.ctx.fillText(
+        character,
+        this.padding + i - this.gridsize / 2,
+        this.padding - 8
+      );
+    }
+    /* Drawing the numeral coordinate markers */
+    for (let i = 0; i <= this.height; i += this.gridsize) {
+      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
+      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
+      this.ctx.strokeStyle = this.strokeStyle;
+      
+      /* Keep the first and last lines of the grid opaque */
+      if ( i > 0 && i < this.height )
+        this.ctx.globalAlpha = this.gridOpacity;
+      
+      this.ctx.stroke();
+      this.ctx.globalAlpha = 1.0;
+
+      this.ctx.beginPath();
+      const num = i / this.gridsize;
+      if (num < 1) continue;
+
+      this.ctx.fillText(
+        String(num),
+        this.padding - 7,
+        this.padding + i - this.gridsize / 2
+      );
+    }
+
+    /* Drawing the scale marker */
+    this.ctx.beginPath();
+    this.ctx.fillText(
+      "1 square = 5ft",
+      this.width - this.padding - 10,
+      this.height + this.padding + 7
+    );
+  }
+
   draw() {
     this.ctx.beginPath();
-    this.ctx.fillStyle = "#ffffff";
+    this.ctx.fillStyle = this.darkMode ? fillDarkMode : fillLightMode;
     this.ctx.fillRect(
       0,
       0,
@@ -96,56 +175,13 @@ export default class Board {
       img.src = this.background;
     }
 
-    for (let i = 0; i <= this.width; i += this.gridsize) {
-      // this.ctx.beginPath();
-      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
-      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);
-      this.ctx.strokeStyle = this.strokeStyle;
-      this.ctx.stroke();
-
-      const num = i / this.gridsize;
-      if (num < 1) continue;
-      this.ctx.beginPath();
-      this.ctx.fillStyle = "slategray";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      const character = num > 26 ? String.fromCharCode(num + 70) : String.fromCharCode(num + 64)
-      this.ctx.fillText(
-        character,
-        this.padding + i - this.gridsize / 2,
-        this.padding - 5
-      );
-    }
-
-    for (let i = 0; i <= this.height; i += this.gridsize) {
-      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
-      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
-      this.ctx.strokeStyle = this.strokeStyle;
-      this.ctx.stroke();
-
-      this.ctx.beginPath();
-      this.ctx.fillStyle = "slategray";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      const num = i / this.gridsize;
-      if (num < 1) continue;
-      this.ctx.fillText(
-        String(num),
-        this.padding - 7,
-        this.padding + i - this.gridsize / 2
-      );
-    }
-
-    this.ctx.beginPath();
-    this.ctx.fillStyle = "slategray";
-    this.ctx.fillText(
-      "1 square = 5ft",
-      this.width - this.padding - 10,
-      this.height + this.padding + 7
-    );
+    this.drawText();
 
     this.drawLines(this.ctx, this.lines);
 
+    /* Keep the light text for tokens */
+    this.ctx.font = tokenFont;
+    this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
         item.draw(this.ctx, x, y, this.gridsize, this.padding);
