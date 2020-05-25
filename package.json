@@ -2,9 +2,10 @@
   "name": "on-the-fly-battle-maps",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "./run-tests.sh"
+    "test": "./run-tests.sh",
+    "start": "node ."
   },
   "type": "module",
   "keywords": [],
@@ -14,7 +15,8 @@
     "canvas": "^2.6.1",
     "fastify": "^2.14.1",
     "fastify-static": "^2.7.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "throng": "^4.0.0"
   },
   "engines": {
     "node": "13.3.0"
