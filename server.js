@@ -1,21 +1,10 @@
-import cluster from 'cluster';
-import os from 'os';
 import fastify from "fastify";
 import drawCanvas from "./draw-canvas.js";
 import fetch from 'node-fetch';
 
-const numCPUs = os.cpus().length;
-const server = fastify({ logger: true });
+export default function createServer () {
+  const server = fastify({ logger: true });
 
-if (cluster.isMaster) {
-  console.log(`Master ${process.pid} is running`);
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
-  cluster.on('exit', worker => {
-    console.log(`Worker ${worker.process.pid} died`);
-  });
-} else {
   server.get("/*", async (request, reply) => {
     if (request.params["*"] === "favicon.ico") return reply.send("");
 
@@ -34,5 +23,6 @@ if (cluster.isMaster) {
     reply.type("image/png").send(buff);
   });
 
-  server.listen(process.env.PORT || 3000, "0.0.0.0");
+  return server;
 }
+  

@@ -2,9 +2,10 @@
   "name": "on-the-fly-battle-maps",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "./run-tests.sh"
+    "test": "./run-tests.sh",
+    "start": "node ."
   },
   "type": "module",
   "keywords": [],
