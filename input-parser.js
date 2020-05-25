@@ -4,7 +4,8 @@ import IconParser from './parsers/icon.js';
 import ZoomParser from "./parsers/zoom.js";
 import BackgroundParser from "./parsers/background.js";
 import LineParser from "./parsers/line.js";
-import OptionsParser from "./parsers/options.js"; 
+import DarkModeParser from "./parsers/dark-mode.js"; 
+import GridOpacityParser from "./parsers/grid-opacity.js"; 
 import Token from "./token.js";
 import Icon from "./icon.js";
 
@@ -17,6 +18,8 @@ export default class InputParser {
     this.icons = [];
     this.options = [];
     this.zoom = 1;
+    this.darkmode = false;
+    this.gridOpacity = 1;
 
     // trim off leading /
     if (pathname[0] === "/") parts = pathname.substr(1)
@@ -30,7 +33,8 @@ export default class InputParser {
     const zoomParser = new ZoomParser();
     const backgroundParser = new BackgroundParser();
     const lineParser = new LineParser();
-    const optionsParser = new OptionsParser();
+    const darkModeparser = new DarkModeParser();
+    const gridOpacityParser = new GridOpacityParser();
 
     for (const part of parts) {
       let parsed = boardParser.parse(part);
@@ -69,9 +73,14 @@ export default class InputParser {
         continue;
       }
 
-      parsed = optionsParser.parse(part);
+      parsed = darkModeparser.parse(part);
       if (parsed) {
-        this.options = parsed;
+        this.darkMode = parsed;
+      }
+
+      parsed = gridOpacityParser.parse(part);
+      if (null !== parsed) { /* This check is like this because one of the valid returns is 0.0 */
+        this.gridOpacity = parsed;
       }
 
       // Extend by adding more parsers here

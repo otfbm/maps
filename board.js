@@ -95,7 +95,7 @@ export default class Board {
       this.ctx.strokeStyle = this.strokeStyle;
       
       /* Keep the first and last lines of the grid opaque */
-      if ( i > 0 && i < this.height )
+      if ( i > 0 && i < this.width )
         this.ctx.globalAlpha = this.gridOpacity;
 
       this.ctx.stroke();

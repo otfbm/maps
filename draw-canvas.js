@@ -23,8 +23,8 @@ export default function main(pathname, backgroundImage) {
     gridsize,
     zoom,
     padding: PADDING,
-    darkMode: input.options.darkMode,
-    gridOpacity: input.options.gridOpacity
+    darkMode: input.darkMode,
+    gridOpacity: input.gridOpacity
   });
 
   board.addBackground(backgroundImage || input.background);
