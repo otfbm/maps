@@ -126,19 +126,23 @@ You can finish a line and start a new one with the `_` character
 https://otfbm.com/_B3J3_B6J6
 ```
 
-### Single and double doors
+### Doors
 
-You can add single doors with the `]` character and double doors with the `[` character
+You can add doors with following characters:
+`-` open door,
+`]` closed door,
+`[` double door,
+`$` secret door
 
 Here is a complex example:
 
 **Example**
 
 ```
-https://otfbm.com/_B1K1K11E11[E6B6A5[A2B1_E1]E4]E6_E4]G4[K4_E6]K6_G1G4
+https://otfbm.com/_B2G2G4H4[H6G6G8$F9E10]C10B10B2_B6-G6
 ```
 
-### Additional Options
+## Additional Options
 You can specify additional drawing options by providing the following parameters after a `@`.
 
 **Dark Mode** You can use a darker coordinate border by providing the `d` option.
