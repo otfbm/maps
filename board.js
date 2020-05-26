@@ -80,7 +80,7 @@ export default class Board {
     };
   }
 
-  drawText() {
+  drawGridAndCoords() {
 
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
     this.ctx.textAlign = "center";
@@ -175,7 +175,7 @@ export default class Board {
       img.src = this.background;
     }
 
-    this.drawText();
+    this.drawGridAndCoords();
 
     this.drawLines(this.ctx, this.lines);
 
