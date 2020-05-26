@@ -6,8 +6,8 @@ const boardFont = "14px impact";
 const tokenFont = "12px impact";
 
 const fillLightMode = "#ffffff";
-const fillDarkMode = "282828";
-const textLightMode = "#161616";
+const fillDarkMode = "#000000";
+const textLightMode = "#000000";
 const textDarkMode = "#ffffff";
 
 export default class Board {
@@ -212,7 +212,7 @@ export default class Board {
       }
 
       ctx.lineWidth = 3;
-      ctx.strokeStyle ="#000000";
+      ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
       ctx.stroke();
     }
 
@@ -232,8 +232,8 @@ export default class Board {
       }
 
       ctx.lineWidth = 1;
-      ctx.strokeStyle ="#000000";
-      ctx.fillStyle = "white";
+      ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+      ctx.fillStyle = this.darkMode ? fillDarkMode : fillLightMode;
       ctx.fill();   
       ctx.stroke();
       ctx.restore();

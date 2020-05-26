@@ -156,24 +156,34 @@ tap.test("token parsing", (t) => {
     },
   ], 'tokens with size should match');
 
-  t.same(clone(new InputParser("/opt=d").options), {
-      darkMode: true,
-      gridOpacity: 1.0
-  }, 'tokens with size should match');
+  t.same(new InputParser("/A1").darkMode, false, 'darkmode should be inactive');
+  t.same(new InputParser("/@d").darkMode, true, 'darkmode should be active');
+  t.same(new InputParser("/@zd").darkMode, true, 'darkmode should be active');
+  t.same(new InputParser("/@dz").darkMode, true, 'darkmode should be active');
+  t.same(new InputParser("/@d2").darkMode, true, 'darkmode should be active');
+  t.same(new InputParser("/@2d").darkMode, true, 'darkmode should be active');
 
-  t.same(clone(new InputParser("/opt=gh").options), {
-    darkMode: false,
-    gridOpacity: 0.5
-  }, 'tokens with size should match');
+  t.same(new InputParser("/A1").gridOpacity, 1.0, 'grid should be opaque');
+  
+  t.same(new InputParser("/@h").gridOpacity, 0.5, 'grid should be half transparent');
+  t.same(new InputParser("/@zh").gridOpacity, 0.5, 'grid should be half transparent');
+  t.same(new InputParser("/@hz").gridOpacity, 0.5, 'grid should be half transparent');
+  t.same(new InputParser("/@2h").gridOpacity, 0.5, 'grid should be half transparent');
+  t.same(new InputParser("/@h2").gridOpacity, 0.5, 'grid should be half transparent');
 
-  t.same(clone(new InputParser("/opt=g0").options), {
-    darkMode: false,
-    gridOpacity: 0.0
-  }, 'tokens with size should match');
+  t.same(new InputParser("/@n").gridOpacity, 0.0, 'grid should be invisible');
+  t.same(new InputParser("/@zn").gridOpacity, 0.0, 'grid should be invisible');
+  t.same(new InputParser("/@nz").gridOpacity, 0.0, 'grid should be invisible');
+  t.same(new InputParser("/@2n").gridOpacity, 0.0, 'grid should be invisible');
+  t.same(new InputParser("/@n2").gridOpacity, 0.0, 'grid should be invisible');
 
-  t.same(clone(new InputParser("/opt=dg0").options), {
-    darkMode: true,
-    gridOpacity: 0.0
-  }, 'tokens with size should match');
+  t.same(new InputParser("/@2").zoom, 2, 'zoom level should be 2');
+  t.same(new InputParser("/@z2").zoom, 2, 'zoom level should be 2');
+  t.same(new InputParser("/@2z").zoom, 2, 'zoom level should be 2');
+
+  t.same(new InputParser("/@3").zoom, 3, 'zoom level should be 3');
+  t.same(new InputParser("/@z3").zoom, 3, 'zoom level should be 3');
+  t.same(new InputParser("/@3z").zoom, 3, 'zoom level should be 3');
+
   t.end();
 });

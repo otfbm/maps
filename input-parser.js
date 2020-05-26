@@ -18,7 +18,7 @@ export default class InputParser {
     this.icons = [];
     this.options = [];
     this.zoom = 1;
-    this.darkmode = false;
+    this.darkMode = false;
     this.gridOpacity = 1;
 
     // trim off leading /
@@ -33,7 +33,7 @@ export default class InputParser {
     const zoomParser = new ZoomParser();
     const backgroundParser = new BackgroundParser();
     const lineParser = new LineParser();
-    const darkModeparser = new DarkModeParser();
+    const darkModeParser = new DarkModeParser();
     const gridOpacityParser = new GridOpacityParser();
 
     for (const part of parts) {
@@ -55,12 +55,6 @@ export default class InputParser {
         continue;
       }
 
-      parsed = zoomParser.parse(part);
-      if (parsed) {
-        this.zoom = parsed;
-        continue;
-      }
-
       parsed = backgroundParser.parse(part);
       if (parsed) {
         this.background = parsed;
@@ -73,7 +67,15 @@ export default class InputParser {
         continue;
       }
 
-      parsed = darkModeparser.parse(part);
+      /* Because all of the options here can be grouped, we need to parse them
+         together and not skip after a successful parse  */
+
+      parsed = zoomParser.parse(part);
+      if (parsed) {
+        this.zoom = parsed;
+      }
+
+      parsed = darkModeParser.parse(part);
       if (parsed) {
         this.darkMode = parsed;
       }

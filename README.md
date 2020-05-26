@@ -139,15 +139,16 @@ https://otfbm.com/_B1K1K11E11[E6B6A5[A2B1_E1]E4]E6_E4]G4[K4_E6]K6_G1G4
 ```
 
 ### Additional Options
+You can specify additional drawing options by providing the following parameters after a `@`.
 
-Additional options can be accessed by providing `/opt=` in your request.
+**Dark Mode** You can use a darker coordinate border by providing the `d` option.
 
-**Dark Mode** You can use a darker coordinate border by providing the `d` option with the additional options.
+**Grid Transparency** You can draw a grid at half transparency by providing the `h` option, or you can have an invisible grid by providing `n`;
 
-**Grid Transparency** You can draw a grid at half transparency by providing the `gh` option, or you can have an invisible grid by providing `g0`;
+**Zoom** You can zoom in on the battle map by providing a number `1-3`.
 
-*Example* - A map drawn with a darker background and no gridlines, with a token in the top left corner.
+*Example* - A map drawn with a darker background and no gridlines, with a zoom value of 2, with a token in the top left corner.
 
 ```
-https://otfbm.com/opt=dg0/A1
+https://otfbm.com/@2dn/A1
 ```
