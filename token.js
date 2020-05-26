@@ -19,13 +19,13 @@ export default class Token {
   //     return
   // }
 
-  draw(ctx, x, y, gridsize, padding) {
+  draw(ctx, x, y, gridsize, padding, zoom) {
     ctx.beginPath();
     ctx.fillStyle = "white";
     ctx.arc(
       padding + gridsize * this.offset + (x - 1) * gridsize,
       padding + gridsize * this.offset + (y - 1) * gridsize,
-      gridsize * this.size, // radius is half the gridsize
+      gridsize * this.size * 0.92, // radius is half the gridsize
       0,
       2 * Math.PI
     );
@@ -38,7 +38,7 @@ export default class Token {
     ctx.arc(
       padding + gridsize * this.offset + (x - 1) * gridsize,
       padding + gridsize * this.offset + (y - 1) * gridsize,
-      gridsize * this.size - 2,
+      gridsize * this.size * 0.92 - 2,
       0,
       2 * Math.PI
     );
@@ -46,6 +46,7 @@ export default class Token {
     ctx.fill();
 
     ctx.beginPath();
+    ctx.font = `${zoom * 12}px impact`;
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";

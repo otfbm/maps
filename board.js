@@ -1,3 +1,4 @@
+import Line from "./line.js";
 import canvas from "canvas";
 const { Image } = canvas;
 
@@ -177,66 +178,18 @@ export default class Board {
 
     this.drawGridAndCoords();
 
-    this.drawLines(this.ctx, this.lines);
+    for (const line of this.lines) {
+      let l = new Line(line, this.darkMode ? textDarkMode : textLightMode, this.darkMode ? fillDarkMode : fillLightMode);
+      l.draw(this.ctx, this.gridsize, this.padding, this.zoom);
+    }
 
     /* Keep the light text for tokens */
     this.ctx.font = tokenFont;
     this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
-        item.draw(this.ctx, x, y, this.gridsize, this.padding);
+        item.draw(this.ctx, x, y, this.gridsize, this.padding, this.zoom);
       }
-    }
-  }
-
-  drawLines(ctx, lines) {
-    let icons = [];
-
-    for (const line of lines) {
-      ctx.beginPath();
-      let startPt = line.shift()
-      ctx.moveTo(startPt.x * this.gridsize + this.padding, startPt.y * this.gridsize + this.padding);
-
-      while (line.length) {
-        let pt = line.shift();
-        ctx.lineTo(pt.x * this.gridsize + this.padding, pt.y * this.gridsize + this.padding);
-        if (pt.icon !== "") {
-          icons.push({ 
-            angle: Math.atan2(startPt.y - pt.y, startPt.x - pt.x),
-            x: (startPt.x + pt.x) / 2,
-            y: (startPt.y + pt.y) / 2,
-            type: pt.icon
-          });
-        }
-        startPt = pt;
-      }
-
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
-      ctx.stroke();
-    }
-
-    let unit = this.gridsize / 5;
-
-    for (const icon of icons) {
-      ctx.save();
-      ctx.beginPath();   
-      ctx.translate(icon.x * this.gridsize + this.padding, icon.y * this.gridsize + this.padding);
-      ctx.rotate(icon.angle);
-      if (icon.type === "double-door") {
-        ctx.rect(unit * -2, unit * -0.5, unit * 2, unit);
-        ctx.rect(0, unit * -0.5, unit * 2, unit);
-      } else { 
-        // normal door
-        ctx.rect(unit * -1.5, unit * -0.5, unit * 3, unit);
-      }
-
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
-      ctx.fillStyle = this.darkMode ? fillDarkMode : fillLightMode;
-      ctx.fill();   
-      ctx.stroke();
-      ctx.restore();
     }
   }
 }
