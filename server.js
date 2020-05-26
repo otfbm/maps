@@ -47,3 +47,9 @@ export default function createServer() {
 
   return server;
 }
+
+// start the server if this file is run directly with node server.js
+if (process.argv[1].includes('server.js')) {
+  const server = createServer();
+  server.listen(process.env.PORT || 3000, "0.0.0.0");
+}
