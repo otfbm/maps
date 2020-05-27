@@ -5,6 +5,9 @@ export default class Token {
     this.size = size;
   }
 
+  get type() {
+    return 'token';
+  }
 
   tiny(gridsize, zoom) {
     const cx = gridsize / 2;

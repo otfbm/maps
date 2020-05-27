@@ -5,6 +5,10 @@ export default class Line {
     this.bg = backgroundColour;
   }
 
+  get type() {
+    return 'line';
+  }
+
   draw(ctx, gridsize, padding, zoom) {
     let icons = [];
     let unit = gridsize / 5;

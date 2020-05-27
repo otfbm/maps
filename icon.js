@@ -6,6 +6,10 @@ export default class Icon {
     this.icon = icon;
   }
 
+  get type() {
+    return 'icon';
+  }
+
   draw(ctx, x, y, gridsize) {
     const img = new Image();
     img.onload = () => {

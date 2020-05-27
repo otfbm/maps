@@ -188,7 +188,7 @@ export default class Board {
     this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
-        if (item.svg) {
+        if (item.type === 'token') {
           const img = new Image();
           img.onload = () => {
             this.ctx.drawImage(
