@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./run-tests.sh",
+    "test": "tap test --no-cov --no-esm",
     "start": "node ."
   },
   "type": "module",
