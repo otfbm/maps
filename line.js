@@ -1,8 +1,8 @@
 export default class Line {
-  constructor(line, fg, bg) {
+  constructor(line, foregroundColour, backgroundColour) {
     this.line = line;
-    this.fg = fg;
-    this.bg = bg;
+    this.fg = foregroundColour;
+    this.bg = backgroundColour;
   }
 
   draw(ctx, gridsize, padding, zoom) {
@@ -46,7 +46,7 @@ export default class Line {
       if (icon.type === "secret-door") {
         ctx.moveTo(unit * -2, 0);
         ctx.lineTo(unit * 2, 0);
-        ctx.font = `${zoom * 15}px sans`;
+        ctx.font = `${zoom * 15}px impact`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.rotate(1.57079632679);
