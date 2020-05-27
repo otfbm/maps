@@ -188,7 +188,22 @@ export default class Board {
     this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
-        item.draw(this.ctx, x, y, this.gridsize, this.padding, this.zoom);
+        if (item.svg) {
+          const img = new Image();
+          img.onload = () => {
+            this.ctx.drawImage(
+              img, 
+              (x - 1) * this.gridsize + this.padding,
+              (y - 1) * this.gridsize + this.padding,
+            );
+          };
+          img.onerror = (err) => {
+            throw err;
+          };
+          img.src = item.svg(this.gridsize, this.zoom);
+        } else {
+          item.draw(this.ctx, x, y, this.gridsize, this.padding, this.zoom);
+        }
       }
     }
   }
