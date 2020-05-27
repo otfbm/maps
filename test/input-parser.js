@@ -23,8 +23,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'basic tokens should match');
@@ -36,8 +35,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'basic tokens should match');
@@ -49,8 +47,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'basic tokens should match');
@@ -62,8 +59,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
     {
@@ -72,8 +68,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'multiple basic tokens should match');
@@ -85,8 +80,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "firebrick",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'tokens with color should match');
@@ -98,8 +92,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "Pizza",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'tokens with names should match');
@@ -111,8 +104,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "",
         color: "black",
-        size: 1,
-        offset: 1,
+        size: "large",
       }
     },
   ], 'tokens with size should match');
@@ -124,8 +116,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "ZOM1",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'tokens with size should match');
@@ -137,8 +128,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "9ZOM1",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'tokens with size should match');
@@ -150,8 +140,7 @@ tap.test("token parsing", (t) => {
       item: {
         name: "123456",
         color: "black",
-        size: 0.5,
-        offset: 0.5,
+        size: "medium",
       }
     },
   ], 'tokens with size should match');
