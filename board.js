@@ -197,18 +197,18 @@ export default class Board {
     for (const { x, y, item } of this) {
       if (item) {
         if (item.type === 'token') {
-          const img = new Image();
-          img.onload = () => {
-            this.ctx.drawImage(
-              img, 
-              (x - 1) * this.gridsize,
-              (y - 1) * this.gridsize,
-            );
-          };
-          img.onerror = (err) => {
-            throw err;
-          };
-          img.src = item.svg(this.gridsize, this.zoom);
+          // const img = new Image();
+          // img.onload = () => {
+          //   this.ctx.drawImage(
+          //     img, 
+          //     (x - 1) * this.gridsize + this.padding,
+          //     (y - 1) * this.gridsize + this.padding,
+          //   );
+          // };
+          // img.onerror = (err) => {
+          //   throw err;
+          // };
+          // img.src = item.svg(this.gridsize, this.zoom);
         } else {
           item.draw(this.ctx, x, y, this.gridsize, this.zoom);
         }

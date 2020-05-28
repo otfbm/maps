@@ -46,7 +46,7 @@ export default class TokenParser {
         y: coords.y,
         color,
         size,
-        name: matches[4] || "",
+        label: matches[4] || "",
       };
     }
 
