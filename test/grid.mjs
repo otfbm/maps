@@ -82,34 +82,15 @@ test('grid 2 overlays added with overlapping locations', (t) => {
     grid.add(new Overlay({ cell: 'a1' }));
     grid.add(new Overlay({ cells: ['a1', 'b2'] }));
 
-    t.equal(grid._cells[0][1].size, 2);
-    t.equal(grid._cells[0][1].size, 2);
-    t.equal(grid._cells[1][0].size, 1);
+    t.equal(grid._cells[0][0].size, 2);
+    t.equal(grid._cells[0][1].size, 1);
     t.equal(grid._cells[1][1].size, 1);
     t.equal(grid._cells[1][0].has(0), false);
-    t.equal(grid._cells[1][0].has(1), true);
-    t.equal(grid._cells[1][1].has(0), false);
-    t.equal(grid._cells[1][1].has(1), true);
-    t.end();
-});
-
-test('grid 2 overlays added with overlapping locations 2', (t) => {
-    const options = new Options();
-    const grid = new Grid(options);
-
-    grid.add(new Overlay({ cell: 'b2' }));
-    grid.add(new Overlay({ cell: 'b2' }));
-    grid.add(new Overlay({ cells: ['a1', 'b2'] }));
-
-    t.equal(grid._cells[1][1].size, 3);
-    t.equal(grid._cells[0][0].size, 1);
-    t.equal(grid._cells[0][1].size, 1);
-    t.equal(grid._cells[1][0].size, 1);
-
-    t.equal(grid._cells[1][1].has(2), true);
-    t.equal(grid._cells[0][0].has(2), true);
-    t.equal(grid._cells[0][1].has(2), true);
-    t.equal(grid._cells[1][0].has(2), true);
+    t.equal(grid._cells[1][0].has(1), false);
+    t.equal(grid._cells[0][0].has(0), true);
+    t.equal(grid._cells[0][0].has(1), true);
+    t.equal(grid._cells[0][1].has(0), true);
+    t.equal(grid._cells[0][1].has(1), false);
     t.end();
 });
 
@@ -155,7 +136,7 @@ test('grid cells iterator', (t) => {
     
     t.equal(cells1.length, 1);
     t.equal(cells2.length, 1);
-    t.equal(cells3.length, 4);
+    t.equal(cells3.length, 2);
     t.end();
 });
 
@@ -172,6 +153,6 @@ test('grid iterator', (t) => {
         if (cell) cells.push(cell);
     }
     
-    t.equal(cells.length, 6);
+    t.equal(cells.length, 4);
     t.end();
 });
