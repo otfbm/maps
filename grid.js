@@ -28,31 +28,158 @@ export default class Grid {
     );
     // TODO validate that coords are within grid
 
+    const bbox = this.bbox(overlay.tl, overlay.br);
+    const atl = this.actualTopLeft(bbox);
+    const abr = this.actualBottomRight(bbox);
+    const rotation = this.rotation(bbox);
+    const { width, height } = this.dimensions(bbox);
+
+    overlay.width = width * this.options.gridsize;
+    overlay.height = height * this.options.gridsize;
+
+    const tlpx = this.tlpx(atl);
+    const brpx = this.brpx(abr);
+
+    const data = {
+      x1: tlpx.x,
+      y1: tlpx.y,
+      x2: brpx.x,
+      y2: brpx.y,
+      rotation,
+      overlay,
+    };
+
     let insertLevel = 0;
     // determine if anything exists in any of the cells already
-    for (const cell of overlay.cells) {
-      const { x, y } = this.convertCellNameToXY(cell);
-      const z = this._cells[x][y];
-
-      let level = 0;
-      for (let i = 0; i < this.options.depth; i++) {
-        if (z.has(i)) level++;
+    for (const level of this.levels()) {
+      let found = false;
+      for (const cell of this.cells(level)) {
+        if (!cell) continue;
+        if (this.overlaps(data, cell) || this.same(data, cell)) {
+          found = true;
+        }
       }
-      if (level > insertLevel) insertLevel = level;
+      if (found) insertLevel = level + 1;
     }
 
-    // insert the overlay at the determined insert level
-    for (const cell of overlay.cells) {
-      const { x, y } = this.convertCellNameToXY(cell);
-      const z = this._cells[x][y];
-      z.set(insertLevel, {
-        overlay,
-        x, // calculate from x + padding
-        y, // calculate from y + padding
-        // width, // calculate from gridsize * zoom * width
-        // height, // calculate from gridsize * zoom * height
-      });
+    const { x, y } = this.convertCellNameToXY(overlay.tl);
+    const z = this._cells[x][y];
+    z.set(insertLevel, data);
+  }
+
+  overlaps(a, b) {
+    // no horizontal overlap
+    if (a.x1 >= b.x2 || b.x1 >= a.x2) return false;
+
+    // no vertical overlap
+    if (a.y1 >= b.y2 || b.y1 >= a.y2) return false;
+
+    return true;
+  }
+
+  same(a, b) {
+    if (a.x1 === b.x1 && a.y1 === b.y1 && a.x2 === b.x2 && a.y2 === b.y2)
+      return true;
+    return false;
+  }
+
+  tlpx({ x, y } = {}) {
+    const { gridsize, padding } = this.options;
+    return {
+      x: x * gridsize + padding,
+      y: y * gridsize + padding,
+    };
+  }
+
+  brpx({ x, y } = {}) {
+    const { gridsize, padding } = this.options;
+    return {
+      x: x * gridsize + padding + gridsize,
+      y: y * gridsize + padding + gridsize,
+    };
+  }
+
+  bbox(tlcell, brcell) {
+    const tl = this.convertCellNameToXY(tlcell);
+    const br = this.convertCellNameToXY(brcell || tlcell);
+
+    const a = 90;
+
+    const tr = {
+      x: br.y,
+      y: tl.x,
+    };
+
+    const bl = {
+      x: tl.y,
+      y: br.x,
+    };
+
+    return [tl, tr, br, bl];
+  }
+
+  actualTopLeft(bbox) {
+    return bbox.sort((a, b) => {
+      if (a.x < b.x) return -1;
+      if (a.x > b.x) return 1;
+      if (a.y < b.y) return -1;
+      if (a.y > b.y) return 1;
+    })[0];
+  }
+
+  actualBottomRight(bbox) {
+    return bbox.sort((a, b) => {
+      if (a.x > b.x) return -1;
+      if (a.x < b.x) return 1;
+      if (a.y > b.y) return -1;
+      if (a.y < b.y) return 1;
+    })[0];
+  }
+
+  rotation(bbox) {
+    const atl = this.actualTopLeft(bbox);
+    const [_, tr, br, bl] = bbox;
+    if (atl.x === tr.x && atl.y === tr.y) {
+      return 90;
     }
+    if (atl.x === br.x && atl.y === br.y) {
+      return 180;
+    }
+    if (atl.x === bl.x && atl.y === bl.y) {
+      return 270;
+    }
+    return 0;
+  }
+
+  dimensions(bbox) {
+    let width;
+    let height;
+    if (bbox[0].x === bbox[1].x) {
+      if (bbox[0].y > bbox[1].y) {
+        width = bbox[0].y - bbox[1].y;
+      } else {
+        width = bbox[1].y - bbox[0].y;
+      }
+
+      if (bbox[0].x > bbox[3].x) {
+        height = bbox[0].x - bbox[3].x;
+      } else {
+        height = bbox[3].x - bbox[0].x;
+      }
+    } else {
+      if (bbox[0].x > bbox[1].x) {
+        width = bbox[0].x - bbox[1].x;
+      } else {
+        width = bbox[1].x - bbox[0].x;
+      }
+
+      if (bbox[0].y > bbox[3].y) {
+        height = bbox[0].y - bbox[3].y;
+      } else {
+        height = bbox[3].y - bbox[0].y;
+      }
+    }
+    return { width, height };
   }
 
   convertCellNameToXY(cellName) {
@@ -87,7 +214,7 @@ export default class Grid {
     return {
       [Symbol.iterator]() {
         return {
-          next () {
+          next() {
             if (level < depth) {
               return { value: level++, done: false };
             } else {
@@ -126,11 +253,11 @@ export default class Grid {
 
   *[Symbol.iterator]() {
     for (const level of this.levels()) {
-        for (const cell of this.cells(level)) {
-            if (cell) {
-                yield cell;
-            }
+      for (const cell of this.cells(level)) {
+        if (cell) {
+          yield cell;
         }
+      }
     }
   }
 }
