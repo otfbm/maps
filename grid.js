@@ -28,17 +28,21 @@ export default class Grid {
     );
     // TODO validate that coords are within grid
 
-    const bbox = this.bbox(overlay.tl, overlay.br);
-    const atl = this.actualTopLeft(bbox);
-    const abr = this.actualBottomRight(bbox);
-    const rotation = this.rotation(bbox);
-    const { width, height } = this.dimensions(bbox);
+    const coords = this.bbox(overlay.tl, overlay.br);
+    const bbox = [
+      this.actualTopLeft(coords), 
+      this.actualTopRight(coords),
+      this.actualBottomRight(coords),
+      this.actualBottomLeft(coords),
+    ];
+    const rotation = this.rotation(overlay.tl, bbox);
+    const { width, height } = this.dimensions(rotation, bbox);
 
     overlay.width = width * this.options.gridsize;
     overlay.height = height * this.options.gridsize;
 
-    const tlpx = this.tlpx(atl);
-    const brpx = this.brpx(abr);
+    const tlpx = this.tlpx(bbox[0]);
+    const brpx = this.brpx(bbox[2]);
 
     const data = {
       x1: tlpx.x,
@@ -103,16 +107,14 @@ export default class Grid {
     const tl = this.convertCellNameToXY(tlcell);
     const br = this.convertCellNameToXY(brcell || tlcell);
 
-    const a = 90;
-
     const tr = {
-      x: br.y,
-      y: tl.x,
+      x: br.x,
+      y: tl.y,
     };
 
     const bl = {
-      x: tl.y,
-      y: br.x,
+      x: tl.x,
+      y: br.y,
     };
 
     return [tl, tr, br, bl];
@@ -120,66 +122,61 @@ export default class Grid {
 
   actualTopLeft(bbox) {
     return bbox.sort((a, b) => {
-      if (a.x < b.x) return -1;
-      if (a.x > b.x) return 1;
-      if (a.y < b.y) return -1;
-      if (a.y > b.y) return 1;
+      if (b.x > a.x) return -1;
+      if (b.y > a.y) return -1;
+      return 1;
+    })[0];
+  }
+
+  actualTopRight(bbox) {
+    return bbox.sort((a, b) => {
+      if (b.x < a.x) return -1;
+      if (b.y > a.y) return -1;
+      return 1;
     })[0];
   }
 
   actualBottomRight(bbox) {
     return bbox.sort((a, b) => {
-      if (a.x > b.x) return -1;
-      if (a.x < b.x) return 1;
-      if (a.y > b.y) return -1;
-      if (a.y < b.y) return 1;
+      if (b.x < a.x) return -1;
+      if (b.y < a.y) return -1;
+      return 1;
     })[0];
   }
 
-  rotation(bbox) {
-    const atl = this.actualTopLeft(bbox);
+  actualBottomLeft(bbox) {
+    return bbox.sort((a, b) => {
+      if (b.x > a.x) return -1;
+      if (b.y < a.y) return -1;
+      return 1;
+    })[0];
+  }
+
+  rotation(tl, bbox) {
     const [_, tr, br, bl] = bbox;
-    if (atl.x === tr.x && atl.y === tr.y) {
+    if (tl.x === tr.x && tl.y === tr.y) {
       return 90;
     }
-    if (atl.x === br.x && atl.y === br.y) {
+    if (tl.x === br.x && tl.y === br.y) {
       return 180;
     }
-    if (atl.x === bl.x && atl.y === bl.y) {
+    if (tl.x === bl.x && tl.y === bl.y) {
       return 270;
     }
     return 0;
   }
 
-  dimensions(bbox) {
-    let width;
-    let height;
-    if (bbox[0].x === bbox[1].x) {
-      if (bbox[0].y > bbox[1].y) {
-        width = bbox[0].y - bbox[1].y;
-      } else {
-        width = bbox[1].y - bbox[0].y;
-      }
-
-      if (bbox[0].x > bbox[3].x) {
-        height = bbox[0].x - bbox[3].x;
-      } else {
-        height = bbox[3].x - bbox[0].x;
-      }
+  dimensions(rotation, bbox) {
+    if (rotation === 0 || rotation === 180) {
+      const width = bbox[1].x + 1 - bbox[0].x;
+      const height = bbox[3].y + 1 - bbox[0].y;
+      return { width, height };
     } else {
-      if (bbox[0].x > bbox[1].x) {
-        width = bbox[0].x - bbox[1].x;
-      } else {
-        width = bbox[1].x - bbox[0].x;
-      }
-
-      if (bbox[0].y > bbox[3].y) {
-        height = bbox[0].y - bbox[3].y;
-      } else {
-        height = bbox[3].y - bbox[0].y;
-      }
+      const width = bbox[3].y + 1 - bbox[0].y;
+      const height = bbox[1].x + 1 - bbox[0].x;
+      return { width, height };
     }
-    return { width, height };
+
   }
 
   convertCellNameToXY(cellName) {

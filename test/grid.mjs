@@ -52,7 +52,7 @@ test("grid convertCellNameToXY", (t) => {
   t.end();
 });
 
-test("grid overlay added", (t) => {
+test("grid overlay added 1", (t) => {
   const options = new Options();
   const grid = new Grid(options);
   const overlay = new Overlay({ cell: "C4" });
@@ -60,6 +60,33 @@ test("grid overlay added", (t) => {
   grid.add(overlay);
 
   t.equal(grid._cells[2][3].size, 1);
+  t.end();
+});
+
+test("grid overlay added 2", (t) => {
+  const options = new Options({ padding: 0 });
+  const grid = new Grid(options);
+
+  grid.add(new Overlay({ cell: "A1" }));
+  grid.add(new Overlay({ cell: "G8" }));
+
+  const a1 = grid._cells[0][0].get(0);
+  const g8 = grid._cells[6][7].get(0);
+
+  t.equal(a1.overlay.width, 40);
+  t.equal(a1.overlay.height, 40);
+  t.equal(a1.x1, 0);
+  t.equal(a1.y1, 0);
+  t.equal(a1.x2, 40);
+  t.equal(a1.y2, 40);
+
+  t.equal(g8.overlay.width, 40);
+  t.equal(g8.overlay.height, 40);
+  t.equal(g8.x1, 240);
+  t.equal(g8.y1, 280);
+  t.equal(g8.x2, 280);
+  t.equal(g8.y2, 320);
+
   t.end();
 });
 
@@ -182,9 +209,9 @@ test("bbox 2", (t) => {
   const result = grid.bbox("A3", "C1");
 
   t.same(result[0], { x: 0, y: 2 });
-  t.same(result[1], { x: 0, y: 0 });
+  t.same(result[1], { x: 2, y: 2 });
   t.same(result[2], { x: 2, y: 0 });
-  t.same(result[3], { x: 2, y: 2 });
+  t.same(result[3], { x: 0, y: 0 });
   t.end();
 });
 
@@ -231,6 +258,21 @@ test("actual top left", (t) => {
   t.end();
 });
 
+test("actual top right", (t) => {
+  const options = new Options();
+  const grid = new Grid(options);
+
+  const result = grid.actualTopRight([
+    { x: 3, y: 3 },
+    { x: 0, y: 3 },
+    { x: 0, y: 0 },
+    { x: 3, y: 0 },
+  ]);
+
+  t.same(result, { x: 3, y: 0 });
+  t.end();
+});
+
 test("actual bottom right", (t) => {
   const options = new Options();
   const grid = new Grid(options);
@@ -258,6 +300,21 @@ test("actual bottom right", (t) => {
   ]);
 
   t.same(result, { x: 3, y: 3 });
+  t.end();
+});
+
+test("actual bottom left", (t) => {
+  const options = new Options();
+  const grid = new Grid(options);
+
+  const result = grid.actualBottomLeft([
+    { x: 3, y: 3 },
+    { x: 0, y: 3 },
+    { x: 0, y: 0 },
+    { x: 3, y: 0 },
+  ]);
+
+  t.same(result, { x: 0, y: 3 });
   t.end();
 });
 
@@ -265,14 +322,14 @@ test("dimensions 1", (t) => {
   const options = new Options();
   const grid = new Grid(options);
 
-  const result = grid.dimensions([
-    { x: 3, y: 3 },
-    { x: 0, y: 3 },
+  const result = grid.dimensions(0, [
     { x: 0, y: 0 },
     { x: 3, y: 0 },
+    { x: 3, y: 3 },
+    { x: 0, y: 3 },
   ]);
 
-  t.same(result, { width: 3, height: 3 });
+  t.same(result, { width: 4, height: 4 });
   t.end();
 });
 
@@ -280,14 +337,14 @@ test("dimensions 2", (t) => {
   const options = new Options();
   const grid = new Grid(options);
 
-  const result = grid.dimensions([
+  const result = grid.dimensions(0, [
     { x: 0, y: 0 },
     { x: 3, y: 0 },
     { x: 3, y: 2 },
     { x: 0, y: 2 },
   ]);
 
-  t.same(result, { width: 3, height: 2 });
+  t.same(result, { width: 4, height: 3 });
   t.end();
 });
 
@@ -295,14 +352,29 @@ test("dimensions 3", (t) => {
   const options = new Options();
   const grid = new Grid(options);
 
-  const result = grid.dimensions([
+  const result = grid.dimensions(90, [
+    { x: 1, y: 2 },
     { x: 3, y: 2 },
     { x: 3, y: 7 },
     { x: 1, y: 7 },
-    { x: 1, y: 2 },
   ]);
 
-  t.same(result, { width: 5, height: 2 });
+  t.same(result, { width: 6, height: 3 });
+  t.end();
+});
+
+test("dimensions 4", (t) => {
+  const options = new Options();
+  const grid = new Grid(options);
+
+  const result = grid.dimensions(0, [
+    { x: 3, y: 3 },
+    { x: 3, y: 3 },
+    { x: 3, y: 3 },
+    { x: 3, y: 3 },
+  ]);
+
+  t.same(result, { width: 1, height: 1 });
   t.end();
 });
 

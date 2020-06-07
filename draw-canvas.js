@@ -2,7 +2,8 @@ import canvas from "canvas";
 import InputParser from "./input-parser.js";
 import Board from "./board.js";
 import Options from "./options.js";
-import Renderer from './renderer/index.js';
+import Renderer from "./renderer/index.js";
+import Grid from "./grid.js";
 
 const GRID_SIZE = 40;
 const PADDING = 15;
@@ -39,7 +40,6 @@ export default function main(pathname, backgroundImage) {
 
   board.addBackground(backgroundImage || input.background);
 
-
   for (const { x, y, item } of input.icons) {
     board.placeItem(x, y, item);
   }
@@ -55,6 +55,32 @@ export default function main(pathname, backgroundImage) {
     renderer.render({ x, y, item });
     // board.placeItem(x, y, item);
   }
+
+
+  // NEW...............
+
+  // const input = new InputParser(pathname);
+  // const options = new Options();
+  const grid = new Grid(options);
+
+  // handles z-index and items that span multiple grid cells
+  for (const overlay of input.overlays) {
+    grid.add(overlay);
+  }
+
+  // renderer.drawAxis(grid);
+  // renderer.drawGridLines(grid);
+  for (const cell of grid) {
+    renderer.renderOverlay(cell);
+  }
+
+  // for (const wall of walls) {
+  //   renderer.drawWall(wall);
+  // }
+
+  // for (const effect of effects) {
+  //   renderer.drawEffect(effect);
+  // }
 
   return renderer.canv;
 }

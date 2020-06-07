@@ -7,6 +7,7 @@ import assert from "assert";
 import Options from "../options.js";
 import Stairs from "../overlays/stairs/index.js";
 import Token from "../overlays/token/index.js";
+import Trap from "../overlays/trap/index.js";
 
 const { createCanvas, loadImage } = canvas;
 
@@ -36,6 +37,15 @@ export default class Renderer {
           break;
         // TODO: add cases here
       }
+    }
+  }
+
+  renderOverlay(cell) {
+    switch (cell.overlay.type) {
+      case "trap":
+        this.svg.renderCell(cell, Trap);
+        break;
+      // TODO: add cases here
     }
   }
 }
