@@ -1,4 +1,5 @@
 import CoordParser from "./coord-parser.js";
+import Overlay from "../overlay.js";
 
 const flagLookups = new Map([
   ["g", "forestgreen"],
@@ -41,13 +42,13 @@ export default class TokenParser {
         if (sizes.includes(char)) size = flagLookups.get(char);
       }
 
-      return {
-        x: coords.x,
-        y: coords.y,
+      return new Overlay({
+        cell: matches[1],
         color,
         size,
+        type: 'token',
         label: matches[4] || "",
-      };
+      });
     }
 
     return false;

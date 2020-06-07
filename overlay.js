@@ -1,9 +1,13 @@
 export default class Overlay {
-  constructor({ cells = [], cell = "", type, label } = {}) {
+  constructor({ cells = [], cell = "", type, label, color, size } = {}) {
     this._cells = cells;
     this._cell = cell;
     this._type = type;
     this._label = label;
+    this._color = color;
+    this._size = size;
+    this._width;
+    this._height;
   }
 
   get tl() {
@@ -46,5 +50,21 @@ export default class Overlay {
 
   set label(label) {
     this._label = label;
+  }
+
+  get color() {
+    return this._color;
+  }
+
+  set color(color) {
+    this._color = color;
+  }
+
+  get size() {
+    return this._size;
+  }
+
+  set size(size) {
+    this._size = size;
   }
 }

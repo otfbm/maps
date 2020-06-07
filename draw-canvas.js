@@ -26,7 +26,7 @@ export default function main(pathname, backgroundImage) {
   const zoom = input.zoom;
 
   const renderer = new Renderer(options);
-
+  
   const board = new Board({
     ctx: renderer.ctx,
     width,
@@ -51,10 +51,10 @@ export default function main(pathname, backgroundImage) {
 
   board.draw();
 
-  for (const { x, y, item } of input.tokens) {
-    renderer.render({ x, y, item });
+  // for (const { x, y, item } of input.tokens) {
+    // renderer.render({ x, y, item });
     // board.placeItem(x, y, item);
-  }
+  // }
 
 
   // NEW...............
@@ -65,6 +65,10 @@ export default function main(pathname, backgroundImage) {
 
   // handles z-index and items that span multiple grid cells
   for (const overlay of input.overlays) {
+    grid.add(overlay);
+  }
+
+  for (const overlay of input.tokens) {
     grid.add(overlay);
   }
 

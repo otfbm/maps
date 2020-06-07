@@ -7,7 +7,6 @@ import BackgroundParser from "./parsers/background.js";
 import LineParser from "./parsers/line.js";
 import DarkModeParser from "./parsers/dark-mode.js"; 
 import GridOpacityParser from "./parsers/grid-opacity.js"; 
-import Token from "./token.js";
 import Icon from "./icon.js";
 import EffectParser from './parsers/effect-parser.js';
 
@@ -51,13 +50,13 @@ export default class InputParser {
 
       parsed = tokenParser.parse(part);
       if (parsed) {
-        this.tokens.push({ x: parsed.x, y: parsed.y, item: new Token(parsed) });
+        this.tokens.push(parsed);
         continue;
       }
 
-      const overlay = overlayParser.parse(part);
-      if (overlay) {
-        this.overlays.push(overlay);
+      parsed = overlayParser.parse(part);
+      if (parsed) {
+        this.overlays.push(parsed);
         continue;
       }
 

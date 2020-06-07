@@ -31,8 +31,8 @@ export default class SVGRenderer {
         img,
         cell.x1,
         cell.y1,
-        cell.overlay.width,
-        cell.overlay.height,
+        // cell.overlay.width,
+        // cell.overlay.height,
       );
     };
     img.onerror = (err) => {
