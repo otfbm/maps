@@ -15,8 +15,8 @@ export default class Icon {
     img.onload = () => {
       ctx.drawImage(
         img,
-        (x - 1) * gridsize + 15,
-        (y - 1) * gridsize + 15,
+        (x - 1) * gridsize,
+        (y - 1) * gridsize,
         gridsize,
         gridsize,
       );

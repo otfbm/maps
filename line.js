@@ -9,7 +9,7 @@ export default class Line {
     return 'line';
   }
 
-  draw(ctx, gridsize, padding, zoom) {
+  draw(ctx, gridsize, zoom) {
     let icons = [];
     let unit = gridsize / 5;
 
@@ -17,13 +17,13 @@ export default class Line {
 
     ctx.beginPath();
     let startPt = l.shift();
-    ctx.moveTo(startPt.x * gridsize + padding, startPt.y * gridsize + padding);
+    ctx.moveTo(startPt.x * gridsize , startPt.y * gridsize );
 
     while (l.length) {
       let pt = l.shift();
 
       if (pt.icon !== "") {
-        this.drawOpenDoor(ctx, startPt, pt, 0.3, gridsize, padding);
+        this.drawOpenDoor(ctx, startPt, pt, 0.3, gridsize);
         icons.push({
           angle: Math.atan2(startPt.y - pt.y, startPt.x - pt.x),
           x: (startPt.x + pt.x) / 2,
@@ -31,7 +31,7 @@ export default class Line {
           type: pt.icon
         });
       } else {
-        ctx.lineTo(pt.x * gridsize + padding, pt.y * gridsize + padding);
+        ctx.lineTo(pt.x * gridsize , pt.y * gridsize);
       }
       startPt = pt;
     }
@@ -45,7 +45,7 @@ export default class Line {
     for (const icon of icons) {
       ctx.save();
       ctx.beginPath();
-      ctx.translate(icon.x * gridsize + padding, icon.y * gridsize + padding);
+      ctx.translate(icon.x * gridsize, icon.y * gridsize);
       ctx.rotate(icon.angle);
       if (icon.type === "secret-door") {
         ctx.moveTo(unit * -2, 0);
@@ -71,13 +71,13 @@ export default class Line {
     }
   }
 
-  drawOpenDoor(ctx, a, b, gapSize, gridsize, padding) {
+  drawOpenDoor(ctx, a, b, gapSize, gridsize) {
     let distance = Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
     let c = this.pointOnLine(a, b, (distance / 2.0 - gapSize) / distance);
     let d = this.pointOnLine(a, b, (distance / 2.0 + gapSize) / distance);
-    ctx.lineTo(c.x * gridsize + padding, c.y * gridsize + padding);
-    ctx.moveTo(d.x * gridsize + padding, d.y * gridsize + padding);
-    ctx.lineTo(b.x * gridsize + padding, b.y * gridsize + padding);
+    ctx.lineTo(c.x * gridsize, c.y * gridsize);
+    ctx.moveTo(d.x * gridsize, d.y * gridsize);
+    ctx.lineTo(b.x * gridsize, b.y * gridsize);
     return { c, d };
   }
 
@@ -100,6 +100,4 @@ export default class Line {
       y: (1 - t) * a.y + t * b.y
     }
   }
-
-
 }
