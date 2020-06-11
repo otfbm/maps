@@ -14,8 +14,8 @@ export default class SVGRenderer {
     img.onload = () => {
       this.ctx.drawImage(
         img,
-        (x - 1) * this.gridsize + this.padding,
-        (y - 1) * this.gridsize + this.padding
+        (x - 1) * this.gridsize,
+        (y - 1) * this.gridsize
       );
     };
     img.onerror = (err) => {

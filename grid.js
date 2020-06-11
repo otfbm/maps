@@ -88,18 +88,18 @@ export default class Grid {
   }
 
   tlpx({ x, y } = {}) {
-    const { gridsize, padding } = this.options;
+    const { gridsize } = this.options;
     return {
-      x: x * gridsize + padding,
-      y: y * gridsize + padding,
+      x: x * gridsize,
+      y: y * gridsize,
     };
   }
 
   brpx({ x, y } = {}) {
-    const { gridsize, padding } = this.options;
+    const { gridsize } = this.options;
     return {
-      x: x * gridsize + padding + gridsize,
-      y: y * gridsize + padding + gridsize,
+      x: x * gridsize + gridsize,
+      y: y * gridsize + gridsize,
     };
   }
 
