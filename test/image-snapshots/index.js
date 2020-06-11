@@ -52,7 +52,99 @@ import createServer from "../../server.js";
     await page.screenshot({ path: "./test/image-snapshots/effects.png" });
   });
 
+  await tap.test('background', async () => {
+    const page = await browser.newPage();
+    const bg = 'https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png';
+    await page.goto(`${address}/24x17/?bg=${bg}`);
+    await page.screenshot({ path: "./test/image-snapshots/background.png" });
+  });
+
+  await tap.test('settings: dark mode', async () => {
+    const page = await browser.newPage();
+    await page.goto(`${address}/@d`);
+    await page.screenshot({ path: "./test/image-snapshots/dark-mode.png" });
+  });
+
+  await tap.test('settings: zoom: 2', async () => {
+    const page = await browser.newPage();
+    await page.goto(`${address}/@2`);
+    await page.screenshot({ path: "./test/image-snapshots/zoom-2.png" });
+  });
+
+  await tap.test('settings: zoom: 3', async () => {
+    const page = await browser.newPage();
+    await page.goto(`${address}/@3`);
+    await page.screenshot({ path: "./test/image-snapshots/zoom-3.png" });
+  });
+
+  await tap.test('settings: grid transparency: half', async () => {
+    const page = await browser.newPage();
+    await page.goto(`${address}/@h`);
+    await page.screenshot({ path: "./test/image-snapshots/transparency-half.png" });
+  });
+
+  await tap.test('settings: grid transparency: no grid', async () => {
+    const page = await browser.newPage();
+    await page.goto(`${address}/@n`);
+    await page.screenshot({ path: "./test/image-snapshots/no-grid.png" });
+  });
+
+  await tap.test('complex: multiple features 1', async () => {
+    const page = await browser.newPage();
+    const tokens = [
+        'A1T',
+        'B1Tp',
+        'C1Tc-Goblin1',
+        'D1',
+        'E1r',
+        'F1y-Goblin1',
+        'G1c-Goblin1',
+        'H1r-Goblin1',
+        'I1g-Goblin1',
+        'J1p-Goblin1',
+        'A2L',
+        'C2bL',
+        'E2gL-Goblin1',
+        'A4H',
+        'D4Hp',
+        'G4Hp-Goblin1',
+        'A7G',
+        'E7Gr-Goblin1',
+    ];
+    const bg = 'https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png';
+    const settings = '@2dn'
+    await page.goto(`${address}/${tokens.join('/')}/${settings}/?bg=${bg}`);
+    await page.screenshot({ path: "./test/image-snapshots/complex-1.png" });
+  });
+
+  await tap.test('complex: multiple features 2', async () => {
+    const page = await browser.newPage();
+    const tokens = [
+        'A1T',
+        'B1Tp',
+        'C1Tc-Goblin1',
+        'D1',
+        'E1r',
+        'F1y-Goblin1',
+        'G1c-Goblin1',
+        'H1r-Goblin1',
+        'I1g-Goblin1',
+        'J1p-Goblin1',
+        'A2L',
+        'C2bL',
+        'E2gL-Goblin1',
+        'A4H',
+        'D4Hp',
+        'G4Hp-Goblin1',
+        'A7G',
+        'E7Gr-Goblin1',
+    ];
+    const bg = 'https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png';
+    const settings = '@3h'
+    await page.goto(`${address}/${tokens.join('/')}/${settings}/?bg=${bg}`);
+    await page.screenshot({ path: "./test/image-snapshots/complex-2.png" });
+  });
+
   await browser.close();
   await server.close();
-
 })();
