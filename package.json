@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_NO_WARNINGS=1 tap test --no-cov --no-esm",
-    "start": "node ."
+    "start": "node .",
+    "test:e2e": "jest -c test/e2e/jest.config.cjs"
   },
   "type": "module",
   "keywords": [],
@@ -22,6 +23,7 @@
     "node": "13.3.0"
   },
   "devDependencies": {
+    "puppeteer": "^3.3.0",
     "tap": "^14.10.7"
   }
 }
