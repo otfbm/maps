@@ -8,6 +8,7 @@ import DarkModeParser from "./parsers/dark-mode.js";
 import GridOpacityParser from "./parsers/grid-opacity.js"; 
 import Token from "./token.js";
 import Icon from "./icon.js";
+import EffectParser from './parsers/effect-parser.js';
 
 export default class InputParser {
   constructor(pathname = "") {
@@ -15,6 +16,7 @@ export default class InputParser {
     this.board = { width: 10, height: 10 };
     this.lines = [];
     this.tokens = [];
+    this.effects = [];
     this.icons = [];
     this.options = [];
     this.zoom = 1;
@@ -35,6 +37,7 @@ export default class InputParser {
     const lineParser = new LineParser();
     const darkModeParser = new DarkModeParser();
     const gridOpacityParser = new GridOpacityParser();
+    const effectParser = new EffectParser();
 
     for (const part of parts) {
       let parsed = boardParser.parse(part);
@@ -64,6 +67,12 @@ export default class InputParser {
       parsed = lineParser.parse(part);
       if (parsed) {
         this.lines = this.lines.concat(parsed);
+        continue;
+      }
+
+      parsed = effectParser.parse(part);
+      if (parsed) {
+        this.effects.push(parsed);
         continue;
       }
 

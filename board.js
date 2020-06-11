@@ -33,6 +33,7 @@ export default class Board {
     this.background = null;
     this.zoom = zoom;
     this.lines = [];
+    this.effects = [];
     this.darkMode = darkMode;
     this.gridOpacity = gridOpacity;
 
@@ -55,6 +56,10 @@ export default class Board {
 
   addLines(lines) {
     this.lines = lines;
+  }
+
+  addEffects(effects) {
+    this.effects = effects;
   }
 
   get(x, y) {
@@ -178,9 +183,12 @@ export default class Board {
 
     this.drawGridAndCoords();
 
+    // move ctx to account for padding
+    this.ctx.translate(this.padding, this.padding);
+
     for (const line of this.lines) {
       let l = new Line(line, this.darkMode ? textDarkMode : textLightMode, this.darkMode ? fillDarkMode : fillLightMode);
-      l.draw(this.ctx, this.gridsize, this.padding, this.zoom);
+      l.draw(this.ctx, this.gridsize, this.zoom);
     }
 
     /* Keep the light text for tokens */
@@ -193,8 +201,8 @@ export default class Board {
           img.onload = () => {
             this.ctx.drawImage(
               img, 
-              (x - 1) * this.gridsize + this.padding,
-              (y - 1) * this.gridsize + this.padding,
+              (x - 1) * this.gridsize,
+              (y - 1) * this.gridsize,
             );
           };
           img.onerror = (err) => {
@@ -202,9 +210,12 @@ export default class Board {
           };
           img.src = item.svg(this.gridsize, this.zoom);
         } else {
-          item.draw(this.ctx, x, y, this.gridsize, this.padding, this.zoom);
+          item.draw(this.ctx, x, y, this.gridsize, this.zoom);
         }
       }
     }
+
+    for(let effect of this.effects)
+      effect.draw(this.ctx, this.gridsize);
   }
 }
