@@ -9,6 +9,7 @@ import Stairs from "../overlays/stairs/index.js";
 import Token from "../overlays/token/index.js";
 import Trap from "../overlays/trap/index.js";
 import PillarRound from "../overlays/pillar-round/index.js";
+import PillarSquare from "../overlays/pillar-square/index.js";
 
 const { createCanvas, loadImage } = canvas;
 
@@ -51,6 +52,9 @@ export default class Renderer {
         break;
       case "pillar-round":
         this.svg.renderCell(cell, PillarRound);
+        break;
+      case "pillar-square":
+        this.svg.renderCell(cell, PillarSquare);
         break;
       // TODO: add cases here
     }
