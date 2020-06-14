@@ -1,6 +1,7 @@
 # On The Fly Battle Maps
 
-URL: `http://otfbm.com`
+* URL: `http://otfbm.com`
+* JOIN OUR DISCORD: `https://discord.gg/PVCtMqN`
 
 **URL structure**
 ```
