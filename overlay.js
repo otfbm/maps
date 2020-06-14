@@ -67,4 +67,17 @@ export default class Overlay {
   set size(size) {
     this._size = size;
   }
+
+  toJSON() {
+    return {
+      tl: this.tl,
+      br: this.br,
+      width: this.width,
+      height: this.height,
+      type: this.type,
+      label: this.label,
+      color: this.color,
+      size: this.size,
+    } 
+  }
 }
