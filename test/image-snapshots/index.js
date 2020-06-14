@@ -33,6 +33,21 @@ import createServer from "../../server.js";
     await page.screenshot({ path: "./test/image-snapshots/tokens.png" });
   });
 
+  await tap.test('overlays', async () => {
+    const page = await browser.newPage();
+    const overlays = [
+        'A1$T',
+        'B1$P',
+        'C1$p',
+        'D1$S',
+        'E1$F',
+        'F1$O',
+        'G1$o',
+    ];
+    await page.goto(`${address}/${overlays.join('/')}`);
+    await page.screenshot({ path: "./test/image-snapshots/overlays.png" });
+  });
+
   await tap.test('walls', async () => {
     const page = await browser.newPage();
     const walls = '_H2J2J7A7A1H1_E1E4]D4A4_B1B2$A2_H1H4[G4E4_D4]D5D7_D5]E5F5F7_F5]G5H5H7_H5I5-J5_I3I4H4';
