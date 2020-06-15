@@ -4,8 +4,8 @@ const overlays = new Map([
   ["$p", "pillar-square"],
   ["$S", "statue-star"],
   ["$F", "fireplace"],
-  ["$O", "pit-open"],
-  ["$o", "pit-covered"],
+  ["$O", "open-pit"],
+  ["$o", "covered-pit"],
 ]);
 
 import Overlay from "../overlay.js";

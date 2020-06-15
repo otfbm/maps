@@ -11,6 +11,7 @@ import Trap from "../overlays/trap/index.js";
 import PillarRound from "../overlays/pillar-round/index.js";
 import PillarSquare from "../overlays/pillar-square/index.js";
 import StatueStar from "../overlays/statue-star/index.js";
+import CoveredPit from "../overlays/covered-pit/index.js";
 
 const { createCanvas, loadImage } = canvas;
 
@@ -60,6 +61,9 @@ export default class Renderer {
         break;
       case "statue-star":
         this.svg.renderCell(cell, StatueStar);
+        break;
+      case "covered-pit":
+        this.svg.renderCell(cell, CoveredPit);
         break;
       // TODO: add cases here
     }
