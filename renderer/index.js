@@ -10,6 +10,7 @@ import Token from "../overlays/token/index.js";
 import Trap from "../overlays/trap/index.js";
 import PillarRound from "../overlays/pillar-round/index.js";
 import PillarSquare from "../overlays/pillar-square/index.js";
+import StatueStar from "../overlays/statue-star/index.js";
 
 const { createCanvas, loadImage } = canvas;
 
@@ -43,6 +44,7 @@ export default class Renderer {
   }
 
   renderOverlay(cell) {
+    console.log(cell.overlay.type);
     switch (cell.overlay.type) {
       case "token":
         this.svg.renderCell(cell, Token);
@@ -55,6 +57,9 @@ export default class Renderer {
         break;
       case "pillar-square":
         this.svg.renderCell(cell, PillarSquare);
+        break;
+      case "statue-star":
+        this.svg.renderCell(cell, StatueStar);
         break;
       // TODO: add cases here
     }
