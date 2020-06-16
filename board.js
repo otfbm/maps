@@ -111,7 +111,11 @@ export default class Board {
       if (num < 1) continue;
 
       this.ctx.beginPath();
-      const character = num > 26 ? String.fromCharCode(num + 70) : String.fromCharCode(num + 64)
+      let character = String.fromCharCode(num + 64);
+      if (num > 26) {
+        const char = String.fromCharCode(num + 38);
+        character = `${char}${char}`;
+      }
 
       this.ctx.fillText(
         character,
