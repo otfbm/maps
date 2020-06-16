@@ -35,7 +35,7 @@ export default class Grid {
       this.actualBottomRight(coords),
       this.actualBottomLeft(coords),
     ];
-    const rotation = this.rotation(overlay.tl, bbox);
+    const rotation = this.rotation(this.convertCellNameToXY(overlay.tl), bbox);
     const { width, height } = this.dimensions(rotation, bbox);
 
     overlay.width = width * this.options.gridsize;
@@ -49,6 +49,7 @@ export default class Grid {
       y1: tlpx.y,
       x2: brpx.x,
       y2: brpx.y,
+      center: [(brpx.x + tlpx.x) / 2, (brpx.y + tlpx.y) / 2],
       rotation,
       overlay,
     };
@@ -152,22 +153,25 @@ export default class Grid {
     })[0];
   }
 
-  rotation(tl, bbox) {
-    const [_, tr, br, bl] = bbox;
-    if (tl.x === tr.x && tl.y === tr.y) {
-      return 90;
+  rotation(t, bbox) {
+    const [tl, tr, br, bl] = bbox;
+    if (t.x === tl.x && t.y === tl.y) {
+      return 0;
     }
-    if (tl.x === br.x && tl.y === br.y) {
-      return 180;
+    if (t.x === tr.x && t.y === tr.y) {
+      return Math.PI / 2;
     }
-    if (tl.x === bl.x && tl.y === bl.y) {
-      return 270;
+    if (t.x === br.x && t.y === br.y) {
+      return Math.PI;
+    }
+    if (t.x === bl.x && t.y === bl.y) {
+      return Math.PI * 1.5;
     }
     return 0;
   }
 
   dimensions(rotation, bbox) {
-    if (rotation === 0 || rotation === 180) {
+    if (rotation === 0 || rotation === Math.PI) {
       const width = bbox[1].x + 1 - bbox[0].x;
       const height = bbox[3].y + 1 - bbox[0].y;
       return { width, height };

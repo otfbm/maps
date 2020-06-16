@@ -25,7 +25,7 @@ export default class StatueOverlay {
     const width = cell.overlay.width;
     const height = cell.overlay.height;
     const shortest = width < height ? width : height;
-    const radius = shortest / 2 - 2;
+    const radius = shortest / 2 - 5;
     const center = { x: width / 2, y: height / 2 };
     const cp = this.circlePoints(5, radius, center)
     const points = [cp[0], cp[3], cp[1], cp[4], cp[2]].map(p => p.join(',')).join(' ');

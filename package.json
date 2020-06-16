@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_NO_WARNINGS=1 tap test --no-cov --no-esm",
-    "start": "node .",
-    "test:e2e": "jest -c test/e2e/jest.config.cjs"
+    "test": "NODE_NO_WARNINGS=1 tap test --no-cov --no-esm --timeout 30000",
+    "start": "node ."
   },
   "type": "module",
   "keywords": [],

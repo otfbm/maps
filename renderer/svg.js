@@ -27,13 +27,15 @@ export default class SVGRenderer {
   renderCell(cell, renderer) {
     const img = new Image();
     img.onload = () => {
+      this.ctx.save();
+      this.ctx.translate(cell.center[0], cell.center[1]);
+      this.ctx.rotate(cell.rotation);
       this.ctx.drawImage(
         img,
-        cell.x1,
-        cell.y1,
-        // cell.overlay.width,
-        // cell.overlay.height,
+        0 - cell.overlay.width / 2,
+        0 - cell.overlay.height / 2,
       );
+      this.ctx.restore();
     };
     img.onerror = (err) => {
       throw err;

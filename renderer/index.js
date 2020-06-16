@@ -12,6 +12,7 @@ import PillarRound from "../overlays/pillar-round/index.js";
 import PillarSquare from "../overlays/pillar-square/index.js";
 import StatueStar from "../overlays/statue-star/index.js";
 import CoveredPit from "../overlays/covered-pit/index.js";
+import OpenPit from "../overlays/open-pit/index.js";
 
 const { createCanvas, loadImage } = canvas;
 
@@ -64,6 +65,9 @@ export default class Renderer {
         break;
       case "covered-pit":
         this.svg.renderCell(cell, CoveredPit);
+        break;
+      case "open-pit":
+        this.svg.renderCell(cell, OpenPit);
         break;
       // TODO: add cases here
     }
