@@ -33,13 +33,12 @@ Tokens are optional and you can define as many as you need separating each with 
 **Token colors**
 You can color tokens a limited number of colors using a letter indicator. Use any of the following letters with the token definition to change its color.
 
-`g` for `forestgreen`
-`r` for `firebrick`
-`b` for `cornflowerblue`
-`y` for `gold`
-`p` for `darkviolet`
-`c` for `deepskyblue`
-`d` for `darkgoldenrod`
+`g` for `forestgreen`  
+`r` for `firebrick`  
+`b` for `cornflowerblue`  
+`y` for `gold`  
+`p` for `darkviolet`  
+`c` for `deepskyblue`    
 
 So to make a token at `F3` gold colored, just add `y` eg. `F3y`
 
@@ -51,12 +50,12 @@ http://otfbm.com/D3p/A1r/G4y
 **Token sizes**
 You can change the token sizes to any of D&Ds monster sizes by adding a letter indicator. Use any of the following letters to indicate size:
 
-`T` for `tiny`
-`S` for `small`
-`M` for `medium`
-`L` for `large`
-`H` for `huge`
-`G` for `gargantuan`
+`T` for `tiny`  
+`S` for `small`  
+`M` for `medium`  
+`L` for `large`  
+`H` for `huge`  
+`G` for `gargantuan`  
 
 So to make a token at `G5` large sized, just add `L` eg. `G5L`
 
@@ -95,7 +94,7 @@ Callers can add custom backgrounds to their maps by providing the image's url in
 Maps provided by callers are expected to meet the following requirements:
 
 * Maps are expected to have a grid scale of 40 px
-* Maps are expected to be fitted to the grid size requested in the url. So if a map is 23x12, then the caller is expected to provide a size of 23x12 when making a map request. 
+* Maps are expected to be fitted to the grid size requested in the url. So if a map is 23x12, then the caller is expected to provide a size of 23x12 when making a map request.
 
 _**Example - Default Background**_
 ```
@@ -106,7 +105,7 @@ http://otfbm.com/E7p-Zombie/I3p-Zombie?bg=https://i.imgur.com/k99s0ch.jpg
 
 You can draw walls and doors directly onto a battlemap using coordinates. To draw a wall, use the `_` character followed by coordinates.
 
-### Basics
+### Walls
 
 **Example**
 
@@ -116,7 +115,7 @@ https://otfbm.com/_B3J3
 
 This will draw a line from B3 to J3
 
-### Multiple lines
+### Multiple Walls
 
 You can finish a line and start a new one with the `_` character
 
@@ -128,11 +127,12 @@ https://otfbm.com/_B3J3_B6J6
 
 ### Doors
 
-You can add doors with following characters:
-`-` open door,
-`]` closed door,
-`[` double door,
-`$` secret door
+You can add doors with following characters:  
+
+`-` open door,  
+`]` closed door,  
+`[` double door,  
+`$` secret door  
 
 Here is a complex example:
 
