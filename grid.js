@@ -12,9 +12,9 @@ export default class Grid {
     this.options = options;
     this._cells = [];
 
-    for (let x = 0; x < options.width; x++) {
+    for (let x = 0; x < options.width / options.gridsize; x++) {
       let arr = [];
-      for (let y = 0; y < options.height; y++) {
+      for (let y = 0; y < options.height / options.gridsize; y++) {
         arr[y] = new Map();
       }
       this._cells[x] = arr;
