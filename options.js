@@ -1,7 +1,7 @@
 export default class Options {
   constructor({
-    width = 10,
-    height = 10,
+    width = 400,
+    height = 400,
     depth = 5,
     zoom = 1,
     gridsize = 40,

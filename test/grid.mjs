@@ -16,7 +16,7 @@ test("grid created", (t) => {
 });
 
 test("grid iterable", (t) => {
-  const options = new Options({ height: 3, width: 2 });
+  const options = new Options({ height: 300, width: 200 });
   const grid = new Grid(options);
 
   grid.add(new Overlay({ cell: "A1" }));
