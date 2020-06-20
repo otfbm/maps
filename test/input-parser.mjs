@@ -12,167 +12,224 @@ tap.test("board parsing", (t) => {
 });
 
 tap.test("token parsing", (t) => {
-  t.same(clone(new InputParser("").tokens), [], 'default tokens should match');
-  t.same(clone(new InputParser("/").tokens), [], 'default tokens should match');
-  t.same(clone(new InputParser("/5x5").tokens), [], 'default tokens should match');
-  t.same(clone(new InputParser("/7x7/").tokens), [], 'default tokens should match');
-  t.same(clone(new InputParser("6x6/B2").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "",
+  t.same(clone(new InputParser("").tokens), [], "default tokens should match");
+  t.same(clone(new InputParser("/").tokens), [], "default tokens should match");
+  t.same(
+    clone(new InputParser("/5x5").tokens),
+    [],
+    "default tokens should match"
+  );
+  t.same(
+    clone(new InputParser("/7x7/").tokens),
+    [],
+    "default tokens should match"
+  );
+  t.same(
+    clone(new InputParser("6x6/B2").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'basic tokens should match');
+      },
+    ],
+    "basic tokens should match"
+  );
 
-  t.same(clone(new InputParser("/6x6/B2").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "",
+  t.same(
+    clone(new InputParser("/6x6/B2").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'basic tokens should match');
+      },
+    ],
+    "basic tokens should match"
+  );
 
-  t.same(clone(new InputParser("/B2").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "",
+  t.same(
+    clone(new InputParser("/B2").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'basic tokens should match');
+      },
+    ],
+    "basic tokens should match"
+  );
 
-  t.same(clone(new InputParser("/B2/C3").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "",
+  t.same(
+    clone(new InputParser("/B2/C3").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "",
         color: "black",
         size: "medium",
-      }
-    },
-    {
-      x: 3,
-      y: 3,
-      item: {
-        name: "",
+      },
+      {
+        tl: "C3",
+        br: "C3",
+        type: "token",
+        label: "",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'multiple basic tokens should match');
+      },
+    ],
+    "multiple basic tokens should match"
+  );
 
-  t.same(clone(new InputParser("/B2r").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "",
+  t.same(
+    clone(new InputParser("/B2r").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "",
         color: "firebrick",
         size: "medium",
-      }
-    },
-  ], 'tokens with color should match');
+      },
+    ],
+    "tokens with color should match"
+  );
 
-  t.same(clone(new InputParser("/B2-Pizza").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "Pizza",
+  t.same(
+    clone(new InputParser("/B2-Pizza").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "Pizza",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'tokens with names should match');
+      },
+    ],
+    "tokens with names should match"
+  );
 
-  t.same(clone(new InputParser("/B2L").tokens), [
-    {
-      x: 2,
-      y: 2,
-      item: {
-        name: "",
+  t.same(
+    clone(new InputParser("/B2L").tokens),
+    [
+      {
+        tl: "B2",
+        br: "B2",
+        type: "token",
+        label: "",
         color: "black",
         size: "large",
-      }
-    },
-  ], 'tokens with size should match');
+      },
+    ],
+    "tokens with size should match"
+  );
 
-  t.same(clone(new InputParser("/A1-ZOM1").tokens), [
-    {
-      x: 1,
-      y: 1,
-      item: {
-        name: "ZOM1",
+  t.same(
+    clone(new InputParser("/A1-ZOM1").tokens),
+    [
+      {
+        tl: "A1",
+        br: "A1",
+        type: "token",
+        label: "ZOM1",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'tokens with size should match');
+      },
+    ],
+    "tokens with size should match"
+  );
 
-  t.same(clone(new InputParser("/A1-9ZOM1").tokens), [
-    {
-      x: 1,
-      y: 1,
-      item: {
-        name: "9ZOM1",
+  t.same(
+    clone(new InputParser("/A1-9ZOM1").tokens),
+    [
+      {
+        tl: "A1",
+        br: "A1",
+        type: "token",
+        label: "9ZOM1",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'tokens with size should match');
+      },
+    ],
+    "tokens with size should match"
+  );
 
-  t.same(clone(new InputParser("/A1-123456").tokens), [
-    {
-      x: 1,
-      y: 1,
-      item: {
-        name: "123456",
+  t.same(
+    clone(new InputParser("/A1-123456").tokens),
+    [
+      {
+        tl: "A1",
+        br: "A1",
+        type: "token",
+        label: "123456",
         color: "black",
         size: "medium",
-      }
-    },
-  ], 'tokens with size should match');
+      },
+    ],
+    "tokens with size should match"
+  );
 
-  t.same(new InputParser("/A1").darkMode, false, 'darkmode should be inactive');
-  t.same(new InputParser("/@d").darkMode, true, 'darkmode should be active');
-  t.same(new InputParser("/@zd").darkMode, true, 'darkmode should be active');
-  t.same(new InputParser("/@dz").darkMode, true, 'darkmode should be active');
-  t.same(new InputParser("/@d2").darkMode, true, 'darkmode should be active');
-  t.same(new InputParser("/@2d").darkMode, true, 'darkmode should be active');
+  t.same(new InputParser("/A1").darkMode, false, "darkmode should be inactive");
+  t.same(new InputParser("/@d").darkMode, true, "darkmode should be active");
+  t.same(new InputParser("/@zd").darkMode, true, "darkmode should be active");
+  t.same(new InputParser("/@dz").darkMode, true, "darkmode should be active");
+  t.same(new InputParser("/@d2").darkMode, true, "darkmode should be active");
+  t.same(new InputParser("/@2d").darkMode, true, "darkmode should be active");
 
-  t.same(new InputParser("/A1").gridOpacity, 1.0, 'grid should be opaque');
-  
-  t.same(new InputParser("/@h").gridOpacity, 0.5, 'grid should be half transparent');
-  t.same(new InputParser("/@zh").gridOpacity, 0.5, 'grid should be half transparent');
-  t.same(new InputParser("/@hz").gridOpacity, 0.5, 'grid should be half transparent');
-  t.same(new InputParser("/@2h").gridOpacity, 0.5, 'grid should be half transparent');
-  t.same(new InputParser("/@h2").gridOpacity, 0.5, 'grid should be half transparent');
+  t.same(new InputParser("/A1").gridOpacity, 1.0, "grid should be opaque");
 
-  t.same(new InputParser("/@n").gridOpacity, 0.0, 'grid should be invisible');
-  t.same(new InputParser("/@zn").gridOpacity, 0.0, 'grid should be invisible');
-  t.same(new InputParser("/@nz").gridOpacity, 0.0, 'grid should be invisible');
-  t.same(new InputParser("/@2n").gridOpacity, 0.0, 'grid should be invisible');
-  t.same(new InputParser("/@n2").gridOpacity, 0.0, 'grid should be invisible');
+  t.same(
+    new InputParser("/@h").gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
+  t.same(
+    new InputParser("/@zh").gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
+  t.same(
+    new InputParser("/@hz").gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
+  t.same(
+    new InputParser("/@2h").gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
+  t.same(
+    new InputParser("/@h2").gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
 
-  t.same(new InputParser("/@2").zoom, 2, 'zoom level should be 2');
-  t.same(new InputParser("/@z2").zoom, 2, 'zoom level should be 2');
-  t.same(new InputParser("/@2z").zoom, 2, 'zoom level should be 2');
+  t.same(new InputParser("/@n").gridOpacity, 0.0, "grid should be invisible");
+  t.same(new InputParser("/@zn").gridOpacity, 0.0, "grid should be invisible");
+  t.same(new InputParser("/@nz").gridOpacity, 0.0, "grid should be invisible");
+  t.same(new InputParser("/@2n").gridOpacity, 0.0, "grid should be invisible");
+  t.same(new InputParser("/@n2").gridOpacity, 0.0, "grid should be invisible");
 
-  t.same(new InputParser("/@3").zoom, 3, 'zoom level should be 3');
-  t.same(new InputParser("/@z3").zoom, 3, 'zoom level should be 3');
-  t.same(new InputParser("/@3z").zoom, 3, 'zoom level should be 3');
+  t.same(new InputParser("/@2").zoom, 2, "zoom level should be 2");
+  t.same(new InputParser("/@z2").zoom, 2, "zoom level should be 2");
+  t.same(new InputParser("/@2z").zoom, 2, "zoom level should be 2");
+
+  t.same(new InputParser("/@3").zoom, 3, "zoom level should be 3");
+  t.same(new InputParser("/@z3").zoom, 3, "zoom level should be 3");
+  t.same(new InputParser("/@3z").zoom, 3, "zoom level should be 3");
 
   t.end();
 });

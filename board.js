@@ -111,7 +111,11 @@ export default class Board {
       if (num < 1) continue;
 
       this.ctx.beginPath();
-      const character = num > 26 ? String.fromCharCode(num + 70) : String.fromCharCode(num + 64)
+      let character = String.fromCharCode(num + 64);
+      if (num > 26) {
+        const char = String.fromCharCode(num + 38);
+        character = `${char}${char}`;
+      }
 
       this.ctx.fillText(
         character,
@@ -197,18 +201,18 @@ export default class Board {
     for (const { x, y, item } of this) {
       if (item) {
         if (item.type === 'token') {
-          const img = new Image();
-          img.onload = () => {
-            this.ctx.drawImage(
-              img, 
-              (x - 1) * this.gridsize,
-              (y - 1) * this.gridsize,
-            );
-          };
-          img.onerror = (err) => {
-            throw err;
-          };
-          img.src = item.svg(this.gridsize, this.zoom);
+          // const img = new Image();
+          // img.onload = () => {
+          //   this.ctx.drawImage(
+          //     img, 
+          //     (x - 1) * this.gridsize + this.padding,
+          //     (y - 1) * this.gridsize + this.padding,
+          //   );
+          // };
+          // img.onerror = (err) => {
+          //   throw err;
+          // };
+          // img.src = item.svg(this.gridsize, this.zoom);
         } else {
           item.draw(this.ctx, x, y, this.gridsize, this.zoom);
         }
