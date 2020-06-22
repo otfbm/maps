@@ -38,6 +38,7 @@ export default class EffectParser {
 
     const matches = trimmed.match(reg);
     let shape = effectShapes.get(matches[1]);
+    let anchorAtCenter = matches[2] ? false : true;
     let size = matches[3];
     let colour = ColourParser.parse(matches[5]);
     let coords = CoordParser.parseSet(matches[6]);
@@ -46,13 +47,12 @@ export default class EffectParser {
       case "triangle":
         return new TriangleEffect({ size, colour, startPt: coords[0], endPt: coords[1] });
       case "circle":
-        let anchorAtCenter = matches[2] ? false : true;
         return new CircleEffect({size, colour, anchorPt: coords[0], anchorAtCenter});
       case "square":
-        if (coords.length == 1)
-          return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true});
-        return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false});  
-      case "rectangle":
+        if (anchorAtCenter && coords.length >= 2)
+          return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false});  
+        return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true});
+          case "rectangle":
         let size2 = matches[4] ? matches[4].substr(1) : 5;
         return new SquareEffect({width: size2, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false}); 
         break;
