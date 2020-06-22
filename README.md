@@ -169,7 +169,7 @@ http://otfbm.com/*l30,5ga1b2
 http://otfbm.com/*s30ca1b2
 ```
 `*s` square `30` size `c` _colour_ `a1` start co-ordinate `b2` _direction co-ordinate_\
-If the direction co-ordinate is not specified the start point is at the top left.
+Alternatively use `*st` to anchor the square at the top left. (Or don't specify the direction co-ordinate.)
 
 ## Additional Options
 You can specify additional drawing options by providing the following parameters after a `@`.
