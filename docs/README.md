@@ -172,3 +172,7 @@ You can specify additional drawing options by providing the following parameters
 ```
 https://otfbm.com/@2dn/A1
 ```
+
+## Avrae aliases
+
+More information on Avrae aliases using OTFBM please visit: https://docs.otfbm.com/#/aliases

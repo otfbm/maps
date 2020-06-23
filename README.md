@@ -7,6 +7,8 @@
 
 How to use OTFBM.  Docs URL: https://docs.otfbm.com
 
+Avrae aliases: https://docs.otfbm.com/#/aliases
+
 ## Contributing
 
 Join the Discord above and find out how you can contribute!
