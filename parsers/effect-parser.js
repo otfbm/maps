@@ -53,10 +53,13 @@ export default class EffectParser {
         return new SquareEffect({ width: size, length: size, colour, startPt: coords[0], endPt: coords[1] });
       case "line":
       case "rectangle":
-        size2 = matches[3] ? matches[3].substr(1) : 5;
-        return new SquareEffect({ width: size2, length: size, colour, startPt: coords[0], endPt: coords[1] });
+          size2 = matches[3] ? matches[3].substr(1) : 5;
+          return new SquareEffect({ width: size2, length: size, colour, startPt: coords[0], endPt: coords[1] });
+        break;
       case "arrow":
-        return new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] });
+        if (coords.length === 2)
+          return new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] });
+        break;
     }
     return false;
   }
