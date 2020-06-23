@@ -32,7 +32,7 @@ export default class EffectParser {
       return false;
 
     const reg = /\*([TLSRCA])([0-9]*)(\,[0-9]*)?([A-Z])?(([A-Z][A-Z]?[0-9][0-9]?)+)/;
-    if (!reg.test(trimmed)) 
+    if (!reg.test(trimmed))
       return false;
 
     const matches = trimmed.match(reg);
@@ -41,23 +41,23 @@ export default class EffectParser {
     let size2 = 0;
     let colour = effectColours.get(matches[4]) || "black";
     let coords = CoordParser.parseSet(matches[5]);
- 
+
     switch (shape) {
       case "triangle":
-        return new TriangleEffect({size, colour, startPt: coords[0], endPt: coords[1]});
+        return new TriangleEffect({ size, colour, startPt: coords[0], endPt: coords[1] });
       case "circle":
         let anchorAtCenter = matches[3] ? false : true;
         size2 = matches[3] ? matches[3].substr(1) : 0;
-        return new CircleEffect({size, colour, anchorPt: coords[0], offset: size2, anchorAtCenter});
+        return new CircleEffect({ size, colour, anchorPt: coords[0], offset: size2, anchorAtCenter });
       case "square":
-        return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1]});
+        return new SquareEffect({ width: size, length: size, colour, startPt: coords[0], endPt: coords[1] });
       case "line":
       case "rectangle":
         size2 = matches[3] ? matches[3].substr(1) : 5;
-        return new SquareEffect({width: size2, length:size, colour, startPt: coords[0], endPt: coords[1]}); 
+        return new SquareEffect({ width: size2, length: size, colour, startPt: coords[0], endPt: coords[1] });
       case "arrow":
-         return new ArrowEffect({colour, startPt: coords[0], endPt: coords[1]});
-      }
+        return new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] });
+    }
     return false;
   }
 }
