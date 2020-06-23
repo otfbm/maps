@@ -25,6 +25,12 @@ export default class TokenParser {
     if (reg.test(trimmed)) {
       const matches = trimmed.match(reg);
 
+      // special case: garguantuan yellow
+      if (matches[2] === "" && matches[3].match(/gy/i)) {
+        matches[2] = "g";
+        matches[3] = "y";
+      }
+
       let color = ColourParser.parse(matches[3]);
 
       let size = 'medium';
