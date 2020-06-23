@@ -46,6 +46,8 @@ You can color tokens a limited number of colors using a letter indicator. Use an
 `bn` for `brown` (or `n`)  
 `o` for `orange`  
 
+So to make a token at `F3` gold colored, just add `y` eg. `F3y`
+
 Colour can also be specifed with `~` and a 3 or 6 digit hex code. E.g. `~f80` or `~f98010`.
 
 _**Example**_
