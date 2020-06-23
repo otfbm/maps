@@ -5,7 +5,7 @@
 
 ## Documentation
 
-Docs URL: https://docs.otfbm.com
+How to use OTFBM.  Docs URL: https://docs.otfbm.com
 
 ## Contributing
 

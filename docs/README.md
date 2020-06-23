@@ -76,19 +76,7 @@ http://otfbm.com/D3-Goblin/A1-Goblin/G4-Fighter
 
 ## Background Images
 
-You can add images to your battle map by providing a link to an external image, or by using one of the default images provided by On The Fly Battle Maps.
-
-**Default Backgrounds**
-The default background images can be accessed by providing a `=#` paramater within your request, where `#` corresponds to the index of the background you would like to use.
-
-On The Fly Battle Maps provides the following default backgrounds:
-
-1. Grass Texture
-
-_**Example - Default Background**_
-```
-http://otfbm.com/D3-Goblin/A1-Goblin/=1
-```
+You can add images to your battle map by providing a link to an external image.
 
 **Custom Backgrounds**
 Callers can add custom backgrounds to their maps by providing the image's url in the map request.
