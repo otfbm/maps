@@ -40,7 +40,7 @@ You can color tokens a limited number of colors using a letter indicator. Use an
 `r` for `red`  
 `g` for `green`  
 `b` for `blue`  
-`y` for `gold`  
+`y` for `yellow`  
 `p` for `purple`  
 `c` for `cyan`  
 `bn` for `brown` (or `n`)  
