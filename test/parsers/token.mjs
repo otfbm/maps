@@ -45,7 +45,7 @@ test('parsing: position and 1 flag', (t) => {
 
 test('parsing: position and 2 flags', (t) => {
     const parser = new TokenParser();
-    const { color, size, label } = parser.parse('/D3rL');
+    const { color, size, label } = parser.parse('/D3Lr');
     
     t.same(color, 'firebrick');
     t.same(size, 'large');
@@ -75,9 +75,19 @@ test('parsing: position, 1 flag and name', (t) => {
 
 test('parsing: position, 2 flags and name', (t) => {
     const parser = new TokenParser();
-    const { color, size, label } = parser.parse('/D3rL-name');
+    const { color, size, label } = parser.parse('/D3Lr-name');
     
     t.same(color, 'firebrick');
+    t.same(size, 'large');
+    t.equal(label, 'name');
+    t.end();
+});
+
+test('parsing: position, size, hex colour and name', (t) => {
+    const parser = new TokenParser();
+    const { color, size, label } = parser.parse('/D3L~ff5500-name');
+    
+    t.same(color, '#FF5500');
     t.same(size, 'large');
     t.equal(label, 'name');
     t.end();
