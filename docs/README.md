@@ -39,7 +39,8 @@ You can color tokens a limited number of colors using a letter indicator. Use an
 `b` for `cornflowerblue`  
 `y` for `gold`  
 `p` for `darkviolet`  
-`c` for `deepskyblue`    
+`c` for `deepskyblue`  
+`d` for `darkgoldenrod`    
 
 So to make a token at `F3` gold colored, just add `y` eg. `F3y`
 
