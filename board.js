@@ -218,7 +218,9 @@ export default class Board {
         }
       }
     }
+  }
 
+  drawEffects() {
     for(let effect of this.effects)
       effect.draw(this.ctx, this.gridsize);
   }

@@ -75,5 +75,7 @@ export default function main(pathname, backgroundImage) {
     renderer.renderOverlay(cell);
   }
 
+  board.drawEffects();
+
   return renderer.canv;
 }
