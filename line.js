@@ -73,8 +73,8 @@ export default class Line {
 
   drawOpenDoor(ctx, a, b, gapSize, gridsize) {
     let distance = Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
-    let c = this.pointOnLine(a, b, (distance / 2.0 - gapSize) / distance);
-    let d = this.pointOnLine(a, b, (distance / 2.0 + gapSize) / distance);
+    let c = Line.pointOnLine(a, b, (distance / 2.0 - gapSize) / distance);
+    let d = Line.pointOnLine(a, b, (distance / 2.0 + gapSize) / distance);
     ctx.lineTo(c.x * gridsize, c.y * gridsize);
     ctx.moveTo(d.x * gridsize, d.y * gridsize);
     ctx.lineTo(b.x * gridsize, b.y * gridsize);
