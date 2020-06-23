@@ -26,7 +26,7 @@ export default class TokenParser {
       const matches = trimmed.match(reg);
 
       // special case: garguantuan yellow
-      if (matches[2] === "" && matches[3].match(/gy/i)) {
+      if (matches[2] === "" && matches[3] !== undefined && matches[3].match(/gy/i)) {
         matches[2] = "g";
         matches[3] = "y";
       }
