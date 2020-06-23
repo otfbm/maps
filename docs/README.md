@@ -36,7 +36,7 @@ You can color tokens a limited number of colors using a letter indicator. Use an
 
 `w` for `white`  
 `bk` for `black` (or `k`)  
-`gy` for `grey` (or `e`, `k`)  
+`gy` for `grey` (or `e`, `a`)  
 `r` for `red`  
 `g` for `green`  
 `b` for `blue`  
