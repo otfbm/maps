@@ -109,7 +109,7 @@ This will draw a line from B3 to J3
 
 You can finish a line and start a new one with the `_` character
 
-*Example*
+**Example**
 
 ```
 https://otfbm.com/_B3J3_B6J6
@@ -132,7 +132,21 @@ Here is a complex example:
 https://otfbm.com/_B2G2G4H4[H6G6G8$F9E10]C10B10B2_B6-G6
 ```
 
-## Spell overlays
+## Overlays
+
+You can also add overlays on the map.  These include Arrows and Spell overlays.
+
+### Arrow overlays
+
+Arrows can now be drawn as overlays on the map. They support a start point, an end point and a color. Arrows are initiated with a `*a`. The formula is `*a[<color>]<start point><end point>`. The most common use case for arrows is to show movement for a token. 
+
+**Example**
+
+```
+http://otfbm.com/*aRa1g4/g4r/
+```
+
+### Spell overlays
 
 To draw a spell overlay, use the `*` character then the following shape codes: `c` circle, `l` line, `s` square, `t` cone. See below for parameters.
 
