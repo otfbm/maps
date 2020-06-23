@@ -2,13 +2,15 @@ import CoordParser from "./coord-parser.js";
 import TriangleEffect from "../effects/triangle-effect.js";
 import CircleEffect from "../effects/circle-effect.js";
 import SquareEffect from "../effects/square-effect.js";
+import ArrowEffect from "../effects/arrow-effect.js";
 
 const effectShapes = new Map([
   ['T', "triangle"], // aka cone
   ['C', "circle"],
   ['L', "line"],
   ['S', "square"],
-  ['R', "rectangle"]
+  ['R', "rectangle"],
+  ["A", "arrow"]
 ]);
 
 const effectColours = new Map([
@@ -29,7 +31,7 @@ export default class EffectParser {
     if (trimmed.charAt(0) !== '*')
       return false;
 
-    const reg = /\*([TLSRC])([0-9]*)(\,[0-9]*)?([A-Z])?(([A-Z][A-Z]?[0-9][0-9]?)+)/;
+    const reg = /\*([TLSRCA])([0-9]*)(\,[0-9]*)?([A-Z])?(([A-Z][A-Z]?[0-9][0-9]?)+)/;
     if (!reg.test(trimmed)) 
       return false;
 
@@ -53,7 +55,9 @@ export default class EffectParser {
       case "rectangle":
         size2 = matches[3] ? matches[3].substr(1) : 5;
         return new SquareEffect({width: size2, length:size, colour, startPt: coords[0], endPt: coords[1]}); 
-    }
+      case "arrow":
+         return new ArrowEffect({colour, startPt: coords[0], endPt: coords[1]});
+      }
     return false;
   }
 }

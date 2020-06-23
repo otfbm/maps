@@ -94,7 +94,7 @@ export default class Line {
    * @param {number} t - distance from a as a fraction.
    * @return {Point} the point.
    */
-  pointOnLine(a, b, t) {
+  static pointOnLine(a, b, t) {
     return {
       x: (1 - t) * a.x + t * b.x,
       y: (1 - t) * a.y + t * b.y
