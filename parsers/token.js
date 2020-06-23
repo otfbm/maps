@@ -1,24 +1,16 @@
-import CoordParser from "./coord-parser.js";
 import Overlay from "../overlay.js";
+import ColourParser from "./colour-parser.js";
 
-const flagLookups = new Map([
-  ["g", "forestgreen"],
-  ["r", "firebrick"],
-  ["b", "cornflowerblue"],
-  ["y", "gold"],
-  ["p", "darkviolet"],
-  ["c", "deepskyblue"],
-  ["d", "darkgoldenrod"],
+const sizeLookups = new Map([
   ["T", "tiny"],
   ["S", "small"],
   ["M", "medium"],
   ["L", "large"],
   ["H", "huge"],
-  ["G", "gargantuan"],
+  ["G", "gargantuan"]
 ]);
 
 const sizes = ['T', 'S', 'M', 'L', 'H', 'G'];
-const colors = ['g', 'r', 'b', 'y', 'p', 'c', 'd'];
 
 export default class TokenParser {
   parse(str) {
@@ -29,17 +21,15 @@ export default class TokenParser {
     if (str.length < 2) return false;
 
     // a string matching a token definition eg. D3rp-asdsa
-    const reg = /^([A-Za-z][A-Za-z]?[0-9][0-9]?)([grbypcdTSMLHG]?[grbypcdTSMLHG]?)(-([A-Za-z0-9_-\s]*))?$/;
+    const reg = /^([A-Z]{1,2}[0-9]{1,2})([TSMLHG]?)(BK|GY|BN|[WKEARGBYPCNO]|~[0-9A-f]{6}|~[0-9A-f]{3})?(-([\w-\s]*))?$/i;
     if (reg.test(trimmed)) {
       const matches = trimmed.match(reg);
 
-      let coords = CoordParser.parse(matches[1]);
+      let color = ColourParser.parse(matches[3]);
 
-      let color = 'black';
       let size = 'medium';
       for (const char of matches[2] || "") {
-        if (colors.includes(char)) color = flagLookups.get(char);
-        if (sizes.includes(char)) size = flagLookups.get(char);
+        if (sizes.includes(char)) size = sizeLookups.get(char);
       }
 
       return new Overlay({
@@ -47,7 +37,7 @@ export default class TokenParser {
         color,
         size,
         type: 'token',
-        label: matches[4] || "",
+        label: matches[5] || "",
       });
     }
 
