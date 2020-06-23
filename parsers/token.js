@@ -21,7 +21,7 @@ export default class TokenParser {
     if (str.length < 2) return false;
 
     // a string matching a token definition eg. D3rp-asdsa
-    const reg = /^([A-Z]{1,2}[0-9]{1,2})([TSMLHG]?)(BK|GY|BN|[WKEARGBYPCNO]|~[0-9A-f]{6}|~[0-9A-f]{3})?(-([\w-\s]*))?$/i;
+    const reg = /^([A-Z]{1,2}[0-9]{1,2})([TSMLHG]*?)(BK|GY|BN|[WKEARGBYPCNO]|~[0-9A-f]{6}|~[0-9A-f]{3})?(-([\w-\s]*))?$/i;
     if (reg.test(trimmed)) {
       const matches = trimmed.match(reg);
 
@@ -29,7 +29,9 @@ export default class TokenParser {
 
       let size = 'medium';
       for (const char of matches[2] || "") {
-        if (sizes.includes(char)) size = sizeLookups.get(char);
+        let upperChar = char.toUpperCase();
+        if (sizes.includes(upperChar)) 
+          size = sizeLookups.get(upperChar);
       }
 
       return new Overlay({
