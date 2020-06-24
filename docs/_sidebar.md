@@ -1,6 +1,6 @@
 - How to Use OTFBM
 
-  - [How to Docs](README.md)
+  - [How to Docs](/)
 
 - Avrae and OTFBM
 
