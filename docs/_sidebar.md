@@ -1,6 +1,11 @@
 - How to Use OTFBM
 
-  - [How to Docs](/)
+  - [Basic Information](/)
+  - [Tokens](tokens.md)
+  - [Background images](background.md)
+  - [Walls and Doors](wallsanddoors.md)
+  - [Overlays](overlays.md)
+  - [Additional Options](addops.md)
 
 - Avrae and OTFBM
 
