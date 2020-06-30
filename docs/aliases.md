@@ -21,9 +21,4 @@ Move allows users to move their own characters on the map by providing coordinat
 ```
 !servalias move
 ```
-Over works with the Overlay features from OTFBM, even allowing for custom overlays for spells using gvars.
-```
-!servalias over
-```
-
-All three of these Aliases have extensive help documentation available via discord.  
+Both of these Aliases have extensive help documentation available via discord.  
