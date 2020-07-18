@@ -52,10 +52,9 @@ export default class EffectParser {
         if (anchorAtCenter && coords.length >= 2)
           return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false});  
         return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true});
-          case "rectangle":
+      case "rectangle":
         let size2 = matches[4] ? matches[4].substr(1) : 5;
         return new SquareEffect({width: size2, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false}); 
-        break;
       case "arrow":
         if (coords.length === 2)
           return new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] });
