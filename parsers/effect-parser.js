@@ -14,18 +14,6 @@ const effectShapes = new Map([
   ["A", "arrow"]
 ]);
 
-const effectColours = new Map([
-  ["W", "white"],
-  ["L", "black"],
-  ["G", "forestgreen"],
-  ["R", "firebrick"],
-  ["B", "cornflowerblue"],
-  ["Y", "gold"],
-  ["P", "darkviolet"],
-  ["C", "deepskyblue"],
-  ["D", "darkgoldenrod"]
-]);
-
 export default class EffectParser {
   parse(str) {
     let trimmed = str.trim().toUpperCase();
