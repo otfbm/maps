@@ -41,6 +41,7 @@ export default class EffectParser {
           return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false});  
         return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true});
       case "rectangle":
+      case "line":
         let size2 = matches[4] ? matches[4].substr(1) : 5;
         return new SquareEffect({width: size2, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false}); 
       case "arrow":
