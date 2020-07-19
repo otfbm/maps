@@ -6,15 +6,21 @@ Tokens are optional and you can define as many as you need separating each with 
 **Token colors**
 You can color tokens a limited number of colors using a letter indicator. Use any of the following letters with the token definition to change its color.
 
-`g` for `forestgreen`  
-`r` for `firebrick`  
-`b` for `cornflowerblue`  
-`y` for `gold`  
-`p` for `darkviolet`  
-`c` for `deepskyblue`  
-`d` for `darkgoldenrod`    
+`w` for `white`  
+`bk` or `k` for `black`  
+`gy` or `e` or `a` for `grey`  
+`r` for `red`  
+`g` for `green`  
+`b` for `blue`  
+`y` for `yellow`  
+`p` for `purple`  
+`c` for `cyan`  
+`bn` or `n` for `brown`  
+`o` for `orange`  
 
 So to make a token at `F3` gold colored, just add `y` eg. `F3y`
+
+Colour can also be specifed with `~` and a 3 or 6 digit hex code. E.g. `~f80` or `~f98010`.
 
 _**Example**_
 ```
