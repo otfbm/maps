@@ -1,16 +1,16 @@
-import BoardParser from './parsers/board.js';
-import TokenParser from './parsers/token.js';
-import IconParser from './parsers/icon.js';
-import OverlayParser from './parsers/overlay.js';
-import ZoomParser from "./parsers/zoom.js";
-import BackgroundParser from "./parsers/background.js";
-import LineParser from "./parsers/line.js";
-import DarkModeParser from "./parsers/dark-mode.js"; 
-import GridOpacityParser from "./parsers/grid-opacity.js"; 
-import Icon from "./icon.js";
-import EffectParser from './parsers/effect-parser.js';
+const BoardParser = require("./parsers/board.js");
+const TokenParser = require("./parsers/token.js");
+const IconParser = require("./parsers/icon.js");
+const OverlayParser = require("./parsers/overlay.js");
+const ZoomParser = require("./parsers/zoom.js");
+const BackgroundParser = require("./parsers/background.js");
+const LineParser = require("./parsers/line.js");
+const DarkModeParser = require("./parsers/dark-mode.js");
+const GridOpacityParser = require("./parsers/grid-opacity.js");
+const Icon = require("./icon.js");
+const EffectParser = require("./parsers/effect-parser.js");
 
-export default class InputParser {
+module.exports = class InputParser {
   constructor(pathname = "") {
     let parts = [];
     this.board = { width: 10, height: 10 };
@@ -25,9 +25,10 @@ export default class InputParser {
     this.gridOpacity = 1;
 
     // trim off leading /
-    if (pathname[0] === "/") parts = pathname.substr(1)
+    if (pathname[0] === "/") parts = pathname.substr(1);
     // trim of trailing /
-    if (pathname[pathname.length - 1] === "/") pathname.substr(0, pathname.length - 1);
+    if (pathname[pathname.length - 1] === "/")
+      pathname.substr(0, pathname.length - 1);
     parts = pathname.split("/");
 
     const boardParser = new BoardParser();
@@ -98,11 +99,12 @@ export default class InputParser {
       }
 
       parsed = gridOpacityParser.parse(part);
-      if (null !== parsed) { /* This check is like this because one of the valid returns is 0.0 */
+      if (null !== parsed) {
+        /* This check is like this because one of the valid returns is 0.0 */
         this.gridOpacity = parsed;
       }
 
       // Extend by adding more parsers here
-    } 
+    }
   }
-}
+};

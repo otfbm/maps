@@ -1,4 +1,4 @@
-import CoordParser from "./coord-parser.js";
+const CoordParser = require("./coord-parser.js");
 
 const icons = new Map([
   ["$D", "./icons/doorway.svg"],
@@ -12,7 +12,7 @@ const icons = new Map([
   ["$o", "./icons/covered-pit.svg"],
 ]);
 
-export default class IconParser {
+module.exports = class IconParser {
   parse(str) {
     let trimmed = str.trim();
     if (trimmed[0] === "/") trimmed = trimmed.substr(1);

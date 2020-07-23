@@ -1,6 +1,6 @@
-import CoordParser from "./coord-parser.js";
+const CoordParser = require("./coord-parser.js");
 
-export default class LineParser {
+module.exports = class LineParser {
   parse(str) {
     let trimmed = str.trim();
     if (trimmed.charAt(0) !== '_')

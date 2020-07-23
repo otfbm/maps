@@ -1,4 +1,4 @@
-export default class Room {
+module.exports = class Room {
   constructor({
     width,
     height,

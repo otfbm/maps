@@ -1,7 +1,7 @@
-import canvas from "canvas";
+const canvas = require("canvas");
 const { Image } = canvas;
 
-export default class SVGRenderer {
+module.exports = class SVGRenderer {
   constructor(ctx, options) {
     this.ctx = ctx;
     this.options = options;
@@ -12,11 +12,7 @@ export default class SVGRenderer {
   render({ renderer, item, x, y }) {
     const img = new Image();
     img.onload = () => {
-      this.ctx.drawImage(
-        img,
-        (x - 1) * this.gridsize,
-        (y - 1) * this.gridsize
-      );
+      this.ctx.drawImage(img, (x - 1) * this.gridsize, (y - 1) * this.gridsize);
     };
     img.onerror = (err) => {
       throw err;
@@ -33,7 +29,7 @@ export default class SVGRenderer {
       this.ctx.drawImage(
         img,
         0 - cell.overlay.width / 2,
-        0 - cell.overlay.height / 2,
+        0 - cell.overlay.height / 2
       );
       this.ctx.restore();
     };

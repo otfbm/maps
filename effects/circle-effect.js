@@ -1,4 +1,4 @@
-export default class CircleEffect {
+module.exports = class CircleEffect {
   constructor({ size, colour, anchorPt, offset, anchorAtCenter }) {
     this.colour = colour;
     this.size = size;

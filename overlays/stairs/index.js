@@ -1,6 +1,6 @@
-import template from './template.js';
+const template = require('./template.js');
 
-export default class StairsOverlay {
+module.exports = class StairsOverlay {
     get name() {
         return 'stairs';
     }

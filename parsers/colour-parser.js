@@ -16,7 +16,7 @@ const colourCodes = new Map([
   ["BN", "darkgoldenrod"]
 ]);
 
-export default class ColourParser {
+module.exports = class ColourParser {
   /**
    * parse a colour
    * @param {string} str colour code 

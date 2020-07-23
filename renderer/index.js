@@ -1,22 +1,22 @@
-import canvas from "canvas";
-import SVGRenderer from "./svg.js";
-import CanvasRenderer from "./canvas.js";
+const canvas = require("canvas");
+const SVGRenderer = require("./svg.js");
+const CanvasRenderer = require("./canvas.js");
 
 // overlays
-import assert from "assert";
-import Options from "../options.js";
-import Stairs from "../overlays/stairs/index.js";
-import Token from "../overlays/token/index.js";
-import Trap from "../overlays/trap/index.js";
-import PillarRound from "../overlays/pillar-round/index.js";
-import PillarSquare from "../overlays/pillar-square/index.js";
-import StatueStar from "../overlays/statue-star/index.js";
-import CoveredPit from "../overlays/covered-pit/index.js";
-import OpenPit from "../overlays/open-pit/index.js";
+const assert = require("assert");
+const Options = require("../options.js");
+const Stairs = require("../overlays/stairs/index.js");
+const Token = require("../overlays/token/index.js");
+const Trap = require("../overlays/trap/index.js");
+const PillarRound = require("../overlays/pillar-round/index.js");
+const PillarSquare = require("../overlays/pillar-square/index.js");
+const StatueStar = require("../overlays/statue-star/index.js");
+const CoveredPit = require("../overlays/covered-pit/index.js");
+const OpenPit = require("../overlays/open-pit/index.js");
 
-const { createCanvas, loadImage } = canvas;
+const { createCanvas } = canvas;
 
-export default class Renderer {
+module.exports = class Renderer {
   constructor(options) {
     assert(
       options instanceof Options,

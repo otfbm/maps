@@ -1,9 +1,9 @@
-import CoordParser from "./coord-parser.js";
-import TriangleEffect from "../effects/triangle-effect.js";
-import CircleEffect from "../effects/circle-effect.js";
-import SquareEffect from "../effects/square-effect.js";
-import ArrowEffect from "../effects/arrow-effect.js";
-import ColourParser from "./colour-parser.js";
+const CoordParser = require("./coord-parser.js");
+const TriangleEffect = require("../effects/triangle-effect.js");
+const CircleEffect = require("../effects/circle-effect.js");
+const SquareEffect = require("../effects/square-effect.js");
+const ArrowEffect = require("../effects/arrow-effect.js");
+const ColourParser = require("./colour-parser.js");
 
 const effectShapes = new Map([
   ["T", "triangle"], // aka cone
@@ -14,7 +14,7 @@ const effectShapes = new Map([
   ["A", "arrow"]
 ]);
 
-export default class EffectParser {
+module.exports = class EffectParser {
   parse(str) {
     let trimmed = str.trim().toUpperCase();
     if (trimmed.charAt(0) !== '*')

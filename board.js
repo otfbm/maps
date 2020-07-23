@@ -1,5 +1,5 @@
-import Line from "./line.js";
-import canvas from "canvas";
+const Line = require("./line.js");
+const canvas = require("canvas");
 const { Image } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
@@ -11,7 +11,7 @@ const fillDarkMode = "#000000";
 const textLightMode = "#000000";
 const textDarkMode = "#ffffff";
 
-export default class Board {
+module.exports = class Board {
   constructor({
     width,
     height,

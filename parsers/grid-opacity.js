@@ -1,4 +1,4 @@
-export default class GridOpacityParser {
+module.exports = class GridOpacityParser {
     parse(str) {
         let trimmed = str.trim();
         if (trimmed[0] === '/') trimmed = trimmed.substr(1);

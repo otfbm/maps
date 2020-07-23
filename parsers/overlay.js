@@ -8,9 +8,9 @@ const overlays = new Map([
   ["$o", "covered-pit"],
 ]);
 
-import Overlay from "../overlay.js";
+const Overlay = require("../overlay.js");
 
-export default class OverlayParser {
+module.exports = class OverlayParser {
   parse(str) {
     if (str.length < 4) return false;
     const reg = /^([A-Za-z][0-9][0-9]?)([A-Za-z][0-9][0-9]?)?(\$[A-Za-z])$/;

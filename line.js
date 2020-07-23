@@ -1,4 +1,4 @@
-export default class Line {
+module.exports = class Line {
   constructor(line, foregroundColour, backgroundColour) {
     this.line = line;
     this.fg = foregroundColour;

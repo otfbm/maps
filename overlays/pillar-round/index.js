@@ -1,6 +1,6 @@
-import template from "./template.js";
+const template = require("./template.js");
 
-export default class PillarRoundOverlay {
+module.exports = class PillarRoundOverlay {
   constructor(options) {
     this.options = options;
   }

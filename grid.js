@@ -1,8 +1,8 @@
-import assert from "assert";
-import Options from "./options.js";
-import Overlay from "./overlay.js";
+const assert = require("assert");
+const Options = require("./options.js");
+const Overlay = require("./overlay.js");
 
-export default class Grid {
+module.exports = class Grid {
   constructor(options) {
     assert(
       options instanceof Options,
