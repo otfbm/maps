@@ -32,5 +32,6 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: us-west-2
+          s3_bucket: otfbm-deploy
           function_name: otfbm
           zip_file: bundle.zip
