@@ -17,6 +17,9 @@ jobs:
         run: |
           npm ci
           npm prune --production
+          rm -rf test
+          rm -rf docs
+          rm -rf icons
         env:
           CI: true
       - name: zip
@@ -31,4 +34,3 @@ jobs:
           aws_region: us-west-2
           function_name: otfbm
           zip_file: bundle.zip
-          dry_run: true
