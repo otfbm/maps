@@ -30,3 +30,4 @@ jobs:
           aws_region: us-west-2
           function_name: otfbm
           zip_file: bundle.zip
+          dry_run: true
