@@ -3,7 +3,7 @@ const TokenParser = require("./parsers/token.js");
 const IconParser = require("./parsers/icon.js");
 const OverlayParser = require("./parsers/overlay.js");
 const ZoomParser = require("./parsers/zoom.js");
-const BackgroundParser = require("./parsers/background.js");
+// const BackgroundParser = require("./parsers/background.js");
 const LineParser = require("./parsers/line.js");
 const DarkModeParser = require("./parsers/dark-mode.js");
 const GridOpacityParser = require("./parsers/grid-opacity.js");
@@ -36,7 +36,7 @@ module.exports = class InputParser {
     const iconParser = new IconParser();
     const overlayParser = new OverlayParser();
     const zoomParser = new ZoomParser();
-    const backgroundParser = new BackgroundParser();
+    // const backgroundParser = new BackgroundParser();
     const lineParser = new LineParser();
     const darkModeParser = new DarkModeParser();
     const gridOpacityParser = new GridOpacityParser();
@@ -67,11 +67,11 @@ module.exports = class InputParser {
         continue;
       }
 
-      parsed = backgroundParser.parse(part);
-      if (parsed) {
-        this.background = parsed;
-        continue;
-      }
+      // parsed = backgroundParser.parse(part);
+      // if (parsed) {
+      //   this.background = parsed;
+      //   continue;
+      // }
 
       parsed = lineParser.parse(part);
       if (parsed) {

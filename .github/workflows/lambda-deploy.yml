@@ -17,24 +17,12 @@ jobs:
         run: |
           npm ci
           npm prune --production
-          rm -rf test
-          rm -rf docs
-          rm -rf icons
         env:
           CI: true
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r ./bundle.zip ./
-      - uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: otfbm-deploy
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-west-2'
-          DEST_DIR: 'otfbm'
+          args: zip -r ./app.zip board.js draw-canvas.js effects fonts grid.js icon.js index.js input-parser.js line.js node_modules options.js overlay.js overlays parsers renderer room.js styles.css token.js
       - name: default deploy
         uses: appleboy/lambda-action@master
         with:
@@ -43,4 +31,4 @@ jobs:
           aws_region: us-west-2
           s3_bucket: otfbm-deploy
           function_name: otfbm
-          zip_file: bundle.zip
+          zip_file: app.zip
