@@ -14,7 +14,9 @@ const StatueStar = require("../overlays/statue-star/index.js");
 const CoveredPit = require("../overlays/covered-pit/index.js");
 const OpenPit = require("../overlays/open-pit/index.js");
 
-const { createCanvas } = canvas;
+const { createCanvas, registerFont } = canvas;
+
+registerFont('./fonts/DroidSansMono.ttf', { family: 'Impact' });
 
 module.exports = class Renderer {
   constructor(options) {
