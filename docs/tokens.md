@@ -51,3 +51,15 @@ _**Example**_
 ```
 http://otfbm.com/D3-Goblin/A1-Goblin/G4-Fighter
 ```
+
+**Token Sequence**
+Adding tokens is not case sensitive.  Tokens are however sequence sensitive. Use the following sequence when defining a token within the url as shown below. As well as an example of creating a gargantuan, red token at D4 in the grid.  
+
+ `column` `row` `size` `color` `-label`
+
+_**Example**_
+```
+http://otfbm.com/D4GR-Warlock
+```
+
+**Note** - *When defining a gargantuan token, you need to include a color. `D4G` would place a green token on the grid, `D4GBK` would place a gargantuan black token on the grid (black being the default color).*

@@ -5,6 +5,12 @@
 * How to use OTFBM.  Docs URL: https://docs.otfbm.com
 * Avrae aliases: https://docs.otfbm.com/#/aliases
 
+## Patreon
+
+If you like the tool and want to help support its hosting and future development please consider supporting us on Patreon.
+
+https://www.patreon.com/otfbm
+
 ## Contributing
 
 Join the Discord above and find out how you can contribute!
