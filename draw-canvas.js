@@ -1,16 +1,13 @@
-import canvas from "canvas";
-import InputParser from "./input-parser.js";
-import Board from "./board.js";
-import Options from "./options.js";
-import Renderer from "./renderer/index.js";
-import Grid from "./grid.js";
+const InputParser = require("./input-parser.js");
+const Board = require("./board.js");
+const Options = require("./options.js");
+const Renderer = require("./renderer/index.js");
+const Grid = require("./grid.js");
 
 const GRID_SIZE = 40;
 const PADDING = 15;
 
-const { createCanvas, loadImage } = canvas;
-
-export default function main(pathname, backgroundImage) {
+module.exports = function main(pathname, backgroundImage) {
   const input = new InputParser(pathname);
   const gridsize = GRID_SIZE * input.zoom;
   const width = (input.board.width >= 52 ? 52 : input.board.width) * gridsize;

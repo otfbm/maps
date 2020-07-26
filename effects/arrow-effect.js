@@ -1,6 +1,6 @@
-import Line from "../line.js";
+const Line = require("../line.js");
 
-export default class ArrowEffect {
+module.exports = class ArrowEffect {
     constructor({ colour, startPt, endPt }) {
       this.colour = colour;
       this.startPt = startPt;

@@ -1,4 +1,4 @@
-export default class SquareEffect {
+module.exports = class SquareEffect {
   constructor({ width, length, colour, startPt, endPt, anchorTopLeft }) {
     this.colour = colour;
     this.width = width;

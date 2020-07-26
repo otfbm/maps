@@ -1,4 +1,4 @@
-export default class CanvasRenderer {
+module.exports = class CanvasRenderer {
     constructor(ctx, options) {
         this.ctx = ctx;
         this.options = options;

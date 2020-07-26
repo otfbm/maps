@@ -1,5 +1,5 @@
-import Overlay from "../overlay.js";
-import ColourParser from "./colour-parser.js";
+const Overlay = require("../overlay.js");
+const ColourParser = require("./colour-parser.js");
 
 const sizeLookups = new Map([
   ["T", "tiny"],
@@ -12,7 +12,7 @@ const sizeLookups = new Map([
 
 const sizes = ['T', 'S', 'M', 'L', 'H', 'G'];
 
-export default class TokenParser {
+module.exports = class TokenParser {
   parse(str) {
     let trimmed = str.trim();
     if (trimmed[0] === "/") trimmed = trimmed.substr(1);

@@ -1,14 +1,38 @@
-import throng from 'throng';
-import os from 'os';
-import createServer from './server.js';
+const drawCanvas = require("./draw-canvas.js");
+const fetch = require("node-fetch");
 
-const numCPUs = os.cpus().length;
-const WORKERS = process.env.WEB_CONCURRENCY || numCPUs;
+exports.handler = async (event, context) => {
+  const query = (event && event.queryStringParameters) || {};
+  const path = event.rawPath || event.path;
+  const { bg } = query;
 
-throng({
-  workers: WORKERS,
-  lifetime: Infinity
-}, () => {
-  const server = createServer();
-  server.listen(process.env.PORT || 3000, "0.0.0.0");
-});
+  let backgroundImage = null;
+  if (bg) {
+    try {
+      const res = await fetch(bg);
+      const buffer = await res.buffer();
+      backgroundImage = `data:${
+        res.headers["content-type"]
+      };base64,${buffer.toString("base64")}`;
+    } catch (err) {
+      // noop
+    }
+  }
+
+  try {
+    const canvas = drawCanvas(path, backgroundImage);
+    const data = canvas.toDataURL("image/jpeg", { quality: 1 });
+    const stripped = data.replace(/^data:image\/\w+;base64,/, "");
+
+    return {
+      statusCode: 200,
+      headers: {
+        "content-type": "image/jpeg",
+      },
+      body: stripped,
+      isBase64Encoded: true,
+    };
+  } catch (err) {
+    return err.message;
+  }
+};

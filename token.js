@@ -1,4 +1,4 @@
-export default class Token {
+module.exports = class Token {
   constructor({ label, color, size }) {
     this.label = label;
     this.color = color || "black";

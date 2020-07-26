@@ -1,4 +1,4 @@
-export default class DarkModeParser {
+module.exports = class DarkModeParser {
     parse(str) {
         let trimmed = str.trim();
         if (trimmed[0] === '/') trimmed = trimmed.substr(1);

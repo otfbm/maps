@@ -1,4 +1,4 @@
-export default class Overlay {
+module.exports = class Overlay {
   constructor({ cells = [], cell = "", type, label, color, size } = {}) {
     this._cells = cells;
     this._cell = cell;

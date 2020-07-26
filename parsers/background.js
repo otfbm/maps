@@ -2,7 +2,7 @@ const backgrounds = new Map([
     ['=1', './backgrounds/grass.png']
 ]);
 
-export default class BackgroundParser {
+module.exports = class BackgroundParser {
     parse(str) {
         let trimmed = str.trim();
         if (trimmed[0] === '/') trimmed = trimmed.substr(1);

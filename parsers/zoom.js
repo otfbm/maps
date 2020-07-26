@@ -1,7 +1,7 @@
 const minZoom = 1;
 const maxZoom = 3;
 
-export default class ZoomParser {
+module.exports = class ZoomParser {
     parse(str) {
         let trimmed = str.trim();
         if (trimmed[0] === '/') trimmed = trimmed.substr(1);

@@ -1,6 +1,6 @@
-import template from "./template.js";
+const template = require("./template.js");
 
-export default class PillarSquareOverlay {
+module.exports = class PillarSquareOverlay {
   constructor(options) {
     this.options = options;
   }

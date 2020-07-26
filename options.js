@@ -1,4 +1,4 @@
-export default class Options {
+module.exports = class Options {
   constructor({
     width = 400,
     height = 400,

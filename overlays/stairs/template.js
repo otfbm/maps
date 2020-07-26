@@ -1,4 +1,4 @@
-export default (options) => `
+module.exports = (options) => `
     <svg>
         <line>
     </svg>
