@@ -1,6 +1,6 @@
-import puppeteer from "puppeteer";
-import tap from 'tap';
-import createServer from "../../server.js";
+const puppeteer = require("puppeteer");
+const tap = require('tap');
+const createServer = require("../../server.js");
 
 (async () => {
   const server = createServer();
