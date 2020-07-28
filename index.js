@@ -1,3 +1,5 @@
+const fs = require('fs').promises;
+const { join } = require('path');
 const drawCanvas = require("./draw-canvas.js");
 const fetch = require("node-fetch");
 
@@ -33,6 +35,14 @@ exports.handler = async (event, context) => {
       isBase64Encoded: true,
     };
   } catch (err) {
-    return err.message;
+    const errorImage = await fs.readFile(join(__dirname, './5xx.jpg'));
+    return {
+      statusCode: 200,
+      headers: {
+        "content-type": "image/jpeg",
+      },
+      body: errorImage.toString('base64'),
+      isBase64Encoded: true,
+    };
   }
 };
