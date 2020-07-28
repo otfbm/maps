@@ -1,18 +1,19 @@
-const backgrounds = new Map([
-    ['=1', './backgrounds/grass.png']
-]);
+const fetch = require('node-fetch');
 
 module.exports = class BackgroundParser {
-    parse(str) {
-        let trimmed = str.trim();
-        if (trimmed[0] === '/') trimmed = trimmed.substr(1);
-        if (trimmed[trimmed.length-1] === '/') trimmed = trimmed.substr(0, trimmed.length - 1);
-
-        // a zoom value between #1 and #3
-        if (/^=[1-9]$/.test(trimmed)) {
-            return backgrounds.get(trimmed);
-        }
-
-        return false;
+    async parse(query) {
+        let backgroundImage = null;
+        if (query.bg) {
+            try {
+                const res = await fetch(query.bg);
+                const buffer = await res.buffer();
+                backgroundImage = `data:${
+                    res.headers.get("content-type")
+                };base64,${buffer.toString("base64")}`;
+            } catch (err) {
+                // noop
+            }
+        }      
+        return backgroundImage;
     }
 }

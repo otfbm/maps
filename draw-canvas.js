@@ -7,8 +7,9 @@ const Grid = require("./grid.js");
 const GRID_SIZE = 40;
 const PADDING = 15;
 
-module.exports = function main(pathname, backgroundImage) {
-  const input = new InputParser(pathname);
+module.exports = async function main(pathname, query) {
+  const input = new InputParser()
+  await input.parse(pathname, query);
   const gridsize = GRID_SIZE * input.zoom;
   const width = (input.board.width >= 52 ? 52 : input.board.width) * gridsize;
   const height =
@@ -37,7 +38,7 @@ module.exports = function main(pathname, backgroundImage) {
   });
 
   // TODO: refactor to match the TODO below
-  board.addBackground(backgroundImage || input.background);
+  board.addBackground(input.background);
   for (const { x, y, item } of input.icons) {
     board.placeItem(x, y, item);
   }

@@ -6,23 +6,9 @@ const fetch = require("node-fetch");
 exports.handler = async (event, context) => {
   const query = (event && event.queryStringParameters) || {};
   const path = event.rawPath || event.path;
-  const { bg } = query;
-
-  let backgroundImage = null;
-  if (bg) {
-    try {
-      const res = await fetch(bg);
-      const buffer = await res.buffer();
-      backgroundImage = `data:${
-        res.headers["content-type"]
-      };base64,${buffer.toString("base64")}`;
-    } catch (err) {
-      // noop
-    }
-  }
 
   try {
-    const canvas = drawCanvas(path, backgroundImage);
+    const canvas = await drawCanvas(path, query);
     const data = canvas.toDataURL("image/jpeg", { quality: 1 });
     const stripped = data.replace(/^data:image\/\w+;base64,/, "");
 
@@ -35,6 +21,7 @@ exports.handler = async (event, context) => {
       isBase64Encoded: true,
     };
   } catch (err) {
+    console.log(err);
     const errorImage = await fs.readFile(join(__dirname, './5xx.jpg'));
     return {
       statusCode: 200,
