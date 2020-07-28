@@ -16,7 +16,7 @@ const OpenPit = require("../overlays/open-pit/index.js");
 
 const { createCanvas, registerFont } = canvas;
 
-registerFont('./fonts/DroidSansMono.ttf', { family: 'Impact' });
+registerFont('./fonts/Titillium-Semibold.otf', { family: 'Impact' });
 
 module.exports = class Renderer {
   constructor(options) {
