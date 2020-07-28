@@ -20,6 +20,7 @@ module.exports = class TokenOverlay {
       radius: (width / 4) * 0.85,
       strokeWidth: 1 * zoom,
       fontsize: 10 * zoom,
+      y:'60%',
     };
   }
 
@@ -35,6 +36,7 @@ module.exports = class TokenOverlay {
       strokeWidth: 2 * zoom,
       fontsize: 12 * zoom,
       label: label.substr(0, 4),
+      y:'60%',
     };
   }
 
@@ -50,6 +52,7 @@ module.exports = class TokenOverlay {
       strokeWidth: 3 * zoom,
       fontsize: 14 * zoom,
       label: label.substr(0, 9),
+      y:'56%',
     };
   }
 
@@ -65,6 +68,7 @@ module.exports = class TokenOverlay {
       strokeWidth: 4 * zoom,
       fontsize: 14 * zoom,
       label: label.substr(0, 14),
+      y:'55%',
     };
   }
 
@@ -80,6 +84,7 @@ module.exports = class TokenOverlay {
       strokeWidth: 5 * zoom,
       fontsize: 16 * zoom,
       label: label.substr(0, 18),
+      y:'53%',
     };
   }
 
