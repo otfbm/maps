@@ -3,29 +3,46 @@ import InputParser from "../input-parser.js";
 
 const clone = (item) => JSON.parse(JSON.stringify(item));
 
-tap.test("board parsing", (t) => {
-  t.same(new InputParser("").board, { width: 10, height: 10 });
-  t.same(new InputParser("1x1").board, { width: 1, height: 1 });
-  t.same(new InputParser("/1x1").board, { width: 1, height: 1 });
-  t.same(new InputParser("/1x1/").board, { width: 1, height: 1 });
+tap.test("board parsing", async (t) => {
+  let input = new InputParser();
+  await input.parse('');
+  t.same(input.board, { width: 10, height: 10 });
+  
+  input = new InputParser();
+  await input.parse("1x1");
+  t.same(input.board, { width: 1, height: 1 });
+
+  input = new InputParser();
+  await input.parse("/1x1");
+  t.same(input.board, { width: 1, height: 1 });
+  
+  input = new InputParser();
+  await input.parse("/1x1/");
+  t.same(input.board, { width: 1, height: 1 });
   t.end();
 });
 
-tap.test("token parsing", (t) => {
-  t.same(clone(new InputParser("").tokens), [], "default tokens should match");
-  t.same(clone(new InputParser("/").tokens), [], "default tokens should match");
+tap.test("token parsing", async (t) => {
+  let input = new InputParser()
+  await input.parse("");
+  t.same(clone(input.tokens), [], "default tokens should match");
+
+  input = new InputParser();
+  await input.parse("/");
+  t.same(clone(input.tokens), [], "default tokens should match");
+
+  input = new InputParser();
+  await input.parse("/5x5");
+  t.same(clone(input.tokens), [], "default tokens should match");
+  
+  input = new InputParser();
+  await input.parse("/7x7/");
+  t.same(clone(input.tokens), [], "default tokens should match");
+  
+  input = new InputParser();
+  await input.parse("6x6/B2");
   t.same(
-    clone(new InputParser("/5x5").tokens),
-    [],
-    "default tokens should match"
-  );
-  t.same(
-    clone(new InputParser("/7x7/").tokens),
-    [],
-    "default tokens should match"
-  );
-  t.same(
-    clone(new InputParser("6x6/B2").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -39,8 +56,10 @@ tap.test("token parsing", (t) => {
     "basic tokens should match"
   );
 
+  input = new InputParser();
+  await input.parse("/6x6/B2");
   t.same(
-    clone(new InputParser("/6x6/B2").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -54,8 +73,10 @@ tap.test("token parsing", (t) => {
     "basic tokens should match"
   );
 
+  input = new InputParser();
+  await input.parse("/B2");
   t.same(
-    clone(new InputParser("/B2").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -69,8 +90,10 @@ tap.test("token parsing", (t) => {
     "basic tokens should match"
   );
 
+  input = new InputParser();
+  await input.parse("/B2/C3");
   t.same(
-    clone(new InputParser("/B2/C3").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -92,8 +115,10 @@ tap.test("token parsing", (t) => {
     "multiple basic tokens should match"
   );
 
+  input = new InputParser();
+  await input.parse("/B2r");
   t.same(
-    clone(new InputParser("/B2r").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -107,8 +132,10 @@ tap.test("token parsing", (t) => {
     "tokens with color should match"
   );
 
+  input = new InputParser();
+  await input.parse("/B2-Pizza");
   t.same(
-    clone(new InputParser("/B2-Pizza").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -122,8 +149,10 @@ tap.test("token parsing", (t) => {
     "tokens with names should match"
   );
 
+  input = new InputParser();
+  await input.parse("/B2L");
   t.same(
-    clone(new InputParser("/B2L").tokens),
+    clone(input.tokens),
     [
       {
         tl: "B2",
@@ -137,8 +166,10 @@ tap.test("token parsing", (t) => {
     "tokens with size should match"
   );
 
+  input = new InputParser();
+  await input.parse("/A1-ZOM1");
   t.same(
-    clone(new InputParser("/A1-ZOM1").tokens),
+    clone(input.tokens),
     [
       {
         tl: "A1",
@@ -152,8 +183,10 @@ tap.test("token parsing", (t) => {
     "tokens with size should match"
   );
 
+  input = new InputParser();
+  await input.parse("/A1-9ZOM1");
   t.same(
-    clone(new InputParser("/A1-9ZOM1").tokens),
+    clone(input.tokens),
     [
       {
         tl: "A1",
@@ -167,8 +200,10 @@ tap.test("token parsing", (t) => {
     "tokens with size should match"
   );
 
+  input = new InputParser();
+  await input.parse("/A1-123456");
   t.same(
-    clone(new InputParser("/A1-123456").tokens),
+    clone(input.tokens),
     [
       {
         tl: "A1",
@@ -182,54 +217,117 @@ tap.test("token parsing", (t) => {
     "tokens with size should match"
   );
 
-  t.same(new InputParser("/A1").darkMode, false, "darkmode should be inactive");
-  t.same(new InputParser("/@d").darkMode, true, "darkmode should be active");
-  t.same(new InputParser("/@zd").darkMode, true, "darkmode should be active");
-  t.same(new InputParser("/@dz").darkMode, true, "darkmode should be active");
-  t.same(new InputParser("/@d2").darkMode, true, "darkmode should be active");
-  t.same(new InputParser("/@2d").darkMode, true, "darkmode should be active");
+  input = new InputParser();
+  await input.parse("/A1");
+  t.same(input.darkMode, false, "darkmode should be inactive");
 
-  t.same(new InputParser("/A1").gridOpacity, 1.0, "grid should be opaque");
+  input = new InputParser();
+  await input.parse("/@d");
+  t.same(input.darkMode, true, "darkmode should be active");
 
+  input = new InputParser();
+  await input.parse("/@zd");
+  t.same(input.darkMode, true, "darkmode should be active");
+
+  input = new InputParser();
+  await input.parse("/@dz");
+  t.same(input.darkMode, true, "darkmode should be active");
+
+  input = new InputParser();
+  await input.parse("/@d2");
+  t.same(input.darkMode, true, "darkmode should be active");
+
+  input = new InputParser();
+  await input.parse("/@2d");
+  t.same(input.darkMode, true, "darkmode should be active");
+
+  input = new InputParser();
+  await input.parse("/A1");
+  t.same(input.gridOpacity, 1.0, "grid should be opaque");
+
+  input = new InputParser();
+  await input.parse("/@h");
   t.same(
-    new InputParser("/@h").gridOpacity,
+    input.gridOpacity,
     0.5,
     "grid should be half transparent"
   );
+
+  input = new InputParser();
+  await input.parse("/@zh");
   t.same(
-    new InputParser("/@zh").gridOpacity,
-    0.5,
-    "grid should be half transparent"
-  );
-  t.same(
-    new InputParser("/@hz").gridOpacity,
-    0.5,
-    "grid should be half transparent"
-  );
-  t.same(
-    new InputParser("/@2h").gridOpacity,
-    0.5,
-    "grid should be half transparent"
-  );
-  t.same(
-    new InputParser("/@h2").gridOpacity,
+    input.gridOpacity,
     0.5,
     "grid should be half transparent"
   );
 
-  t.same(new InputParser("/@n").gridOpacity, 0.0, "grid should be invisible");
-  t.same(new InputParser("/@zn").gridOpacity, 0.0, "grid should be invisible");
-  t.same(new InputParser("/@nz").gridOpacity, 0.0, "grid should be invisible");
-  t.same(new InputParser("/@2n").gridOpacity, 0.0, "grid should be invisible");
-  t.same(new InputParser("/@n2").gridOpacity, 0.0, "grid should be invisible");
+  input = new InputParser();
+  await input.parse("/@hz");
+  t.same(
+    input.gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
 
-  t.same(new InputParser("/@2").zoom, 2, "zoom level should be 2");
-  t.same(new InputParser("/@z2").zoom, 2, "zoom level should be 2");
-  t.same(new InputParser("/@2z").zoom, 2, "zoom level should be 2");
+  input = new InputParser();
+  await input.parse("/@2h");
+  t.same(
+    input.gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
 
-  t.same(new InputParser("/@3").zoom, 3, "zoom level should be 3");
-  t.same(new InputParser("/@z3").zoom, 3, "zoom level should be 3");
-  t.same(new InputParser("/@3z").zoom, 3, "zoom level should be 3");
+  input = new InputParser();
+  await input.parse("/@h2");
+  t.same(
+    input.gridOpacity,
+    0.5,
+    "grid should be half transparent"
+  );
+
+  input = new InputParser();
+  await input.parse("/@n");
+  t.same(input.gridOpacity, 0.0, "grid should be invisible");
+
+  input = new InputParser();
+  await input.parse("/@zn");
+  t.same(input.gridOpacity, 0.0, "grid should be invisible");
+
+  input = new InputParser();
+  await input.parse("/@nz");
+  t.same(input.gridOpacity, 0.0, "grid should be invisible");
+
+  input = new InputParser();
+  await input.parse("/@2n");
+  t.same(input.gridOpacity, 0.0, "grid should be invisible");
+
+  input = new InputParser();
+  await input.parse("/@n2");
+  t.same(input.gridOpacity, 0.0, "grid should be invisible");
+
+  input = new InputParser();
+  await input.parse("/@2");
+  t.same(input.zoom, 2, "zoom level should be 2");
+
+  input = new InputParser();
+  await input.parse("/@z2");
+  t.same(input.zoom, 2, "zoom level should be 2");
+
+  input = new InputParser();
+  await input.parse("/@2z");
+  t.same(input.zoom, 2, "zoom level should be 2");
+  
+  input = new InputParser();
+  await input.parse("/@3");
+  t.same(input.zoom, 3, "zoom level should be 3");
+
+  input = new InputParser();
+  await input.parse("/@z3");
+  t.same(input.zoom, 3, "zoom level should be 3");
+
+  input = new InputParser();
+  await input.parse("/@3z");
+  t.same(input.zoom, 3, "zoom level should be 3");
 
   t.end();
 });

@@ -3,7 +3,7 @@ const TokenParser = require("./parsers/token.js");
 const IconParser = require("./parsers/icon.js");
 const OverlayParser = require("./parsers/overlay.js");
 const ZoomParser = require("./parsers/zoom.js");
-// const BackgroundParser = require("./parsers/background.js");
+const BackgroundParser = require("./parsers/background.js");
 const LineParser = require("./parsers/line.js");
 const DarkModeParser = require("./parsers/dark-mode.js");
 const GridOpacityParser = require("./parsers/grid-opacity.js");
@@ -11,8 +11,7 @@ const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
 
 module.exports = class InputParser {
-  constructor(pathname = "") {
-    let parts = [];
+  constructor() {
     this.board = { width: 10, height: 10 };
     this.lines = [];
     this.tokens = [];
@@ -23,7 +22,22 @@ module.exports = class InputParser {
     this.zoom = 1;
     this.darkMode = false;
     this.gridOpacity = 1;
+    this.background = null;
 
+    this.backgroundParser = new BackgroundParser();
+    this.boardParser = new BoardParser();
+    this.tokenParser = new TokenParser();
+    this.iconParser = new IconParser();
+    this.overlayParser = new OverlayParser();
+    this.zoomParser = new ZoomParser();
+    this.lineParser = new LineParser();
+    this.darkModeParser = new DarkModeParser();
+    this.gridOpacityParser = new GridOpacityParser();
+    this.effectParser = new EffectParser();
+  }
+
+  async parse(pathname = "", query = {}) {
+    let parts = [];
     // trim off leading /
     if (pathname[0] === "/") parts = pathname.substr(1);
     // trim of trailing /
@@ -31,55 +45,40 @@ module.exports = class InputParser {
       pathname.substr(0, pathname.length - 1);
     parts = pathname.split("/");
 
-    const boardParser = new BoardParser();
-    const tokenParser = new TokenParser();
-    const iconParser = new IconParser();
-    const overlayParser = new OverlayParser();
-    const zoomParser = new ZoomParser();
-    // const backgroundParser = new BackgroundParser();
-    const lineParser = new LineParser();
-    const darkModeParser = new DarkModeParser();
-    const gridOpacityParser = new GridOpacityParser();
-    const effectParser = new EffectParser();
+    this.background = await this.backgroundParser.parse(query);
 
     for (const part of parts) {
-      let parsed = boardParser.parse(part);
+      let parsed = this.boardParser.parse(part);
       if (parsed) {
         this.board = parsed;
         continue;
       }
 
-      parsed = tokenParser.parse(part);
+      parsed = this.tokenParser.parse(part);
       if (parsed) {
         this.tokens.push(parsed);
         continue;
       }
 
-      parsed = overlayParser.parse(part);
+      parsed = this.overlayParser.parse(part);
       if (parsed) {
         this.overlays.push(parsed);
         continue;
       }
 
-      parsed = iconParser.parse(part);
+      parsed = this.iconParser.parse(part);
       if (parsed) {
         this.icons.push({ x: parsed.x, y: parsed.y, item: new Icon(parsed) });
         continue;
       }
 
-      // parsed = backgroundParser.parse(part);
-      // if (parsed) {
-      //   this.background = parsed;
-      //   continue;
-      // }
-
-      parsed = lineParser.parse(part);
+      parsed = this.lineParser.parse(part);
       if (parsed) {
         this.lines = this.lines.concat(parsed);
         continue;
       }
 
-      parsed = effectParser.parse(part);
+      parsed = this.effectParser.parse(part);
       if (parsed) {
         this.effects.push(parsed);
         continue;
@@ -88,17 +87,17 @@ module.exports = class InputParser {
       /* Because all of the options here can be grouped, we need to parse them
          together and not skip after a successful parse  */
 
-      parsed = zoomParser.parse(part);
+      parsed = this.zoomParser.parse(part);
       if (parsed) {
         this.zoom = parsed;
       }
 
-      parsed = darkModeParser.parse(part);
+      parsed = this.darkModeParser.parse(part);
       if (parsed) {
         this.darkMode = parsed;
       }
 
-      parsed = gridOpacityParser.parse(part);
+      parsed = this.gridOpacityParser.parse(part);
       if (null !== parsed) {
         /* This check is like this because one of the valid returns is 0.0 */
         this.gridOpacity = parsed;
