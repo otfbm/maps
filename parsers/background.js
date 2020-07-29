@@ -6,7 +6,20 @@ module.exports = class BackgroundParser {
         if (query.bg) {
             try {
                 const res = await fetch(query.bg);
+
+                const contentLength = res.headers.get('content-length');
+                console.log('Content-Length', contentLength);
+                if (contentLength > 1000000) {
+                    res.destroy();
+                    throw new Error('Background too large');
+                }
+                
                 const buffer = await res.buffer();
+
+                console.log('Buffer Length', buffer.byteLength);
+                if (buffer.byteLength > 1000000)
+                    throw new Error('Background too large');
+
                 backgroundImage = `data:${
                     res.headers.get("content-type")
                 };base64,${buffer.toString("base64")}`;
