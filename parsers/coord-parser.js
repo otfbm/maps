@@ -23,7 +23,7 @@ module.exports = class CoordParser {
   }
 
   static parseSet(str) {
-    const reg = /[A-Za-z][A-Za-z]?[0-9][0-9]?/g;
+    const reg = /[A-Za-z][A-Za-z]?[A-Za-z]?[A-Za-z]?[0-9][0-9]?/g;
     let result = [];
     const coords = str.match(reg) || [];
     for (const m of coords) {

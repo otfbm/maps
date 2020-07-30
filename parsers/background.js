@@ -8,7 +8,6 @@ module.exports = class BackgroundParser {
                 const res = await fetch(query.bg);
 
                 const contentLength = res.headers.get('content-length');
-                console.log('Content-Length', contentLength);
                 if (contentLength > 1000000) {
                     res.destroy();
                     throw new Error('Background too large');
@@ -16,7 +15,6 @@ module.exports = class BackgroundParser {
                 
                 const buffer = await res.buffer();
 
-                console.log('Buffer Length', buffer.byteLength);
                 if (buffer.byteLength > 1000000)
                     throw new Error('Background too large');
 

@@ -12,9 +12,9 @@ module.exports = class Grid {
     this.options = options;
     this._cells = [];
 
-    for (let x = 0; x < options.width / options.gridsize; x++) {
+    for (let x = -100; x < 100; x++) {
       let arr = [];
-      for (let y = 0; y < options.height / options.gridsize; y++) {
+      for (let y = -100; y < 100; y++) {
         arr[y] = new Map();
       }
       this._cells[x] = arr;
@@ -199,14 +199,18 @@ module.exports = class Grid {
     }
 
     let start = 0;
-    if (characters.length > 1) {
+    if (characters.length > 3) {
+      start = 78;
+    } else if (characters.length > 2) {
+      start = 52;
+    } else if (characters.length > 1) {
       start = 26;
     }
 
     const code = characters[0].toUpperCase().charCodeAt(0);
     const x = code - 64 + start - 1;
 
-    return { x, y };
+    return { x: Number(x) - Number(this.options.panX), y: Number(y) - Number(this.options.panY) };
   }
 
   levels() {

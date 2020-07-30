@@ -48,7 +48,6 @@ module.exports = class Renderer {
   }
 
   renderOverlay(cell) {
-    console.log(cell.overlay.type);
     switch (cell.overlay.type) {
       case "token":
         this.svg.renderCell(cell, Token);

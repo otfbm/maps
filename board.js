@@ -21,7 +21,9 @@ module.exports = class Board {
     ctx,
     strokeStyle = "#CCCCCC",
     darkMode = false,
-    gridOpacity = 1.0
+    gridOpacity = 1.0,
+    panX = 0,
+    panY = 0,
   }) {
     this.width = width;
     this.height = height;
@@ -36,6 +38,8 @@ module.exports = class Board {
     this.effects = [];
     this.darkMode = darkMode;
     this.gridOpacity = gridOpacity;
+    this.panX = Number(panX);
+    this.panY = Number(panY);
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -111,10 +115,18 @@ module.exports = class Board {
       if (num < 1) continue;
 
       this.ctx.beginPath();
-      let character = String.fromCharCode(num + 64);
-      if (num > 26) {
-        const char = String.fromCharCode(num + 38);
+      let character = String.fromCharCode(num + 64 + this.panX);
+      if (num + this.panX > 26) {
+        const char = String.fromCharCode(num + 38 + this.panX);
         character = `${char}${char}`;
+      }
+      if (num + this.panX > 52) {
+        const char = String.fromCharCode(num + 12 + this.panX);
+        character = `${char}${char}${char}`;
+      }
+      if (num + this.panX > 78) {
+        const char = String.fromCharCode(num - 14 + this.panX);
+        character = `${char}${char}${char}${char}`;
       }
 
       this.ctx.fillText(
@@ -137,7 +149,7 @@ module.exports = class Board {
       this.ctx.globalAlpha = 1.0;
 
       this.ctx.beginPath();
-      const num = i / this.gridsize;
+      const num = i / this.gridsize + this.panY;
       if (num < 1) continue;
 
       this.ctx.fillText(
@@ -170,14 +182,27 @@ module.exports = class Board {
       const img = new Image();
 
       img.onload = () => {
+        const sourceX = this.panX * this.gridsize;
+        const sourceY = this.panY * this.gridsize;
 
+        // if the we try to clip from the bg image outside its size things don't work
+        // don't draw a bg if thats the case
+        if (sourceX > img.width || sourceY > img.height) return;
         /* We don't want to scale images because we're assuming that any 
            default maps or user-provided maps meet the specifications we 
            outlined in the README.
            Instead of scaling, trim provided image to the map */
-        this.ctx.drawImage(img, 
-                          0, 0, this.width, this.height, /* Clip image */
-                          this.padding, this.padding, this.width * this.zoom, this.height * this.zoom); /* Draw Image */
+        this.ctx.drawImage(
+          img,
+          sourceX,
+          sourceY,
+          this.width,
+          this.height,
+          this.padding,
+          this.padding,
+          this.width,
+          this.height,
+        );
       };
       img.onerror = (err) => {
         throw err;

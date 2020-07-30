@@ -11,9 +11,9 @@ module.exports = async function main(pathname, query) {
   const input = new InputParser()
   await input.parse(pathname, query);
   const gridsize = GRID_SIZE * input.zoom;
-  const width = (input.board.width >= 52 ? 52 : input.board.width) * gridsize;
+  const width = (input.board.width >= 100 ? 100 : input.board.width) * gridsize;
   const height =
-    (input.board.height >= 52 ? 52 : input.board.height) * gridsize;
+    (input.board.height >= 100 ? 100 : input.board.height) * gridsize;
   
   const options = new Options({
     padding: PADDING,
@@ -21,6 +21,8 @@ module.exports = async function main(pathname, query) {
     zoom: input.zoom,
     width,
     height,
+    panX: input.panX,
+    panY: input.panY,
   });
   const zoom = input.zoom;
 
@@ -35,6 +37,8 @@ module.exports = async function main(pathname, query) {
     padding: PADDING,
     darkMode: input.darkMode,
     gridOpacity: input.gridOpacity,
+    panX: input.panX,
+    panY: input.panY,
   });
 
   // TODO: refactor to match the TODO below
