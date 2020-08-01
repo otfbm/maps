@@ -41,12 +41,20 @@ module.exports = class TokenParser {
           size = sizeLookups.get(upperChar);
       }
 
+      // handle uri encoded strings
+      let label = matches[5];
+      try {
+        label = decodeURI(label);
+      } catch(err) {
+        // noop
+      }
+
       return new Overlay({
         cell: matches[1],
         color,
         size,
         type: 'token',
-        label: matches[5] || "",
+        label: label || "",
       });
     }
 
