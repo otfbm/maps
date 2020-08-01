@@ -79,5 +79,8 @@ module.exports = async function main(pathname, query) {
 
   board.drawEffects();
 
+  // border is drawn last so nothing overlaps it
+  board.drawBorder();
+
   return renderer.canv;
 }

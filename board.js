@@ -90,27 +90,48 @@ module.exports = class Board {
     };
   }
 
-  drawGridAndCoords() {
+  drawBorder() {
+
+    // undo padding and any pan to draw the border
+    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
     this.ctx.font = boardFont;
 
-    /* Drawing the Alphabetic coordinate markers */
+    // fill the edges
+    this.ctx.beginPath();
+    this.ctx.moveTo( this.padding * 0.5, this.padding * 0.5);
+    this.ctx.lineTo( this.padding * 0.5, this.height + this.padding * 1.5);
+    this.ctx.lineTo( this.width + this.padding * 1.5, this.height + this.padding * 1.5);
+    this.ctx.lineTo( this.width + this.padding * 1.5, this.padding * 0.5);
+    this.ctx.lineTo( this.padding * 0.5, this.padding * 0.5);
+    this.ctx.strokeStyle = this.darkMode ? textLightMode : textDarkMode;
+    this.ctx.lineWidth = this.padding;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
+    // outer grid lines
+    this.ctx.beginPath();
+    this.ctx.lineWidth = 1;
+    this.ctx.moveTo(0.5 + this.padding, this.padding);
+    this.ctx.lineTo(0.5 + this.padding, this.height + this.padding);
+
+    this.ctx.moveTo(0.5 + this.width + this.padding, this.padding);
+    this.ctx.lineTo(0.5 + this.width + this.padding, this.height + this.padding);
+
+    this.ctx.moveTo(this.padding, 0.5 + this.padding);
+    this.ctx.lineTo(this.width + this.padding, 0.5 + this.padding);
+
+    this.ctx.moveTo(this.padding, 0.5 + this.height + this.padding);
+    this.ctx.lineTo(this.width + this.padding, 0.5 + this.height + this.padding);
+
+    this.ctx.strokeStyle = this.strokeStyle;
+    this.ctx.stroke();
+
+    // Drawing the Alphabetic coordinate markers
     for (let i = 0; i <= this.width; i += this.gridsize) {
-      // this.ctx.beginPath();
-      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
-      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);
-      this.ctx.strokeStyle = this.strokeStyle;
-      
-      /* Keep the first and last lines of the grid opaque */
-      if ( i > 0 && i < this.width )
-        this.ctx.globalAlpha = this.gridOpacity;
-
-      this.ctx.stroke();
-      this.ctx.globalAlpha = 1.0;
-
       const num = i / this.gridsize;
       if (num < 1) continue;
 
@@ -135,19 +156,9 @@ module.exports = class Board {
         this.padding - 7
       );
     }
-    /* Drawing the numeral coordinate markers */
-    for (let i = 0; i <= this.height; i += this.gridsize) {
-      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
-      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
-      this.ctx.strokeStyle = this.strokeStyle;
-      
-      /* Keep the first and last lines of the grid opaque */
-      if ( i > 0 && i < this.height )
-        this.ctx.globalAlpha = this.gridOpacity;
-      
-      this.ctx.stroke();
-      this.ctx.globalAlpha = 1.0;
 
+    // Drawing the numeral coordinate markers
+    for (let i = 0; i <= this.height; i += this.gridsize) {
       this.ctx.beginPath();
       const num = i / this.gridsize + this.panY;
       if (num < 1) continue;
@@ -159,13 +170,32 @@ module.exports = class Board {
       );
     }
 
-    /* Drawing the scale marker */
+    // Drawing the scale marker
     this.ctx.beginPath();
     this.ctx.fillText(
       "1 square = 5ft",
       this.width - this.padding - 10,
       this.height + this.padding + 8
     );
+  }
+
+  drawGridLines() {
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = this.strokeStyle;
+    this.ctx.globalAlpha = this.gridOpacity;
+
+    for (let i = this.gridsize; i < this.width; i += this.gridsize) {
+      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
+      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);    
+    }
+
+    for (let i = this.gridsize; i < this.height; i += this.gridsize) {
+      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
+      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
+    }
+
+    this.ctx.stroke();
+    this.ctx.globalAlpha = 1.0;
   }
 
   draw() {
@@ -210,10 +240,11 @@ module.exports = class Board {
       img.src = this.background;
     }
 
-    this.drawGridAndCoords();
+    this.drawGridLines(); 
 
-    // move ctx to account for padding
-    this.ctx.translate(this.padding, this.padding);
+    // move ctx to account for padding and pan
+    this.ctx.save();
+    this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
 
     for (const line of this.lines) {
       let l = new Line(line, this.darkMode ? textDarkMode : textLightMode, this.darkMode ? fillDarkMode : fillLightMode);

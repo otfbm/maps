@@ -210,7 +210,7 @@ module.exports = class Grid {
     const code = characters[0].toUpperCase().charCodeAt(0);
     const x = code - 64 + start - 1;
 
-    return { x: Number(x) - Number(this.options.panX), y: Number(y) - Number(this.options.panY) };
+    return { x, y };
   }
 
   levels() {
@@ -276,7 +276,7 @@ module.exports = class Grid {
 
   *[Symbol.iterator]() {
     for (const level of this.levels()) {
-      for (const cell of this.cellsInViewForLevel(level)) {
+      for (const cell of this.cells(level)) {
         if (cell) {
           yield cell;
         }
