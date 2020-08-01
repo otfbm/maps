@@ -91,8 +91,7 @@ module.exports = class Board {
   }
 
   drawBorder() {
-
-    // undo padding and any pan to draw the border
+    // undo padding and any pan before drawing the border
     this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
@@ -180,6 +179,9 @@ module.exports = class Board {
   }
 
   drawGridLines() {
+    if (this.gridOpacity === 0)
+      return;
+
     this.ctx.beginPath();
     this.ctx.strokeStyle = this.strokeStyle;
     this.ctx.globalAlpha = this.gridOpacity;

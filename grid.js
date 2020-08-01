@@ -231,24 +231,6 @@ module.exports = class Grid {
     };
   }
 
-  cellsInViewForLevel(level) {
-    const width = this.options.width / this.options.gridsize;
-    const height = this.options.height / this.options.gridsize;
-
-    const cells = this._cells;
-    return {
-      *[Symbol.iterator]() {
-        for (let x = 0; x < width; x++) {
-          for (let y = 0; y < height; y++) {
-            if (cells[x][y].get(level)) {
-              yield cells[x][y].get(level);
-            }
-          }
-        }
-      }
-    }
-  }
-
   cells(level) {
     let x = 0;
     let y = 0;
