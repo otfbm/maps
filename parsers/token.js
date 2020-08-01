@@ -44,7 +44,7 @@ module.exports = class TokenParser {
       // handle uri encoded strings
       let label = matches[5];
       try {
-        label = decodeURI(label);
+        if (label) label = decodeURI(label);
       } catch(err) {
         // noop
       }
