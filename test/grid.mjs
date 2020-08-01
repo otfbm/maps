@@ -9,8 +9,8 @@ test("grid created", (t) => {
   const options = new Options();
   const grid = new Grid(options);
 
-  t.equal(grid._cells.length, 10);
-  t.equal(grid._cells[0].length, 10);
+  t.equal(grid._cells.length, 100);
+  t.equal(grid._cells[0].length, 100);
   t.equal(grid._cells[0][0].size, 0);
   t.end();
 });
