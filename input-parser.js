@@ -9,7 +9,8 @@ const DarkModeParser = require("./parsers/dark-mode.js");
 const GridOpacityParser = require("./parsers/grid-opacity.js");
 const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
-const PanParser = require('./parsers/pan.js')
+const PanParser = require('./parsers/pan.js');
+const GridsizeParser = require('./parsers/gridsize.js');
 
 module.exports = class InputParser {
   constructor() {
@@ -20,12 +21,13 @@ module.exports = class InputParser {
     this.icons = [];
     this.overlays = [];
     this.options = [];
-    this.zoom = 1;
+    this.zoom = 3;
     this.darkMode = false;
     this.gridOpacity = 1;
     this.background = null;
     this.panX = 0;
     this.panY = 0;
+    this.gridsize = 40;
 
     this.panParser = new PanParser();
     this.backgroundParser = new BackgroundParser();
@@ -38,6 +40,7 @@ module.exports = class InputParser {
     this.darkModeParser = new DarkModeParser();
     this.gridOpacityParser = new GridOpacityParser();
     this.effectParser = new EffectParser();
+    this.gridsizeParser = new GridsizeParser();
   }
 
   async parse(pathname = "", query = {}) {
@@ -92,6 +95,12 @@ module.exports = class InputParser {
       if (parsed) {
         this.panX = parsed.x;
         this.panY = parsed.y;
+        continue;
+      }
+
+      parsed = this.gridsizeParser.parse(part);
+      if (parsed) {
+        this.gridsize = parsed;
         continue;
       }
 

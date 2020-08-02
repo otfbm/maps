@@ -4,16 +4,14 @@ const Options = require("./options.js");
 const Renderer = require("./renderer/index.js");
 const Grid = require("./grid.js");
 
-const GRID_SIZE = 40;
 const PADDING = 15;
 
 module.exports = async function main(pathname, query) {
   const input = new InputParser()
   await input.parse(pathname, query);
-  const gridsize = GRID_SIZE * input.zoom;
-  const width = (input.board.width >= 100 ? 100 : input.board.width) * gridsize;
-  const height =
-    (input.board.height >= 100 ? 100 : input.board.height) * gridsize;
+  const gridsize = input.gridsize * input.zoom;
+  const width = input.board.width * input.gridsize;
+  const height = input.board.height * input.gridsize;
   
   const options = new Options({
     padding: PADDING,

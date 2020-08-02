@@ -1,5 +1,5 @@
 const minZoom = 1;
-const maxZoom = 3;
+const maxZoom = 5;
 
 module.exports = class ZoomParser {
     parse(str) {
@@ -11,8 +11,20 @@ module.exports = class ZoomParser {
            is the zoom level we're hoping for */
         for (var i = minZoom; i <= maxZoom; i++) {
             let re = new RegExp('^@.*[' + i + '].*$');
-            if (re.test(trimmed))
-                return i;
+            if (re.test(trimmed)) {
+                switch (i) {
+                    case 1:
+                        return 0.5;
+                    case 2:
+                        return 0.75;
+                    case 3:
+                        return 1;
+                    case 4:
+                        return 1.5;
+                    case 5:
+                        return 2;
+                }
+            }
         }
 
         return false;
