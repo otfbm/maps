@@ -15,8 +15,8 @@ module.exports = class Board {
   constructor({
     width,
     height,
-    gridsize,
-    zoom,
+    gridsize = 40,
+    zoom = 1,
     padding,
     ctx,
     strokeStyle = "#CCCCCC",
