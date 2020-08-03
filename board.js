@@ -221,22 +221,16 @@ module.exports = class Board {
         // don't draw a bg if thats the case
         if (sourceX > img.width || sourceY > img.height) return;
 
-        let invert = 1 / this.zoom;
-
         /* We don't want to scale images because we're assuming that any 
            default maps or user-provided maps meet the specifications we 
            outlined in the README.
            Instead of scaling, trim provided image to the map */
         this.ctx.drawImage(
           img,
-          sourceX,
-          sourceY,
-          this.width * invert,
-          this.height * invert,
-          this.padding,
-          this.padding,
-          this.width,
-          this.height,
+          this.padding - sourceX,
+          this.padding - sourceY,
+          img.width * this.zoom,
+          img.height * this.zoom,
         );
       };
       img.onerror = (err) => {
