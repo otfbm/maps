@@ -217,16 +217,12 @@ module.exports = class Board {
         const sourceX = this.panX * this.gridsize;
         const sourceY = this.panY * this.gridsize;
 
-        let invert = 1;
-
-        if (this.zoom === 0.5) invert = 2;
-        if (this.zoom === 0.75) invert = 1.5;
-        if (this.zoom === 1.5) invert = 0.75;
-        if (this.zoom === 2) invert = 0.5;
-
         // if the we try to clip from the bg image outside its size things don't work
         // don't draw a bg if thats the case
         if (sourceX > img.width || sourceY > img.height) return;
+
+        let invert = 1 / this.zoom;
+
         /* We don't want to scale images because we're assuming that any 
            default maps or user-provided maps meet the specifications we 
            outlined in the README.
