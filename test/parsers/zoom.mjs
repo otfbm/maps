@@ -43,15 +43,15 @@ test('parsing 5', (t) => {
     t.end();
 });
 
-test('parsing 5', (t) => {
+test('parsing 6', (t) => {
     const parser = new ZoomParser();
-    const result = parser.parse('/@4');
+    const result = parser.parse('/@4.321');
     
-    t.equal(result, false);
+    t.equal(result, 4.321);
     t.end();
 });
 
-test('parsing 6', (t) => {
+test('parsing 7', (t) => {
     const parser = new ZoomParser();
     const result = parser.parse('@3');
     
@@ -59,10 +59,10 @@ test('parsing 6', (t) => {
     t.end();
 });
 
-test('parsing 7', (t) => {
+test('parsing 8', (t) => {
     const parser = new ZoomParser();
-    const result = parser.parse('@0');
+    const result = parser.parse('@0.0');
     
-    t.equal(result, false);
+    t.equal(result, 0);
     t.end();
 });
