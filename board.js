@@ -238,7 +238,6 @@ module.exports = class Board {
     this.drawGridLines(); 
 
     // move ctx to account for padding and pan
-    this.ctx.save();
     this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
 
     for (const line of this.lines) {
