@@ -10,8 +10,8 @@ module.exports = async function main(pathname, query) {
   const input = new InputParser()
   await input.parse(pathname, query);
   const gridsize = input.gridsize * input.zoom;
-  const width = input.board.width;
-  const height = input.board.height;
+  const width = input.board.width * gridsize;
+  const height = input.board.height * gridsize;
   
   const options = new Options({
     padding: PADDING,

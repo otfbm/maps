@@ -14,7 +14,7 @@ const GridsizeParser = require('./parsers/gridsize.js');
 
 module.exports = class InputParser {
   constructor() {
-    this.board = { width: 400, height: 400 };
+    this.board = { width: 10, height: 10 };
     this.lines = [];
     this.tokens = [];
     this.effects = [];
@@ -127,11 +127,11 @@ module.exports = class InputParser {
     }
 
     // ensure that width and pan don't exceed 100
-    if ((this.board.width / this.gridsize + this.panX) > 100) {
-      this.panX = 100 - this.board.width / this.gridsize;
+    if ((this.board.width + this.panX) > 100) {
+      this.panX = 100 - this.board.width;
     }
-    if ((this.board.height / this.gridsize + this.panY) > 100){
-      this.panY = 100 - this.board.height / this.gridsize;
+    if ((this.board.height + this.panY) > 100){
+      this.panY = 100 - this.board.height;
     }
   }
 };
