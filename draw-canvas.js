@@ -21,6 +21,8 @@ module.exports = async function main(pathname, query) {
     height,
     panX: input.panX,
     panY: input.panY,
+    backgroundOffsetX: input.backgroundOffsetX,
+    backgroundOffsetY: input.backgroundOffsetY,
   });
   const zoom = input.zoom;
 
@@ -37,6 +39,8 @@ module.exports = async function main(pathname, query) {
     gridOpacity: input.gridOpacity,
     panX: input.panX,
     panY: input.panY,
+    backgroundOffsetX: input.backgroundOffsetX,
+    backgroundOffsetY: input.backgroundOffsetY,
   });
 
   // TODO: refactor to match the TODO below

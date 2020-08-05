@@ -28,6 +28,8 @@ module.exports = class InputParser {
     this.panX = 0;
     this.panY = 0;
     this.gridsize = 40;
+    this.backgroundOffsetX = 0;
+    this.backgroundOffsetY = 0;
 
     this.panParser = new PanParser();
     this.backgroundParser = new BackgroundParser();
@@ -101,6 +103,9 @@ module.exports = class InputParser {
       parsed = this.gridsizeParser.parse(part);
       if (parsed) {
         this.gridsize = parsed.size;
+
+        if (parsed.x) this.backgroundOffsetX = parsed.x;
+        if (parsed.y) this.backgroundOffsetY = parsed.y;
         continue;
       }
 

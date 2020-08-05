@@ -8,6 +8,8 @@ module.exports = class Options {
     padding = 15,
     panX = 0,
     panY = 0,
+    backgroundOffsetX = 0,
+    backgroundOffsetY = 0,
   } = {}) {
     this.width = width;
     this.height = height;
@@ -17,5 +19,7 @@ module.exports = class Options {
     this.padding = padding;
     this.panX = panX;
     this.panY = panY;
+    this.backgroundOffsetX = backgroundOffsetX;
+    this.backgroundOffsetY = backgroundOffsetY;
   }
 }

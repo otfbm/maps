@@ -24,6 +24,8 @@ module.exports = class Board {
     gridOpacity = 1.0,
     panX = 0,
     panY = 0,
+    backgroundOffsetX = 0,
+    backgroundOffsetY = 0,
   }) {
     this.width = width;
     this.height = height;
@@ -40,6 +42,8 @@ module.exports = class Board {
     this.gridOpacity = gridOpacity;
     this.panX = Number(panX);
     this.panY = Number(panY);
+    this.backgroundOffsetX = backgroundOffsetX;
+    this.backgroundOffsetY = backgroundOffsetY;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -214,8 +218,8 @@ module.exports = class Board {
       const img = new Image();
 
       img.onload = () => {
-        const sourceX = this.panX * this.gridsize;
-        const sourceY = this.panY * this.gridsize;
+        const sourceX = this.panX * this.gridsize + this.backgroundOffsetX;
+        const sourceY = this.panY * this.gridsize + this.backgroundOffsetY;
 
         /* We don't want to scale images because we're assuming that any 
            default maps or user-provided maps meet the specifications we 
