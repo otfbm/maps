@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_NO_WARNINGS=1 tap test --no-cov --no-esm --timeout 30000",
-    "start": "node ."
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
