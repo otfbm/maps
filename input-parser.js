@@ -100,7 +100,7 @@ module.exports = class InputParser {
 
       parsed = this.gridsizeParser.parse(part);
       if (parsed) {
-        this.gridsize = parsed;
+        this.gridsize = parsed.size;
         continue;
       }
 
