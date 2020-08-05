@@ -11,6 +11,7 @@ const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
 const PanParser = require('./parsers/pan.js');
 const GridsizeParser = require('./parsers/gridsize.js');
+const BackgroundOffsetParser = require('./parsers/background-offset.js');
 
 module.exports = class InputParser {
   constructor() {
@@ -43,6 +44,7 @@ module.exports = class InputParser {
     this.gridOpacityParser = new GridOpacityParser();
     this.effectParser = new EffectParser();
     this.gridsizeParser = new GridsizeParser();
+    this.backgroundOffsetParser = new BackgroundOffsetParser();
   }
 
   async parse(pathname = "", query = {}) {
@@ -100,15 +102,6 @@ module.exports = class InputParser {
         continue;
       }
 
-      parsed = this.gridsizeParser.parse(part);
-      if (parsed) {
-        this.gridsize = parsed.size;
-
-        if (parsed.x) this.backgroundOffsetX = parsed.x;
-        if (parsed.y) this.backgroundOffsetY = parsed.y;
-        continue;
-      }
-
       /* Because all of the options here can be grouped, we need to parse them
          together and not skip after a successful parse  */
 
@@ -126,6 +119,17 @@ module.exports = class InputParser {
       if (null !== parsed) {
         /* This check is like this because one of the valid returns is 0.0 */
         this.gridOpacity = parsed;
+      }
+
+      parsed = this.gridsizeParser.parse(part);
+      if (parsed) {
+        this.gridsize = parsed.size;
+      }
+
+      parsed = this.backgroundOffsetParser.parse(part);
+      if (parsed) {
+        this.backgroundOffsetX = parsed.x;
+        this.backgroundOffsetY = parsed.y;
       }
 
       // Extend by adding more parsers here
