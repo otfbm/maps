@@ -1,7 +1,7 @@
 const fastify = require('fastify');
 const func = require('./index').handler;
 
-const createServer = ({ logger = true }) => {
+const createServer = ({ logger = true } = {}) => {
     const server = fastify({ logger });
     server.get("/*", async (request, reply) => {
         if (request.params["*"] === "favicon.ico") return reply.send("");
