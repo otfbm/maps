@@ -9,13 +9,12 @@ const DarkModeParser = require("./parsers/dark-mode.js");
 const GridOpacityParser = require("./parsers/grid-opacity.js");
 const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
-const PanParser = require('./parsers/pan.js');
 const GridsizeParser = require('./parsers/gridsize.js');
 const BackgroundOffsetParser = require('./parsers/background-offset.js');
 
 module.exports = class InputParser {
   constructor() {
-    this.board = { width: 10, height: 10 };
+    this.board = { width: 10, height: 10, panX: 0, panY: 0 };
     this.lines = [];
     this.tokens = [];
     this.effects = [];
@@ -26,13 +25,10 @@ module.exports = class InputParser {
     this.darkMode = false;
     this.gridOpacity = 1;
     this.background = null;
-    this.panX = 0;
-    this.panY = 0;
     this.gridsize = 40;
     this.backgroundOffsetX = 0;
     this.backgroundOffsetY = 0;
 
-    this.panParser = new PanParser();
     this.backgroundParser = new BackgroundParser();
     this.boardParser = new BoardParser();
     this.tokenParser = new TokenParser();
@@ -95,13 +91,6 @@ module.exports = class InputParser {
         continue;
       }
 
-      parsed = this.panParser.parse(part);
-      if (parsed) {
-        this.panX = parsed.x;
-        this.panY = parsed.y;
-        continue;
-      }
-
       /* Because all of the options here can be grouped, we need to parse them
          together and not skip after a successful parse  */
 
@@ -136,11 +125,11 @@ module.exports = class InputParser {
     }
 
     // ensure that width and pan don't exceed 100
-    if ((this.board.width + this.panX) > 100) {
-      this.panX = 100 - this.board.width;
+    if ((this.board.width + this.board.panX) > 100) {
+      this.board.panX = 100 - this.board.width;
     }
-    if ((this.board.height + this.panY) > 100){
-      this.panY = 100 - this.board.height;
+    if ((this.board.height + this.board.panY) > 100){
+      this.board.panY = 100 - this.board.height;
     }
   }
 };

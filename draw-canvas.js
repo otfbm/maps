@@ -19,8 +19,8 @@ module.exports = async function main(pathname, query) {
     zoom: input.zoom,
     width,
     height,
-    panX: input.panX,
-    panY: input.panY,
+    panX: input.board.panX,
+    panY: input.board.panY,
     backgroundOffsetX: input.backgroundOffsetX,
     backgroundOffsetY: input.backgroundOffsetY,
   });
@@ -37,8 +37,8 @@ module.exports = async function main(pathname, query) {
     padding: PADDING,
     darkMode: input.darkMode,
     gridOpacity: input.gridOpacity,
-    panX: input.panX,
-    panY: input.panY,
+    panX: input.board.panX,
+    panY: input.board.panY,
     backgroundOffsetX: input.backgroundOffsetX,
     backgroundOffsetY: input.backgroundOffsetY,
   });

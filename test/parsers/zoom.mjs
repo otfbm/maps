@@ -58,3 +58,11 @@ test('parsing 7', (t) => {
     t.equal(result, 0);
     t.end();
 });
+
+test('parsing 8', (t) => {
+    const parser = new ZoomParser();
+    const result = parser.parse('@.52');
+    
+    t.equal(result, 0.52);
+    t.end();
+});

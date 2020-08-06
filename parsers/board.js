@@ -1,16 +1,31 @@
+const CoordParser = require("./coord-parser.js");
+
 module.exports = class BoardParser {
     parse(str) {
         let trimmed = str.trim();
         if (trimmed[0] === '/') trimmed = trimmed.substr(1);
-        if (trimmed[trimmed.length-1] === '/') trimmed = trimmed.substr(0, trimmed.length - 1);
+        if (trimmed[trimmed.length - 1] === '/') trimmed = trimmed.substr(0, trimmed.length - 1);
 
-        if (/^[1-9][0-9]?x[1-9][0-9]?$/.test(trimmed)) {
-            const size = trimmed.split('x');
-            let width = parseInt(size[0], 10);
-            let height = parseInt(size[1], 10);
-            if (width > 100) width = 100;
-            if (height > 100) height = 100;
-            return { width, height }
+        let match = trimmed.match(/^([A-Z]{1,2}[0-9]{1,2}):([A-Z]{1,4}[0-9]{1,2})$/i);
+        if (match) {
+            let pan = CoordParser.parse(match[1]);
+            pan.x--;
+            pan.y--;
+            let bottomRight = CoordParser.parse(match[2]);
+            return { width: bottomRight.x - pan.x, height: bottomRight.y - pan.y, panX: pan.x, panY: pan.y };
+        }
+
+        match = trimmed.match(/^(([A-Z]{1,2}[0-9]{1,2}):)?([1-9][0-9]?)x([1-9][0-9]?)$/i);
+        if (match) {
+            let pan = { x: 0, y: 0 };
+            if (match[2]) {
+                pan = CoordParser.parse(match[2]);
+                pan.x--;
+                pan.y--;
+            }
+            let width = parseInt(match[3]);
+            let height = parseInt(match[4]);
+            return { width, height, panX: pan.x, panY: pan.y };
         }
 
         return false;
