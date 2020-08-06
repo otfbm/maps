@@ -21,8 +21,8 @@ module.exports = async function main(pathname, query) {
     height,
     panX: input.board.panX,
     panY: input.board.panY,
-    backgroundOffsetX: input.backgroundOffsetX,
-    backgroundOffsetY: input.backgroundOffsetY,
+    backgroundOffsetX: input.backgroundOffsetX * input.zoom,
+    backgroundOffsetY: input.backgroundOffsetY * input.zoom,
   });
   const zoom = input.zoom;
 
@@ -39,8 +39,8 @@ module.exports = async function main(pathname, query) {
     gridOpacity: input.gridOpacity,
     panX: input.board.panX,
     panY: input.board.panY,
-    backgroundOffsetX: input.backgroundOffsetX,
-    backgroundOffsetY: input.backgroundOffsetY,
+    backgroundOffsetX: input.backgroundOffsetX * input.zoom,
+    backgroundOffsetY: input.backgroundOffsetY * input.zoom,
   });
 
   // TODO: refactor to match the TODO below
