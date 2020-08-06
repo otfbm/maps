@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit --no-cov --no-esm --timeout 30000",
-    "test:integration": "jest ./test/integration/image-snapshots.test.js",
+    "test:integration": "NODE_NO_WARNINGS=1 jest ./test/integration",
+    "test:integration:update": "jest ./test/integration -u",
     "start": "node server.js"
   },
   "keywords": [],
