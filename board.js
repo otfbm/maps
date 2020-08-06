@@ -161,7 +161,7 @@ module.exports = class Board {
     }
 
     // Drawing the numeral coordinate markers
-    for (let i = 0; i <= this.height; i += this.gridsize) {
+    for (let i = this.gridsize; i <= this.height; i += this.gridsize) {
       this.ctx.beginPath();
       const num = i / this.gridsize + this.panY;
       if (num < 1) continue;
