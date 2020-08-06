@@ -1,5 +1,5 @@
 import tap from 'tap';
-import GridsizeParser from '../../parsers/gridsize.js';
+import GridsizeParser from '../../../parsers/gridsize.js';
 
 const { test } = tap;
 

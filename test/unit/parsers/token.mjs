@@ -1,5 +1,5 @@
 import tap from 'tap';
-import TokenParser from '../../parsers/token.js';
+import TokenParser from '../../../parsers/token.js';
 
 const { test } = tap;
 

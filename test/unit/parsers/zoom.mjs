@@ -1,5 +1,5 @@
 import tap from 'tap';
-import ZoomParser from '../../parsers/zoom.js';
+import ZoomParser from '../../../parsers/zoom.js';
 
 const { test } = tap;
 

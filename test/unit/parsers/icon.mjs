@@ -1,5 +1,5 @@
 import tap from 'tap';
-import IconParser from '../../parsers/icon.js';
+import IconParser from '../../../parsers/icon.js';
 
 const { test } = tap;
 

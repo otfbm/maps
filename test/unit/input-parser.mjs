@@ -1,5 +1,5 @@
 import tap from "tap";
-import InputParser from "../input-parser.js";
+import InputParser from "../../input-parser.js";
 
 const clone = (item) => JSON.parse(JSON.stringify(item));
 

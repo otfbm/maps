@@ -1,5 +1,5 @@
 import tap from 'tap';
-import Board from '../board.js';
+import Board from '../../board.js';
 
 const { test } = tap;
 

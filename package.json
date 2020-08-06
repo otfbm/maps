@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_NO_WARNINGS=1 tap test --no-cov --no-esm --timeout 30000",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit --no-cov --no-esm --timeout 30000",
+    "test:integration": "jest ./test/integration/image-snapshots.test.js",
     "start": "node server.js"
   },
   "keywords": [],
@@ -17,6 +19,8 @@
     "canvas": "^2.6.1",
     "fastify": "^2.14.1",
     "fastify-static": "^2.7.0",
+    "jest": "^26.2.2",
+    "jest-image-snapshot": "^4.1.0",
     "puppeteer": "^3.3.0",
     "tap": "^14.10.7"
   }

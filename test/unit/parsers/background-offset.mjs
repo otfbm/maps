@@ -1,5 +1,5 @@
 import tap from 'tap';
-import BackgroundOffsetParser from '../../parsers/background-offset.js';
+import BackgroundOffsetParser from '../../../parsers/background-offset.js';
 
 const { test } = tap;
 

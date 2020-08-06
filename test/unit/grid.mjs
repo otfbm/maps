@@ -1,7 +1,7 @@
 import tap from "tap";
-import Grid from "../grid.js";
-import Options from "../options.js";
-import Overlay from "../overlay.js";
+import Grid from "../../grid.js";
+import Options from "../../options.js";
+import Overlay from "../../overlay.js";
 
 const { test } = tap;
 
