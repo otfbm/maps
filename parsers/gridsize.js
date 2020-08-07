@@ -8,7 +8,11 @@ module.exports = class GridsizeParser {
         const matches = trimmed.match(regex);
         
         if (matches) {
-            const size = parseInt(matches[1], 10);
+            let size = parseInt(matches[1], 10);
+
+            // min grid size
+            if (size < 20) size = 20;
+            if (size > 100) size = 100;
 
             // nasty hack to remove the match from the original options string
             obj.str = obj.str.replace(`c${matches[1]}`, '');
