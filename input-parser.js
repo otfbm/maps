@@ -97,11 +97,6 @@ module.exports = class InputParser {
       /* Because all of the options here can be grouped, we need to parse them
          together and not skip after a successful parse  */
 
-      parsed = this.zoomParser.parse(part);
-      if (parsed) {
-        this.zoom = parsed;
-      }
-
       parsed = this.darkModeParser.parse(part);
       if (parsed) {
         this.darkMode = parsed;
@@ -113,20 +108,27 @@ module.exports = class InputParser {
         this.gridOpacity = parsed;
       }
 
-      parsed = this.gridsizeParser.parse(part);
+      let p = part;
+
+      parsed = this.gridsizeParser.parse(p);
       if (parsed) {
         this.gridsize = parsed.size;
       }
 
-      parsed = this.backgroundOffsetParser.parse(part);
+      parsed = this.backgroundOffsetParser.parse(p);
       if (parsed) {
         this.backgroundOffsetX = parsed.x;
         this.backgroundOffsetY = parsed.y;
       }
 
-      parsed = this.backgroundZoomParser.parse(part);
+      parsed = this.backgroundZoomParser.parse(p);
       if (parsed) {
         this.backgroundZoom = parsed;
+      }
+
+      parsed = this.zoomParser.parse(p);
+      if (parsed) {
+        this.zoom = parsed;
       }
 
       // Extend by adding more parsers here

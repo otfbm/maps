@@ -12,6 +12,9 @@ module.exports = class BackgroundOffsetParser {
 
             if (Number.isNaN(zoom)) return false;
 
+            // nasty hack to remove the match from the original options string
+            str = str.replace(`c${matches[1]}`, '');
+
             return zoom;
         }
 
