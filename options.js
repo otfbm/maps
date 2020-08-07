@@ -10,6 +10,7 @@ module.exports = class Options {
     panY = 0,
     backgroundOffsetX = 0,
     backgroundOffsetY = 0,
+    backgroundZoom = 1,
   } = {}) {
     this.width = width;
     this.height = height;
@@ -21,5 +22,6 @@ module.exports = class Options {
     this.panY = panY;
     this.backgroundOffsetX = backgroundOffsetX;
     this.backgroundOffsetY = backgroundOffsetY;
+    this.backgroundZoom = backgroundZoom;
   }
 }

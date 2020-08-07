@@ -11,6 +11,7 @@ const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
 const GridsizeParser = require('./parsers/gridsize.js');
 const BackgroundOffsetParser = require('./parsers/background-offset.js');
+const BackgroundZoomParser = require('./parsers/background-zoom.js');
 
 module.exports = class InputParser {
   constructor() {
@@ -28,6 +29,7 @@ module.exports = class InputParser {
     this.gridsize = 40;
     this.backgroundOffsetX = 0;
     this.backgroundOffsetY = 0;
+    this.backgroundZoom = 1;
 
     this.backgroundParser = new BackgroundParser();
     this.boardParser = new BoardParser();
@@ -41,6 +43,7 @@ module.exports = class InputParser {
     this.effectParser = new EffectParser();
     this.gridsizeParser = new GridsizeParser();
     this.backgroundOffsetParser = new BackgroundOffsetParser();
+    this.backgroundZoomParser = new BackgroundZoomParser();
   }
 
   async parse(pathname = "", query = {}) {
@@ -119,6 +122,11 @@ module.exports = class InputParser {
       if (parsed) {
         this.backgroundOffsetX = parsed.x;
         this.backgroundOffsetY = parsed.y;
+      }
+
+      parsed = this.backgroundZoomParser.parse(part);
+      if (parsed) {
+        this.backgroundZoom = parsed;
       }
 
       // Extend by adding more parsers here

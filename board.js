@@ -26,6 +26,7 @@ module.exports = class Board {
     panY = 0,
     backgroundOffsetX = 0,
     backgroundOffsetY = 0,
+    backgroundZoom = 1,
   }) {
     this.width = width;
     this.height = height;
@@ -44,6 +45,7 @@ module.exports = class Board {
     this.panY = Number(panY);
     this.backgroundOffsetX = backgroundOffsetX;
     this.backgroundOffsetY = backgroundOffsetY;
+    this.backgroundZoom = backgroundZoom;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -220,17 +222,15 @@ module.exports = class Board {
       img.onload = () => {
         const sourceX = this.panX * this.gridsize + this.backgroundOffsetX;
         const sourceY = this.panY * this.gridsize + this.backgroundOffsetY;
+        const destWidth = img.width * this.backgroundZoom;
+        const destHeight = img.height * this.backgroundZoom;
 
-        /* We don't want to scale images because we're assuming that any 
-           default maps or user-provided maps meet the specifications we 
-           outlined in the README.
-           Instead of scaling, trim provided image to the map */
         this.ctx.drawImage(
           img,
           this.padding - sourceX,
           this.padding - sourceY,
-          img.width * this.zoom,
-          img.height * this.zoom,
+          destWidth,
+          destHeight,
         );
       };
       img.onerror = (err) => {
