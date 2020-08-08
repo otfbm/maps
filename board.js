@@ -100,11 +100,6 @@ module.exports = class Board {
     // undo padding and any pan before drawing the border
     this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
-    this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-    this.ctx.font = boardFont;
-
     // fill the edges
     this.ctx.beginPath();
     this.ctx.moveTo( this.padding * 0.5, this.padding * 0.5);
@@ -122,18 +117,19 @@ module.exports = class Board {
     this.ctx.lineWidth = 1;
     this.ctx.moveTo(0.5 + this.padding, this.padding);
     this.ctx.lineTo(0.5 + this.padding, this.height + this.padding);
-
     this.ctx.moveTo(0.5 + this.width + this.padding, this.padding);
     this.ctx.lineTo(0.5 + this.width + this.padding, this.height + this.padding);
-
     this.ctx.moveTo(this.padding, 0.5 + this.padding);
     this.ctx.lineTo(this.width + this.padding, 0.5 + this.padding);
-
     this.ctx.moveTo(this.padding, 0.5 + this.height + this.padding);
     this.ctx.lineTo(this.width + this.padding, 0.5 + this.height + this.padding);
-
     this.ctx.strokeStyle = this.strokeStyle;
     this.ctx.stroke();
+
+    this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.font = boardFont;
 
     // Drawing the Alphabetic coordinate markers
     for (let i = 0; i <= this.width; i += this.gridsize) {

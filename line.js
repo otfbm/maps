@@ -54,6 +54,7 @@ module.exports = class Line {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.rotate(1.57079632679);
+        ctx.fillStyle = this.fg;
         ctx.fillText("S", 0, zoom);
       } else if (icon.type === "door") {
         ctx.rect(unit * -1.5, unit * -0.5, unit * 3, unit);
@@ -63,7 +64,6 @@ module.exports = class Line {
       }
 
       ctx.lineWidth = 1;
-      ctx.strokeStyle = this.fg;
       ctx.fillStyle = this.bg;
       ctx.fill();
       ctx.stroke();
