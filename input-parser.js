@@ -108,7 +108,7 @@ module.exports = class InputParser {
         this.gridOpacity = parsed;
       }
 
-      let p = part;
+      let p = {str: part};
 
       parsed = this.gridsizeParser.parse(p);
       if (parsed) {

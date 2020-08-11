@@ -1,6 +1,6 @@
 module.exports = class ZoomParser {
-    parse(str) {
-        let trimmed = str.trim();
+    parse(obj) {
+        let trimmed = obj.str.trim();
         if (trimmed[0] === '/') trimmed = trimmed.substr(1);
         if (trimmed[trimmed.length-1] === '/') trimmed = trimmed.substr(0, trimmed.length - 1);
 
