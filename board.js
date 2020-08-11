@@ -126,6 +126,7 @@ module.exports = class Board {
     this.ctx.strokeStyle = this.strokeStyle;
     this.ctx.stroke();
 
+    // grid label settings
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";

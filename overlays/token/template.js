@@ -1,15 +1,12 @@
 module.exports = ({
-  height,
-  width,
-  radius,
+  size,
   color,
-  strokeWidth,
   fontsize,
-  label,
-  y,
+  label
 }) => `
-<svg height="${height}" width="${width}">
-  <circle cx="50%" cy="50%" r="${radius}" fill="${color}" stroke="black" stroke-width="${strokeWidth}" />
-  <text fill="white" x="49%" y="${y}" font-family="sans-serif" font-size="${fontsize}" text-anchor="middle">${label}</text>
+<svg height="${size}" width="${size}">
+  <circle cx="50%" cy="50%" r="47%" fill="${color}" stroke="white" stroke-width="3.5%"/>
+  <circle cx="50%" cy="50%" r="48%" fill="none" stroke="black" stroke-width="2.5%" />
+  <text dy=".3em" x = "50%" y = "50%" text-anchor="middle" fill="white" font-family="sans-serif" font-size="${fontsize}">${label}</text>
 </svg>
 `;
