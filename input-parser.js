@@ -57,7 +57,11 @@ module.exports = class InputParser {
 
     this.background = await this.backgroundParser.parse(query);
 
-    for (const part of parts) {
+    for (let part of parts) {
+      part = part.trim();
+      if (part[0] === '/') part = part.substr(1);
+      if (part[part.length-1] === '/') part = part.substr(0, part.length - 1);
+
       let parsed = this.boardParser.parse(part);
       if (parsed) {
         this.board = parsed;

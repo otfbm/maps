@@ -16,7 +16,7 @@ const effectShapes = new Map([
 
 module.exports = class EffectParser {
   parse(str) {
-    let trimmed = str.trim().toUpperCase();
+    let trimmed = str.toUpperCase();
     if (trimmed.charAt(0) !== '*')
       return false;
 

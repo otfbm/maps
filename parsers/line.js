@@ -2,7 +2,7 @@ const CoordParser = require("./coord-parser.js");
 
 module.exports = class LineParser {
   parse(str) {
-    let trimmed = str.trim();
+    let trimmed = str;
     if (trimmed.charAt(0) !== '_')
       return false;
 
