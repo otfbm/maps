@@ -1,5 +1,5 @@
 import tap from "tap";
-import Overlay from "../overlay.js";
+import Overlay from "../../overlay.js";
 
 const { test } = tap;
 

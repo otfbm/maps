@@ -10,81 +10,51 @@ module.exports = class TokenOverlay {
 
   tiny(item) {
     const { label, color, width, height } = item;
-    const { zoom } = this.options;
 
     return {
       color,
       label: `${label.substr(0, 1)}${label.substr(-1)}`,
-      height,
-      width,
-      radius: (width / 4) * 0.85,
-      strokeWidth: 1 * zoom,
-      fontsize: 10 * zoom,
-      y:'60%',
+      size: width / 2
     };
   }
 
   medium(item) {
     const { label, color, width, height } = item;
-    const { zoom } = this.options;
 
     return {
-      height,
-      width,
-      radius: (width / 2) * 0.85,
+      size: width,
       color,
-      strokeWidth: 2 * zoom,
-      fontsize: 12 * zoom,
-      label: label.substr(0, 4),
-      y:'60%',
+      label: label.substr(0, 4)
     };
   }
 
   large(item) {
     const { label, color, width, height } = item;
-    const { zoom } = this.options;
 
     return {
-      height: height * 2,
-      width: width * 2,
-      radius: width * 0.9,
+      size: width * 2,
       color,
-      strokeWidth: 3 * zoom,
-      fontsize: 14 * zoom,
-      label: label.substr(0, 9),
-      y:'56%',
+      label: label.substr(0, 9)
     };
   }
 
   huge(item) {
     const { label, color, width, height } = item;
-    const { zoom } = this.options;
 
     return {
-      height: height * 3,
-      width: width * 3,
-      radius: width * 1.5 * 0.92,
+      size: width * 3,
       color,
-      strokeWidth: 4 * zoom,
-      fontsize: 14 * zoom,
-      label: label.substr(0, 14),
-      y:'55%',
+      label: label.substr(0, 14)
     };
   }
 
   gargantuan(item) {
     const { label, color, width, height } = item;
-    const { zoom } = this.options;
 
     return {
-      height: height * 4,
-      width: width * 4,
-      radius: width * 2 * 0.95,
+      size: width * 4,
       color,
-      strokeWidth: 5 * zoom,
-      fontsize: 16 * zoom,
-      label: label.substr(0, 18),
-      y:'53%',
+      label: label.substr(0, 18)
     };
   }
 
@@ -111,6 +81,9 @@ module.exports = class TokenOverlay {
         opts = this.gargantuan(item.overlay);
         break;
     }
+
+    opts.fontsize = opts.size * ( 8 / (opts.label.length + 4)) * 0.30;
+
     const svg = template(opts);
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
   }

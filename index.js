@@ -20,6 +20,7 @@ exports.handler = async (event, context) => {
       isBase64Encoded: true,
     };
   } catch (err) {
+    console.log(err);
     const errorImage = await fs.readFile(join(__dirname, './5xx.jpg'));
     return {
       statusCode: 200,

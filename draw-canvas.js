@@ -4,16 +4,14 @@ const Options = require("./options.js");
 const Renderer = require("./renderer/index.js");
 const Grid = require("./grid.js");
 
-const GRID_SIZE = 40;
 const PADDING = 15;
 
 module.exports = async function main(pathname, query) {
   const input = new InputParser()
   await input.parse(pathname, query);
-  const gridsize = GRID_SIZE * input.zoom;
-  const width = (input.board.width >= 52 ? 52 : input.board.width) * gridsize;
-  const height =
-    (input.board.height >= 52 ? 52 : input.board.height) * gridsize;
+  const gridsize = input.gridsize * input.zoom;
+  const width = input.board.width * gridsize;
+  const height = input.board.height * gridsize;
   
   const options = new Options({
     padding: PADDING,
@@ -21,6 +19,11 @@ module.exports = async function main(pathname, query) {
     zoom: input.zoom,
     width,
     height,
+    panX: input.board.panX,
+    panY: input.board.panY,
+    backgroundOffsetX: input.backgroundOffsetX * input.zoom,
+    backgroundOffsetY: input.backgroundOffsetY * input.zoom,
+    backgroundZoom: input.backgroundZoom * input.zoom,
   });
   const zoom = input.zoom;
 
@@ -35,6 +38,11 @@ module.exports = async function main(pathname, query) {
     padding: PADDING,
     darkMode: input.darkMode,
     gridOpacity: input.gridOpacity,
+    panX: input.board.panX,
+    panY: input.board.panY,
+    backgroundOffsetX: input.backgroundOffsetX * input.zoom,
+    backgroundOffsetY: input.backgroundOffsetY * input.zoom,
+    backgroundZoom: input.backgroundZoom * input.zoom,
   });
 
   // TODO: refactor to match the TODO below
@@ -74,6 +82,9 @@ module.exports = async function main(pathname, query) {
   }
 
   board.drawEffects();
+
+  // border is drawn last so nothing overlaps it
+  board.drawBorder();
 
   return renderer.canv;
 }

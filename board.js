@@ -15,13 +15,18 @@ module.exports = class Board {
   constructor({
     width,
     height,
-    gridsize,
-    zoom,
+    gridsize = 40,
+    zoom = 1,
     padding,
     ctx,
     strokeStyle = "#CCCCCC",
     darkMode = false,
-    gridOpacity = 1.0
+    gridOpacity = 1.0,
+    panX = 0,
+    panY = 0,
+    backgroundOffsetX = 0,
+    backgroundOffsetY = 0,
+    backgroundZoom = 1,
   }) {
     this.width = width;
     this.height = height;
@@ -36,6 +41,11 @@ module.exports = class Board {
     this.effects = [];
     this.darkMode = darkMode;
     this.gridOpacity = gridOpacity;
+    this.panX = Number(panX);
+    this.panY = Number(panY);
+    this.backgroundOffsetX = backgroundOffsetX;
+    this.backgroundOffsetY = backgroundOffsetY;
+    this.backgroundZoom = backgroundZoom;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -86,35 +96,60 @@ module.exports = class Board {
     };
   }
 
-  drawGridAndCoords() {
+  drawBorder() {
+    // undo padding and any pan before drawing the border
+    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
+    // fill the edges
+    this.ctx.beginPath();
+    this.ctx.moveTo( this.padding * 0.5, this.padding * 0.5);
+    this.ctx.lineTo( this.padding * 0.5, this.height + this.padding * 1.5);
+    this.ctx.lineTo( this.width + this.padding * 1.5, this.height + this.padding * 1.5);
+    this.ctx.lineTo( this.width + this.padding * 1.5, this.padding * 0.5);
+    this.ctx.lineTo( this.padding * 0.5, this.padding * 0.5);
+    this.ctx.strokeStyle = this.darkMode ? textLightMode : textDarkMode;
+    this.ctx.lineWidth = this.padding;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
+    // outer grid lines
+    this.ctx.beginPath();
+    this.ctx.lineWidth = 1;
+    this.ctx.moveTo(0.5 + this.padding, this.padding);
+    this.ctx.lineTo(0.5 + this.padding, this.height + this.padding);
+    this.ctx.moveTo(0.5 + this.width + this.padding, this.padding);
+    this.ctx.lineTo(0.5 + this.width + this.padding, this.height + this.padding);
+    this.ctx.moveTo(this.padding, 0.5 + this.padding);
+    this.ctx.lineTo(this.width + this.padding, 0.5 + this.padding);
+    this.ctx.moveTo(this.padding, 0.5 + this.height + this.padding);
+    this.ctx.lineTo(this.width + this.padding, 0.5 + this.height + this.padding);
+    this.ctx.strokeStyle = this.strokeStyle;
+    this.ctx.stroke();
+
+    // grid label settings
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
     this.ctx.font = boardFont;
 
-    /* Drawing the Alphabetic coordinate markers */
+    // Drawing the Alphabetic coordinate markers
     for (let i = 0; i <= this.width; i += this.gridsize) {
-      // this.ctx.beginPath();
-      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
-      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);
-      this.ctx.strokeStyle = this.strokeStyle;
-      
-      /* Keep the first and last lines of the grid opaque */
-      if ( i > 0 && i < this.width )
-        this.ctx.globalAlpha = this.gridOpacity;
-
-      this.ctx.stroke();
-      this.ctx.globalAlpha = 1.0;
-
       const num = i / this.gridsize;
       if (num < 1) continue;
 
       this.ctx.beginPath();
-      let character = String.fromCharCode(num + 64);
-      if (num > 26) {
-        const char = String.fromCharCode(num + 38);
+      let character = String.fromCharCode(num + 64 + this.panX);
+      if (num + this.panX > 26) {
+        const char = String.fromCharCode(num + 38 + this.panX);
         character = `${char}${char}`;
+      }
+      if (num + this.panX > 52) {
+        const char = String.fromCharCode(num + 12 + this.panX);
+        character = `${char}${char}${char}`;
+      }
+      if (num + this.panX > 78) {
+        const char = String.fromCharCode(num - 14 + this.panX);
+        character = `${char}${char}${char}${char}`;
       }
 
       this.ctx.fillText(
@@ -123,21 +158,11 @@ module.exports = class Board {
         this.padding - 7
       );
     }
-    /* Drawing the numeral coordinate markers */
-    for (let i = 0; i <= this.height; i += this.gridsize) {
-      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
-      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
-      this.ctx.strokeStyle = this.strokeStyle;
-      
-      /* Keep the first and last lines of the grid opaque */
-      if ( i > 0 && i < this.height )
-        this.ctx.globalAlpha = this.gridOpacity;
-      
-      this.ctx.stroke();
-      this.ctx.globalAlpha = 1.0;
 
+    // Drawing the numeral coordinate markers
+    for (let i = this.gridsize; i <= this.height; i += this.gridsize) {
       this.ctx.beginPath();
-      const num = i / this.gridsize;
+      const num = i / this.gridsize + this.panY;
       if (num < 1) continue;
 
       this.ctx.fillText(
@@ -147,13 +172,35 @@ module.exports = class Board {
       );
     }
 
-    /* Drawing the scale marker */
+    // Drawing the scale marker
     this.ctx.beginPath();
     this.ctx.fillText(
       "1 square = 5ft",
       this.width - this.padding - 10,
       this.height + this.padding + 8
     );
+  }
+
+  drawGridLines() {
+    if (this.gridOpacity === 0)
+      return;
+
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = this.strokeStyle;
+    this.ctx.globalAlpha = this.gridOpacity;
+
+    for (let i = this.gridsize; i < this.width; i += this.gridsize) {
+      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
+      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);    
+    }
+
+    for (let i = this.gridsize; i < this.height; i += this.gridsize) {
+      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
+      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
+    }
+
+    this.ctx.stroke();
+    this.ctx.globalAlpha = 1.0;
   }
 
   draw() {
@@ -170,14 +217,18 @@ module.exports = class Board {
       const img = new Image();
 
       img.onload = () => {
+        const sourceX = this.panX * this.gridsize + this.backgroundOffsetX;
+        const sourceY = this.panY * this.gridsize + this.backgroundOffsetY;
+        const destWidth = img.width * this.backgroundZoom;
+        const destHeight = img.height * this.backgroundZoom;
 
-        /* We don't want to scale images because we're assuming that any 
-           default maps or user-provided maps meet the specifications we 
-           outlined in the README.
-           Instead of scaling, trim provided image to the map */
-        this.ctx.drawImage(img, 
-                          0, 0, this.width, this.height, /* Clip image */
-                          this.padding, this.padding, this.width * this.zoom, this.height * this.zoom); /* Draw Image */
+        this.ctx.drawImage(
+          img,
+          this.padding - sourceX,
+          this.padding - sourceY,
+          destWidth,
+          destHeight,
+        );
       };
       img.onerror = (err) => {
         throw err;
@@ -185,10 +236,10 @@ module.exports = class Board {
       img.src = this.background;
     }
 
-    this.drawGridAndCoords();
+    this.drawGridLines(); 
 
-    // move ctx to account for padding
-    this.ctx.translate(this.padding, this.padding);
+    // move ctx to account for padding and pan
+    this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
 
     for (const line of this.lines) {
       let l = new Line(line, this.darkMode ? textDarkMode : textLightMode, this.darkMode ? fillDarkMode : fillLightMode);

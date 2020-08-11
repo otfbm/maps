@@ -1,7 +1,7 @@
 import tap from "tap";
-import Grid from "../grid.js";
-import Options from "../options.js";
-import Overlay from "../overlay.js";
+import Grid from "../../grid.js";
+import Options from "../../options.js";
+import Overlay from "../../overlay.js";
 
 const { test } = tap;
 
@@ -9,8 +9,8 @@ test("grid created", (t) => {
   const options = new Options();
   const grid = new Grid(options);
 
-  t.equal(grid._cells.length, 10);
-  t.equal(grid._cells[0].length, 10);
+  t.equal(grid._cells.length, 100);
+  t.equal(grid._cells[0].length, 100);
   t.equal(grid._cells[0][0].size, 0);
   t.end();
 });

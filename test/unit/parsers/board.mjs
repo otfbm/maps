@@ -1,5 +1,5 @@
 import tap from 'tap';
-import BoardParser from '../../parsers/board.js';
+import BoardParser from '../../../parsers/board.js';
 
 const { test } = tap;
 

@@ -1,5 +1,5 @@
 import tap from 'tap';
-import OverlayParser from '../../parsers/overlay.js';
+import OverlayParser from '../../../parsers/overlay.js';
 
 const { test } = tap;
 

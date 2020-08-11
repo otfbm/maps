@@ -1,24 +1,32 @@
 import tap from "tap";
-import InputParser from "../input-parser.js";
+import InputParser from "../../input-parser.js";
 
 const clone = (item) => JSON.parse(JSON.stringify(item));
 
 tap.test("board parsing", async (t) => {
   let input = new InputParser();
   await input.parse('');
-  t.same(input.board, { width: 10, height: 10 });
+  t.same(input.board, { width: 10, height: 10, panX: 0, panY: 0 });
   
   input = new InputParser();
   await input.parse("1x1");
-  t.same(input.board, { width: 1, height: 1 });
+  t.same(input.board, { width: 1, height: 1, panX: 0, panY: 0 });
 
   input = new InputParser();
   await input.parse("/1x1");
-  t.same(input.board, { width: 1, height: 1 });
+  t.same(input.board, { width: 1, height: 1, panX: 0, panY: 0 });
   
   input = new InputParser();
   await input.parse("/1x1/");
-  t.same(input.board, { width: 1, height: 1 });
+  t.same(input.board, { width: 1, height: 1, panX: 0, panY: 0 });
+
+  input = new InputParser();
+  await input.parse("b2:2x3");
+  t.same(input.board, { width: 2, height: 3, panX: 1, panY: 1 });
+
+  input = new InputParser();
+  await input.parse("c3:e8");
+  t.same(input.board, { width: 3, height: 6, panX: 2, panY: 2 });
   t.end();
 });
 
