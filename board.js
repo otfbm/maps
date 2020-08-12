@@ -172,12 +172,30 @@ module.exports = class Board {
       );
     }
 
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.15));
+    this.ctx.lineTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.lineWidth = 1;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.15));
+    this.ctx.lineTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.lineWidth = 1;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
     // Drawing the scale marker
     this.ctx.beginPath();
+    this.ctx.textAlign = 'center';
     this.ctx.fillText(
-      "1 square = 5ft",
-      this.width - this.padding - 10,
-      this.height + this.padding + 8
+      "5ft",
+      this.padding + this.width - (this.gridsize / 2),
+      this.padding + this.height + (this.gridsize / 2),
+      this.gridsize,
     );
   }
 
