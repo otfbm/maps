@@ -6,10 +6,10 @@ const { Image } = canvas;
 const boardFont = '14px FleischWurst';
 const tokenFont = '12px bold AzoSans';
 
-const fillLightMode = "#ffffff";
-const fillDarkMode = "#000000";
-const textLightMode = "#000000";
-const textDarkMode = "#ffffff";
+const fillLightMode = "#f4f6ff"; // Powdered Sugar
+const fillDarkMode = "#07031a"; // Midnight Blue
+const textLightMode = "#07031a";
+const textDarkMode = "#f4f6ff";
 
 module.exports = class Board {
   constructor({

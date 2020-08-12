@@ -133,7 +133,7 @@ tap.test("token parsing", async (t) => {
         br: "B2",
         type: "token",
         label: "",
-        color: "firebrick",
+        color: "#e63c3c",
         size: "medium",
       },
     ],
