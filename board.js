@@ -155,7 +155,7 @@ module.exports = class Board {
       this.ctx.fillText(
         character,
         this.padding + i - this.gridsize / 2,
-        this.padding - 7
+        this.padding / 2
       );
     }
 
@@ -167,7 +167,7 @@ module.exports = class Board {
 
       this.ctx.fillText(
         String(num),
-        this.padding - 8,
+        this.padding / 2,
         this.padding + i - this.gridsize / 2
       );
     }
