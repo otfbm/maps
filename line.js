@@ -50,7 +50,7 @@ module.exports = class Line {
       if (icon.type === "secret-door") {
         ctx.moveTo(unit * -2, 0);
         ctx.lineTo(unit * 2, 0);
-        ctx.font = `${zoom * 15}px impact`;
+        ctx.font = `${zoom * 15}px "Azo Sans Bold"`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.rotate(1.57079632679);

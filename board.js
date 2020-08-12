@@ -3,8 +3,8 @@ const canvas = require("canvas");
 const { Image } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
-const boardFont = "14px impact";
-const tokenFont = "12px impact";
+const boardFont = '14px FleischWurst';
+const tokenFont = '12px bold AzoSans';
 
 const fillLightMode = "#ffffff";
 const fillDarkMode = "#000000";
