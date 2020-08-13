@@ -8,8 +8,11 @@ const tokenFont = '12px bold AzoSans';
 
 const fillLightMode = "#f4f6ff"; // Powdered Sugar
 const fillDarkMode = "#07031a"; // Midnight Blue
-const textLightMode = "#07031a";
-const textDarkMode = "#f4f6ff";
+
+const textLightMode = "rgb(7, 3, 26)";
+const textLightModeAlpha = "rgba(7, 3, 26, 0.6)";
+const textDarkMode = "rgb(244, 246, 255)";
+const textDarkModeAlpha = "rgba(244, 246, 255, 0.6)";
 
 module.exports = class Board {
   constructor({
@@ -100,17 +103,72 @@ module.exports = class Board {
     // undo padding and any pan before drawing the border
     this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
+    let color = '';
+    let solidColor = '';
+    if (this.darkMode) {
+      solidColor = textLightMode;
+      color = textLightModeAlpha;
+    } else {
+      solidColor = textDarkMode;
+      color = textDarkModeAlpha;
+    }
+
     // fill the edges
+    // TL -> BL
     this.ctx.beginPath();
-    this.ctx.moveTo( this.padding * 0.5, this.padding * 0.5);
-    this.ctx.lineTo( this.padding * 0.5, this.height + this.padding * 1.5);
-    this.ctx.lineTo( this.width + this.padding * 1.5, this.height + this.padding * 1.5);
-    this.ctx.lineTo( this.width + this.padding * 1.5, this.padding * 0.5);
-    this.ctx.lineTo( this.padding * 0.5, this.padding * 0.5);
-    this.ctx.strokeStyle = this.darkMode ? textLightMode : textDarkMode;
-    this.ctx.lineWidth = this.padding;
     this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.padding * 0.5, 0);
+    this.ctx.lineTo( this.padding * 0.5, this.height + this.padding * 2);
+    this.ctx.strokeStyle = color;
     this.ctx.stroke();
+
+    // BL -> BR
+    this.ctx.beginPath();
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.padding * 1.5, this.height + this.padding * 1.5);
+    this.ctx.lineTo( this.width + this.padding * 0.5, this.height + this.padding * 1.5);
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+    
+    // BR -> TR
+    this.ctx.beginPath();
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.width + this.padding * 1.5, this.height + this.padding * 2);
+    this.ctx.lineTo( this.width + this.padding * 1.5, 0);
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+
+    // TR -> TL
+    this.ctx.beginPath();
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.width + this.padding * 0.5, this.padding * 0.5);
+    this.ctx.lineTo( this.padding * 1.5, this.padding * 0.5);
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+    
+    // // TL BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(0, 0, this.padding, this.padding);
+
+    // // BL BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(this.padding + this.width, 0, this.padding, this.padding);
+
+    // // BR BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(0, this.padding + this.height, this.padding, this.padding);
+
+    // // TR BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(this.padding + this.width, this.padding + this.height, this.padding, this.padding);
 
     // outer grid lines
     this.ctx.beginPath();
@@ -236,17 +294,26 @@ module.exports = class Board {
       const img = new Image();
 
       img.onload = () => {
-        const sourceX = this.panX * this.gridsize + this.backgroundOffsetX;
-        const sourceY = this.panY * this.gridsize + this.backgroundOffsetY;
-        const destWidth = img.width * this.backgroundZoom;
-        const destHeight = img.height * this.backgroundZoom;
+        const sourceX = this.panX * this.gridsize;
+        const sourceY = this.panY * this.gridsize;
+        const destWidth = img.width * this.backgroundZoom - this.backgroundOffsetX;
+        const destHeight = img.height * this.backgroundZoom - this.backgroundOffsetY;
+
+        const destWidthLeftover = destWidth % this.gridsize;
+        const destHeightLeftover = destHeight % this.gridsize;
+
+        console.log(destWidthLeftover, destHeightLeftover);
 
         this.ctx.drawImage(
           img,
+          this.backgroundOffsetX,
+          this.backgroundOffsetY,
+          img.width - this.backgroundOffsetX - destWidthLeftover,
+          img.height - this.backgroundOffsetY - destHeightLeftover,
           this.padding - sourceX,
           this.padding - sourceY,
-          destWidth,
-          destHeight,
+          destWidth - destWidthLeftover,
+          destHeight - destHeightLeftover,
         );
       };
       img.onerror = (err) => {
