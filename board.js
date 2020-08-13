@@ -190,6 +190,7 @@ module.exports = class Board {
 
     // Drawing the scale marker
     this.ctx.beginPath();
+    this.ctx.fillStyle = '#808080';
     this.ctx.textAlign = 'center';
     this.ctx.fillText(
       "5ft",
