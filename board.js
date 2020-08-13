@@ -310,26 +310,28 @@ module.exports = class Board {
       const img = new Image();
 
       img.onload = () => {
-        const sourceX = this.panX * this.gridsize;
-        const sourceY = this.panY * this.gridsize;
-        const destWidth = img.width * this.backgroundZoom - this.backgroundOffsetX;
-        const destHeight = img.height * this.backgroundZoom - this.backgroundOffsetY;
-
-        const destWidthLeftover = destWidth % this.gridsize;
-        const destHeightLeftover = destHeight % this.gridsize;
-
-        console.log(destWidthLeftover, destHeightLeftover);
-
+        const gridsize = this.gridsize / this.zoom;
+        const padding = this.padding / this.zoom;
+        const offsetX = this.backgroundOffsetX / this.zoom;
+        const offsetY = this.backgroundOffsetY / this.zoom;
+        const scaledOffsetX = this.backgroundOffsetX;
+        const scaledOffsetY = this.backgroundOffsetY;
+        const offsetTrimX = (img.width - offsetX) % gridsize;
+        const offsetTrimY = (img.height - offsetY) % gridsize;
+        const scaledOffsetTrimX = offsetTrimX * this.zoom;
+        const scaledOffsetTrimY = offsetTrimY * this.zoom;
+        
         this.ctx.drawImage(
           img,
-          this.backgroundOffsetX,
-          this.backgroundOffsetY,
-          img.width - this.backgroundOffsetX - destWidthLeftover,
-          img.height - this.backgroundOffsetY - destHeightLeftover,
-          this.padding - sourceX,
-          this.padding - sourceY,
-          destWidth - destWidthLeftover,
-          destHeight - destHeightLeftover,
+          offsetX,
+          offsetY,
+          img.width - offsetX - offsetTrimX,
+          img.height - offsetY - offsetTrimY,
+          padding * this.zoom - this.panX * this.zoom * gridsize,
+          padding * this.zoom - this.panY * this.zoom * gridsize,
+          img.width * this.zoom - scaledOffsetX - scaledOffsetTrimX,
+          img.height * this.zoom - scaledOffsetY - scaledOffsetTrimY,
+
         );
       };
       img.onerror = (err) => {
