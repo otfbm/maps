@@ -239,8 +239,8 @@ resource "aws_lambda_function" "bg" {
   role          = aws_iam_role.bg-lambda.arn
   handler       = "lambda.lambda_handler"
   runtime       = "python3.8"
-
-  source_code_hash = filebase64sha256(local.lambda-preload-filename)
+  
+  depends_on = [data.archive_file.preload-lambda]
 }
 
 # IAM
