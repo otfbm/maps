@@ -7,7 +7,7 @@ test('parsing: position 1', (t) => {
     const parser = new TokenParser();
     const { color, size, label } = parser.parse('D3');
     
-    t.same(color, 'black');
+    t.same(color, '#07031a');
     t.same(size, 'medium');
     t.equal(label, '');
     t.end();
@@ -17,7 +17,7 @@ test('parsing: position 2', (t) => {
     const parser = new TokenParser();
     const { color, size, label } = parser.parse('D3');
     
-    t.same(color, 'black');
+    t.same(color, '#07031a');
     t.same(size, 'medium');
     t.equal(label, '');
     t.end();
@@ -27,7 +27,7 @@ test('parsing: position 3', (t) => {
     const parser = new TokenParser();
     const { color, size, label } = parser.parse('D12');
     
-    t.same(color, 'black');
+    t.same(color, '#07031a');
     t.same(size, 'medium');
     t.equal(label, '');
     t.end();
@@ -57,7 +57,7 @@ test('parsing: position and name', (t) => {
     const parser = new TokenParser();
     const { color, size, label } = parser.parse('D3-name');
     
-    t.same(color, 'black');
+    t.same(color, '#07031a');
     t.same(size, 'medium');
     t.equal(label, 'name');
     t.end();
