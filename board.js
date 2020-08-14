@@ -272,6 +272,50 @@ module.exports = class Board {
       this.padding + this.height + (this.gridsize / 2),
       this.gridsize,
     );
+
+    if (this.panY * this.gridsize + this.height + this.gridsize < this.imgheight) {
+      this.ctx.beginPath();
+      this.ctx.setLineDash([5, 5]);
+      this.ctx.lineWidth = 1;
+      this.ctx.lineCap = "square";
+      this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+      this.ctx.moveTo(this.padding, this.padding + this.height);
+      this.ctx.lineTo(this.padding, this.padding * 2 + this.height);
+      this.ctx.stroke();
+    }
+
+    if (this.panX < 1 && this.panY > 0) {
+      this.ctx.beginPath();
+      this.ctx.setLineDash([5, 5]);
+      this.ctx.lineWidth = 1;
+      this.ctx.lineCap = "square";
+      this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+      this.ctx.moveTo(this.padding, 0);
+      this.ctx.lineTo(this.padding, this.padding);
+      this.ctx.stroke();
+    }
+
+    if (this.panX * this.gridsize + this.width + this.gridsize < this.imgwidth) {
+      this.ctx.beginPath();
+      this.ctx.setLineDash([5, 5]);
+      this.ctx.lineWidth = 1;
+      this.ctx.lineCap = "square";
+      this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+      this.ctx.moveTo(this.padding + this.width, this.padding);
+      this.ctx.lineTo(this.padding * 2 + this.width, this.padding);
+      this.ctx.stroke();
+    }
+
+    if (this.panY < 1 && this.panX > 0) {
+      this.ctx.beginPath();
+      this.ctx.setLineDash([5, 5]);
+      this.ctx.lineWidth = 1;
+      this.ctx.lineCap = "square";
+      this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+      this.ctx.moveTo(0, this.padding);
+      this.ctx.lineTo(this.padding, this.padding);
+      this.ctx.stroke();
+    }
   }
 
   drawGridLines() {
@@ -321,6 +365,9 @@ module.exports = class Board {
         const scaledOffsetTrimX = offsetTrimX * this.zoom;
         const scaledOffsetTrimY = offsetTrimY * this.zoom;
         
+        this.imgwidth = img.width;
+        this.imgheight = img.height;
+
         this.ctx.drawImage(
           img,
           offsetX,
