@@ -94,19 +94,30 @@ module.exports = class TokenOverlay {
    * @param {*} bgColor background color, must be in format: "#ffffff" or "#fff"
    */
   pickTextColor(bgColor) {
-    let L = 0;
     if (bgColor.length === 7) {
       var r = parseInt(bgColor.substring(1, 3), 16);
       var g = parseInt(bgColor.substring(3, 5), 16);
       var b = parseInt(bgColor.substring(5, 7), 16);
-      L = r * 0.299 + g * 0.587 + b * 0.114;
     } else if (bgColor.length === 4) {
-      var r = parseInt(bgColor.substring(1, 2), 16);
-      var g = parseInt(bgColor.substring(2, 3), 16);
-      var b = parseInt(bgColor.substring(3, 4), 16);
-      L = r * 5.083 + g * 9.979 + b * 1.938;
+      var r = parseInt(bgColor.substring(1, 2), 16) * 17;
+      var g = parseInt(bgColor.substring(2, 3), 16) * 17;
+      var b = parseInt(bgColor.substring(3, 4), 16) * 17;
     }
 
-    return L > 155 ? "black" : "white";
+    let L1 = 0.9236;
+    let L2 = this.luminanace(r, g, b);
+    if (L1 < L2) return "#07031a";
+    let contrastRatio = (L1 + 0.05) / (L2 + 0.05);
+    return contrastRatio < 3 ? "#07031a" : "#f4f6ff";
+  }
+
+  luminanace(r, g, b) {
+    var a = [r, g, b].map(function (v) {
+      v /= 255;
+      return v <= 0.03928
+        ? v / 12.92
+        : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
   }
 }

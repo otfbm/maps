@@ -5,7 +5,7 @@ module.exports = class Room {
     ctx,
     gridsize,
     padding,
-    strokeStyle = "black",
+    strokeStyle = "#07031a",
     coordinates = [],
   }) {
     this.width = width;
