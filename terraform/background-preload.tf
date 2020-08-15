@@ -307,3 +307,24 @@ resource "aws_iam_role" "bg-lambda" {
 }
 POLICY
 }
+
+resource "aws_iam_policy" "bg-lambda" {
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "LambdaWriteObject",
+            "Effect": "Allow",
+            "Action": "s3:PutObject",
+            "Resource": "${aws_s3_bucket.backgrounds.arn}/*"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "bg-lambda" {
+  policy_arn = aws_iam_policy.bg-lambda.arn
+  role = aws_iam_role.bg-lambda.name
+}

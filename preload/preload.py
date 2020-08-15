@@ -23,12 +23,12 @@ def lambda_handler(event, context):
         download_img(buffer, imgUrl)
         limit_img_size(
             buffer,
-            os.environ['TARGET_BYTES'],  # target image size
-            tolerance=os.environ['SIZE_TOLERANCE']  # percent of what the file may be bigger than TARGET_BYTES
+            int(os.environ['TARGET_BYTES']),  # target image size
+            tolerance=int(os.environ['SIZE_TOLERANCE'])  # percent of what the file may be bigger than TARGET_BYTES
         )
 
-        s3_client.upload_fileobj(buffer.getvalue(), bucket, imgUrlEnc,
-                                 ExtraArgs={'Metadata': {'CacheControl': 'max-age=259200'}})
+        s3_client.upload_fileobj(buffer, bucket, imgUrlEnc,
+                                 ExtraArgs={'Metadata': {'Cache-Control': 'max-age=259200'}, {'Content-Type': 'image/jpeg'}})
 
     response = {}
     response['statusCode'] = 301
