@@ -273,7 +273,7 @@ module.exports = class Board {
       this.gridsize,
     );
 
-    if (this.panY * this.gridsize + this.height + this.gridsize < this.imgheight) {
+    if (this.panY * this.gridsize + this.height + this.gridsize - 1 < this.imgheight && this.panX < 1) {
       this.ctx.beginPath();
       this.ctx.setLineDash([5, 5]);
       this.ctx.lineWidth = 1;
@@ -295,7 +295,7 @@ module.exports = class Board {
       this.ctx.stroke();
     }
 
-    if (this.panX * this.gridsize + this.width + this.gridsize < this.imgwidth) {
+    if (this.panX * this.gridsize + this.width + this.gridsize - 1 < this.imgwidth && this.panY < 1) {
       this.ctx.beginPath();
       this.ctx.setLineDash([5, 5]);
       this.ctx.lineWidth = 1;
@@ -307,15 +307,92 @@ module.exports = class Board {
     }
 
     if (this.panY < 1 && this.panX > 0) {
-      this.ctx.beginPath();
-      this.ctx.setLineDash([5, 5]);
-      this.ctx.lineWidth = 1;
-      this.ctx.lineCap = "square";
-      this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
-      this.ctx.moveTo(0, this.padding);
-      this.ctx.lineTo(this.padding, this.padding);
-      this.ctx.stroke();
+      // if () { // dont draw right on the edge of the canvas, it looks weird
+        this.ctx.beginPath();
+        this.ctx.setLineDash([5, 5]);
+        this.ctx.lineWidth = 1;
+        this.ctx.lineCap = "square";
+        this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+        this.ctx.moveTo(0, this.padding);
+        this.ctx.lineTo(this.padding, this.padding);
+        this.ctx.stroke();
+      // }
     }
+
+    if (this.panX > 0) {
+      const leftoverHeight = this.imgheight % this.gridsize
+      const height = this.imgheight - leftoverHeight;
+      const drawHeight = height - (this.panY * this.gridsize) + this.padding;
+      if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+        this.ctx.beginPath();
+        this.ctx.setLineDash([5, 5]);
+        this.ctx.lineWidth = 1;
+        this.ctx.lineCap = "square";
+        this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+        this.ctx.moveTo(0, drawHeight);
+        this.ctx.lineTo(this.padding, drawHeight);
+        this.ctx.stroke();
+      }
+
+      if (this.panY * this.gridsize + this.height + this.gridsize - 1 < this.imgheight) {
+        const leftoverWidth = this.imgwidth % this.gridsize
+        const width = this.imgwidth - leftoverWidth;
+        const drawWidth = width - (this.panX * this.gridsize) + this.padding;
+        const startHeight = this.padding + this.height;
+        const endHeight = this.padding * 2 + this.height;
+
+
+        if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+          if (drawWidth < this.width) { // dont draw over the "5ft" key
+            this.ctx.beginPath();
+            this.ctx.setLineDash([5, 5]);
+            this.ctx.lineWidth = 1;
+            this.ctx.lineCap = "square";
+            this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+            this.ctx.moveTo(drawWidth, startHeight);
+            this.ctx.lineTo(drawWidth, endHeight);
+            this.ctx.stroke();
+          }
+        }
+      }
+    }
+
+    if (this.panY > 0) {
+      const leftoverWidth = this.imgwidth % this.gridsize
+      const width = this.imgwidth - leftoverWidth;
+      const drawWidth = width - (this.panX * this.gridsize) + this.padding;
+      if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+        this.ctx.beginPath();
+        this.ctx.setLineDash([5, 5]);
+        this.ctx.lineWidth = 1;
+        this.ctx.lineCap = "square";
+        this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+        this.ctx.moveTo(drawWidth, 0);
+        this.ctx.lineTo(drawWidth, this.padding);
+        this.ctx.stroke();
+      }
+
+      if (this.panX * this.gridsize + this.width + this.gridsize - 1 < this.imgwidth) {
+        const leftoverHeight = this.imgheight % this.gridsize
+        const height = this.imgheight - leftoverHeight;
+        const startWidth = this.padding + this.width;
+        const endWidth = this.padding * 2 + this.width;
+        const drawHeight = height - (this.panY * this.gridsize) + this.padding;
+
+        if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+          this.ctx.beginPath();
+          this.ctx.setLineDash([5, 5]);
+          this.ctx.lineWidth = 1;
+          this.ctx.lineCap = "square";
+          this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+          this.ctx.moveTo(startWidth, drawHeight);
+          this.ctx.lineTo(endWidth, drawHeight);
+          this.ctx.stroke();
+        }
+      }
+    }
+
+    
   }
 
   drawGridLines() {
