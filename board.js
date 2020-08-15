@@ -3,7 +3,7 @@ const canvas = require("canvas");
 const { Image } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
-const boardFont = '14px FleischWurst';
+const boardFont = '1em FleischWurst';
 const tokenFont = '12px bold AzoSans';
 
 const fillLightMode = "#f4f6ff"; // Powdered Sugar
@@ -188,7 +188,7 @@ module.exports = class Board {
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
-    this.ctx.font = boardFont;
+    this.ctx.font = `${this.gridsize * 0.35}px FleischWurst`;
 
     // Drawing the Alphabetic coordinate markers
     for (let i = 0; i <= this.width; i += this.gridsize) {
