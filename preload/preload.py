@@ -13,6 +13,7 @@ from PIL import Image
 warnings.simplefilter('error', Image.DecompressionBombWarning)
 s3_client = boto3.client('s3')
 
+
 def lambda_handler(event, context):
     imgUrlEnc = event['pathParameters']['url']
     imgUrl = base64.b64decode(event['pathParameters']['url'])
@@ -27,15 +28,17 @@ def lambda_handler(event, context):
             tolerance=int(os.environ['SIZE_TOLERANCE'])  # percent of what the file may be bigger than TARGET_BYTES
         )
 
+        buffer.seek(0)  # rewind file pointer before read
         s3_client.upload_fileobj(buffer, bucket, imgUrlEnc,
-                                 ExtraArgs={'Metadata': {'Cache-Control': 'max-age=259200'}, {'Content-Type': 'image/jpeg'}})
+                                 ExtraArgs={'CacheControl': 'max-age=86400', 'ContentType': 'image/jpeg'})
 
     response = {}
     response['statusCode'] = 301
-    response['headers']={'Location': f'{s3Url}/{imgUrlEnc}'}
+    response['headers'] = {'Location': f'https://{s3Url}/{imgUrlEnc}'}
     data = {}
-    response['body']=json.dumps(data)
+    response['body'] = json.dumps(data)
     return response
+
 
 def download_img(buffer, url):
     resp = requests.get(url, stream=True)
@@ -44,18 +47,25 @@ def download_img(buffer, url):
         for chunk in resp:
             buffer.write(chunk)
 
-def limit_img_size(buffer, target_filesize, tolerance=5):
+
+def limit_img_size(buffer, target_filesize, tolerance=5, debug=False):
     img = img_orig = Image.open(buffer).convert('RGB')
     aspect = img.size[0] / img.size[1]
 
+    if len(buffer.getvalue()) < (target_filesize + target_filesize * (tolerance / 100)):
+        if (debug):
+            print("size within tolerance. nothing to do.")
+        return  # dont do anything if it's already good
+
     while True:
-        buffer.truncate(0)
         buffer.seek(0)
-        img.save(buffer, format="JPEG", optimize=True, quality=1)
+        buffer.truncate(0)
+        img.save(buffer, format="JPEG", optimize=True, quality=75)
         data = buffer.getvalue()
         filesize = len(data)
         size_deviation = filesize / target_filesize
-       # print("size: {}; factor: {:.3f}".format(filesize, size_deviation))
+        if (debug):
+            print("size: {}; factor: {:.3f}".format(filesize, size_deviation))
 
         if size_deviation <= (100 + tolerance) / 100:
             # filesize fits
@@ -67,3 +77,26 @@ def limit_img_size(buffer, target_filesize, tolerance=5):
             new_height = new_width / aspect
             # resize from img_orig to not lose quality
             img = img_orig.resize((int(new_width), int(new_height)))
+
+
+def test():
+    url = "https://media.wizards.com/2015/images/dnd/resources/Sword-Coast-Map_LowRes.jpg"
+    with io.BytesIO() as buffer:
+        download_img(buffer, url)
+        print(f"original buffer size: {len(buffer.getvalue())}")
+        with open("/tmp/download.jpg", "wb") as f:
+            f.write(buffer.getvalue())
+        limit_img_size(
+            buffer,
+            1048576,  # target image size
+            tolerance=5,  # percent of what the file may be bigger than TARGET_BYTES
+            debug=True
+        )
+        buffer.seek(0)
+        print(f"final buffer size: {len(buffer.getvalue())}")
+        with open("/tmp/temp.jpg", "wb") as f:
+            f.write(buffer.getvalue())
+
+
+if __name__ == '__main__':
+    test()

@@ -240,7 +240,9 @@ resource "aws_api_gateway_integration" "integration" {
 }
 
 resource "aws_api_gateway_deployment" "prod" {
-  depends_on = [aws_api_gateway_integration.integration]
+  depends_on = [aws_api_gateway_integration.integration, aws_api_gateway_method.method,
+                aws_api_gateway_resource.action, aws_api_gateway_resource.url,
+                aws_api_gateway_rest_api.bg]
   stage_name = "prod"
 
   rest_api_id = aws_api_gateway_rest_api.bg.id
