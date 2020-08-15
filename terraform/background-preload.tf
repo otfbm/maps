@@ -274,8 +274,8 @@ resource "aws_lambda_function" "bg" {
   runtime       = "python3.8"
   handler = "${local.lambda-preload-function-name}.lambda_handler"
   layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
-  memory_size = 512
-  timeout = 10
+  memory_size = 1024
+  timeout = 20
 
   source_code_hash = filebase64sha256(local.lambda-preload-filename)
 
@@ -329,4 +329,9 @@ EOF
 resource "aws_iam_role_policy_attachment" "bg-lambda" {
   policy_arn = aws_iam_policy.bg-lambda.arn
   role = aws_iam_role.bg-lambda.name
+}
+
+resource "aws_iam_role_policy_attachment" "bg-lamba-basicexecutionrole" {
+  role       = "${aws_iam_role.bg-lambda.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
