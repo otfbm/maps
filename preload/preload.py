@@ -1,12 +1,40 @@
 #!/usr/bin/env python3
 
-import warnings
-from PIL import Image
 import io
-from hashlib import sha256
+import json
+import os
+import warnings
+
+import boto3
 import requests
+from PIL import Image
 
 warnings.simplefilter('error', Image.DecompressionBombWarning)
+s3_client = boto3.client('s3')
+
+def lambda_handler(event, context):
+    imgUrlEnc = event['pathParameters']['url']
+    imgUrl = base64.b64decode(event['pathParameters']['url'])
+    bucket = os.environ['BUCKET']
+    s3Url = os.environ['URL']
+
+    with io.BytesIO() as buffer:
+        download_img(buffer, imgUrl)
+        limit_img_size(
+            buffer,
+            os.environ['TARGET_BYTES'],  # target image size
+            tolerance=os.environ['SIZE_TOLERANCE']  # percent of what the file may be bigger than TARGET_BYTES
+        )
+
+        s3_client.upload_fileobj(buffer.getvalue(), bucket, imgUrlEnc,
+                                 ExtraArgs={'Metadata': {'CacheControl': 'max-age=259200'}})
+
+    response = {}
+    response['statusCode'] = 301
+    response['headers']={'Location': f'{s3Url}/{imgUrlEnc}'}
+    data = {}
+    response['body']=json.dumps(data)
+    return response
 
 def download_img(buffer, url):
     resp = requests.get(url, stream=True)
@@ -26,8 +54,7 @@ def limit_img_size(buffer, target_filesize, tolerance=5):
         data = buffer.getvalue()
         filesize = len(data)
         size_deviation = filesize / target_filesize
-        print("size: {}; factor: {:.3f}".format(filesize, size_deviation))
-        return
+       # print("size: {}; factor: {:.3f}".format(filesize, size_deviation))
 
         if size_deviation <= (100 + tolerance) / 100:
             # filesize fits
@@ -35,21 +62,7 @@ def limit_img_size(buffer, target_filesize, tolerance=5):
         else:
             # filesize not good enough => adapt width and height
             # use sqrt of deviation since applied both in width and height
-            new_width = img.size[0] / size_deviation**0.5
+            new_width = img.size[0] / size_deviation ** 0.5
             new_height = new_width / aspect
             # resize from img_orig to not lose quality
             img = img_orig.resize((int(new_width), int(new_height)))
-
-url = 'http://media.wizards.com/2015/images/dnd/resources/Sword-Coast-Map_HighRes.jpg'
-with io.BytesIO() as buffer:
-    download_img(buffer, url)
-
-    limit_img_size(
-        buffer,
-        1048576,   # bytes
-        tolerance = 5    # percent of what the file may be bigger than target_filesize
-    )
-
-    hash = sha256(url.encode('utf-8')).hexdigest()
-    with open(f'{hash}.jpg', "wb") as f:
-        f.write(buffer.getvalue())

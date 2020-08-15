@@ -2,6 +2,7 @@
 
 set -eEuo pipefail
 
-lambda-preload-filename="artifacts/preload.zip"
-zip -r ${lambda-preload-filename} ../preload/*
+lambda_preload_filename="artifacts/preload.zip"
+rm -f ../${lambda_preload_filename}
+zip -jr ../${lambda_preload_filename} ../../preload/*
 echo "Done with function bundle!"

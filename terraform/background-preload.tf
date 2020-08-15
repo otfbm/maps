@@ -2,8 +2,11 @@ locals {
   index_key             = "index.html"
   domain_name           = "bg.otfbm.io"
   lambda-layer-preload-s3-key = "lambda/preload-layer.zip"
-  lambda-preload-filename = "preload.zip"
+  lambda-preload-filename = "artifacts/preload.zip"
+  lambda-preload-layer-filename = "artifacts/preload-layer.zip"
   lambda-preload-function-name = "preload"
+  target_image_bytes = 1048576
+  target_image_bytes_tolerance = 5
 }
 
 data "aws_route53_zone" "otfbm" {
@@ -15,12 +18,6 @@ data "aws_s3_bucket" "infra" {
   bucket = "otfbm-infra"
 }
 
-data "archive_file" "preload-lambda" {
-  output_path = "${path.root}/${local.lambda-preload-filename}"
-  type = "zip"
-  source_dir = "${path.root}/../preload"
-}
-
 # Certificate creation and validation
 resource "aws_acm_certificate" "bg" {
   provider = aws.us-east-1   # CF distributions require certificates in us-east-1
@@ -28,19 +25,11 @@ resource "aws_acm_certificate" "bg" {
   validation_method         = "DNS"
 }
 
-resource "null_resource" "preload-lambda-layer" {
-  provisioner "local-exec" {
-    working_dir = "${path.root}/scripts"
-    command = "./lambda-layer-preload.sh"
-  }
-}
-
 resource "aws_s3_bucket_object" "preload-lambda-layer" {
   bucket = data.aws_s3_bucket.infra.bucket
   key = local.lambda-layer-preload-s3-key
-  source = "scripts/preload-layer.zip"
+  source = local.lambda-preload-layer-filename
   content_type = "application/zip"
-  depends_on = [null_resource.preload-lambda-layer]
 }
 
 resource "aws_lambda_layer_version" "preload-lambda-layer" {
@@ -130,6 +119,20 @@ EOF
 
   website {
     index_document = local.index_key
+
+    routing_rules = <<EOF
+[{
+  "Condition": {
+    "HttpErrorCodeReturnedEquals": "404"
+  },
+  "Redirect": {
+    "Protocol": "https",
+    "HostName": "${aws_api_gateway_rest_api.bg.id}.execute-api.${var.region}.amazonaws.com",
+    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.action.path_part}/",
+    "HttpRedirectCode": "307"
+  }
+}]
+EOF
   }
 
   # no cors_rule necessary - images allowed by cors
@@ -170,7 +173,7 @@ resource "aws_cloudfront_distribution" "backgrounds" {
     target_origin_id       = local.domain_name
     viewer_protocol_policy = "allow-all"
     compress = true
-    default_ttl            = 259200
+    default_ttl            = 0
     forwarded_values {
       query_string = false
       cookies {
@@ -200,47 +203,88 @@ resource "aws_api_gateway_rest_api" "bg" {
   name = "Background Preload API GW"
 }
 
-resource "aws_api_gateway_resource" "resource" {
-  path_part   = "fetch"
+resource "aws_api_gateway_resource" "action" {
   parent_id   = aws_api_gateway_rest_api.bg.root_resource_id
+  path_part   = "preload"
+  rest_api_id = aws_api_gateway_rest_api.bg.id
+}
+
+resource "aws_api_gateway_resource" "url" {
+  parent_id = aws_api_gateway_resource.action.id
+  path_part = "{url}"
   rest_api_id = aws_api_gateway_rest_api.bg.id
 }
 
 resource "aws_api_gateway_method" "method" {
   rest_api_id   = aws_api_gateway_rest_api.bg.id
-  resource_id   = aws_api_gateway_resource.resource.id
+  resource_id   = aws_api_gateway_resource.url.id
   http_method   = "GET"
   authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.url" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "integration" {
   rest_api_id             = aws_api_gateway_rest_api.bg.id
-  resource_id             = aws_api_gateway_resource.resource.id
+  resource_id             = aws_api_gateway_resource.url.id
   http_method             = aws_api_gateway_method.method.http_method
-  integration_http_method = "GET"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.bg.invoke_arn
+
+  request_parameters = {
+    "integration.request.path.id" = "method.request.path.url"
+  }
+}
+
+resource "aws_api_gateway_deployment" "prod" {
+  depends_on = [aws_api_gateway_integration.integration]
+  stage_name = "prod"
+
+  rest_api_id = aws_api_gateway_rest_api.bg.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  variables = {
+    deployed_at = timestamp()
+  }
 }
 
 # Lambda Function Bits
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.bg.function_name
+  function_name = aws_lambda_function.bg.arn
   principal     = "apigateway.amazonaws.com"
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  source_arn = "arn:aws:execute-api:${var.region}:${var.account}:${aws_api_gateway_rest_api.bg.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
+  source_arn = "${aws_api_gateway_rest_api.bg.execution_arn}/*/*/*"
 }
 
 resource "aws_lambda_function" "bg" {
   filename      = local.lambda-preload-filename
   function_name = local.lambda-preload-function-name
   role          = aws_iam_role.bg-lambda.arn
-  handler       = "lambda.lambda_handler"
   runtime       = "python3.8"
-  
-  depends_on = [data.archive_file.preload-lambda]
+  handler = "${local.lambda-preload-function-name}.lambda_handler"
+  layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
+  memory_size = 512
+  timeout = 10
+
+  source_code_hash = filebase64sha256(local.lambda-preload-filename)
+
+  environment {
+    variables = {
+      BUCKET = local.domain_name
+      URL = local.domain_name
+      TARGET_BYTES = local.target_image_bytes
+      SIZE_TOLERANCE = local.target_image_bytes_tolerance
+    }
+  }
 }
 
 # IAM
