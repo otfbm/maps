@@ -410,8 +410,8 @@ module.exports = class Board {
         const offsetY = this.backgroundOffsetY / this.zoom;
         const scaledOffsetX = this.backgroundOffsetX;
         const scaledOffsetY = this.backgroundOffsetY;
-        const offsetTrimX = (img.width - offsetX) % gridsize;
-        const offsetTrimY = (img.height - offsetY) % gridsize;
+        const offsetTrimX = (img.width * this.backgroundZoom - offsetX) % gridsize;
+        const offsetTrimY = (img.height * this.backgroundZoom - offsetY) % gridsize;
         const scaledOffsetTrimX = offsetTrimX * this.zoom;
         const scaledOffsetTrimY = offsetTrimY * this.zoom;
         
