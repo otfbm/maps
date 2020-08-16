@@ -285,8 +285,8 @@ module.exports = class Board {
       this.ctx.stroke();
     }
 
-    const imgheight = this.imgheight * this.zoom;
-    const imgwidth = this.imgwidth * this.zoom;
+    const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
+    const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
     const leftoverHeight = imgheight % this.gridsize
     const height = imgheight - leftoverHeight;
     const drawHeight = height - (this.panY * this.gridsize) + this.padding;
