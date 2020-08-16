@@ -425,11 +425,10 @@ module.exports = class Board {
           offsetY,
           img.width - offsetX - offsetTrimX,
           img.height - offsetY - offsetTrimY,
-          padding * this.zoom - this.panX * this.zoom * gridsize,
-          padding * this.zoom - this.panY * this.zoom * gridsize,
+          this.padding - this.panX * this.gridsize,
+          this.padding - this.panY * this.gridsize,
           img.width * this.zoom - scaledOffsetX - scaledOffsetTrimX,
           img.height * this.zoom - scaledOffsetY - scaledOffsetTrimY,
-
         );
       };
       img.onerror = (err) => {
