@@ -12,7 +12,7 @@ module.exports = class CoordParser {
     const reg = /[A-Z]/;
     let yIndex = 1;
     if (upper[1].match(reg)) {
-      x = x * 26 + upper.charCodeAt(1) - charOffset;
+      x = 26 + upper.charCodeAt(1) - charOffset;
       yIndex = 2;
     }
 
