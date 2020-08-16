@@ -406,7 +406,6 @@ module.exports = class Board {
 
       img.onload = () => {
         const gridsize = this.gridsize / this.zoom;
-        const padding = this.padding / this.zoom;
         const offsetX = this.backgroundOffsetX / this.zoom;
         const offsetY = this.backgroundOffsetY / this.zoom;
         const scaledOffsetX = this.backgroundOffsetX;
@@ -427,8 +426,8 @@ module.exports = class Board {
           img.height - offsetY - offsetTrimY,
           this.padding - this.panX * this.gridsize,
           this.padding - this.panY * this.gridsize,
-          img.width * this.zoom - scaledOffsetX - scaledOffsetTrimX,
-          img.height * this.zoom - scaledOffsetY - scaledOffsetTrimY,
+          (img.width * this.backgroundZoom * this.zoom) - scaledOffsetX - scaledOffsetTrimX,
+          (img.height * this.backgroundZoom * this.zoom) - scaledOffsetY - scaledOffsetTrimY,
         );
       };
       img.onerror = (err) => {

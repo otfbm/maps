@@ -21,7 +21,7 @@ module.exports = async function main(pathname, query) {
     panY: input.board.panY,
     backgroundOffsetX: input.backgroundOffsetX * input.zoom,
     backgroundOffsetY: input.backgroundOffsetY * input.zoom,
-    backgroundZoom: input.backgroundZoom * input.zoom,
+    backgroundZoom: input.backgroundZoom,
   });
   const zoom = input.zoom;
 
@@ -40,7 +40,7 @@ module.exports = async function main(pathname, query) {
     panY: input.board.panY,
     backgroundOffsetX: input.backgroundOffsetX * input.zoom,
     backgroundOffsetY: input.backgroundOffsetY * input.zoom,
-    backgroundZoom: input.backgroundZoom * input.zoom,
+    backgroundZoom: input.backgroundZoom,
   });
 
   // TODO: refactor to match the TODO below
