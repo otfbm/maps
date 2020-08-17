@@ -4,8 +4,6 @@ const Options = require("./options.js");
 const Renderer = require("./renderer/index.js");
 const Grid = require("./grid.js");
 
-const PADDING = 15;
-
 module.exports = async function main(pathname, query) {
   const input = new InputParser()
   await input.parse(pathname, query);
@@ -14,7 +12,7 @@ module.exports = async function main(pathname, query) {
   const height = input.board.height * gridsize;
   
   const options = new Options({
-    padding: PADDING,
+    padding: gridsize,
     gridsize,
     zoom: input.zoom,
     width,
@@ -23,7 +21,7 @@ module.exports = async function main(pathname, query) {
     panY: input.board.panY,
     backgroundOffsetX: input.backgroundOffsetX * input.zoom,
     backgroundOffsetY: input.backgroundOffsetY * input.zoom,
-    backgroundZoom: input.backgroundZoom * input.zoom,
+    backgroundZoom: input.backgroundZoom,
   });
   const zoom = input.zoom;
 
@@ -35,14 +33,14 @@ module.exports = async function main(pathname, query) {
     height,
     gridsize,
     zoom,
-    padding: PADDING,
+    padding: gridsize,
     darkMode: input.darkMode,
     gridOpacity: input.gridOpacity,
     panX: input.board.panX,
     panY: input.board.panY,
     backgroundOffsetX: input.backgroundOffsetX * input.zoom,
     backgroundOffsetY: input.backgroundOffsetY * input.zoom,
-    backgroundZoom: input.backgroundZoom * input.zoom,
+    backgroundZoom: input.backgroundZoom,
   });
 
   // TODO: refactor to match the TODO below

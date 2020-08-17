@@ -174,3 +174,73 @@ test("complex: multiple features 2", async () => {
   const image = await page.screenshot();
   expect(image).toMatchImageSnapshot();
 });
+
+test("dotted lines: top right -> right & bottom left -> left", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("dotted lines: top right -> right & bottom left -> left", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("dotted lines: top right -> up (pan) & bottom left -> left (pan)", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/o8:10x10?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("dotted lines: pan x only", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/c1:10x10?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("dotted lines: pan x only - to the end", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/q1:10x10?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("dotted lines: pan y only", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/a7:10x10?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("dotted lines: pan y only - to the end", async () => {
+  const page = await browser.newPage();
+  
+  const bg =
+    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+  await page.goto(`${address}/a7:10x10?bg=${bg}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});

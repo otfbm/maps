@@ -3,13 +3,16 @@ const canvas = require("canvas");
 const { Image } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
-const boardFont = "14px impact";
-const tokenFont = "12px impact";
+const boardFont = '1em FleischWurst';
+const tokenFont = '12px bold AzoSans';
 
-const fillLightMode = "#ffffff";
-const fillDarkMode = "#000000";
-const textLightMode = "#000000";
-const textDarkMode = "#ffffff";
+const fillLightMode = "#f4f6ff"; // Powdered Sugar
+const fillDarkMode = "#07031a"; // Midnight Blue
+
+const textLightMode = "rgb(7, 3, 26)";
+const textLightModeAlpha = "rgba(7, 3, 26, 0.6)";
+const textDarkMode = "rgb(244, 246, 255)";
+const textDarkModeAlpha = "rgba(244, 246, 255, 0.6)";
 
 module.exports = class Board {
   constructor({
@@ -100,17 +103,72 @@ module.exports = class Board {
     // undo padding and any pan before drawing the border
     this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
+    let color = '';
+    let solidColor = '';
+    if (this.darkMode) {
+      solidColor = textLightMode;
+      color = textLightModeAlpha;
+    } else {
+      solidColor = textDarkMode;
+      color = textDarkModeAlpha;
+    }
+
     // fill the edges
+    // TL -> BL
     this.ctx.beginPath();
-    this.ctx.moveTo( this.padding * 0.5, this.padding * 0.5);
-    this.ctx.lineTo( this.padding * 0.5, this.height + this.padding * 1.5);
-    this.ctx.lineTo( this.width + this.padding * 1.5, this.height + this.padding * 1.5);
-    this.ctx.lineTo( this.width + this.padding * 1.5, this.padding * 0.5);
-    this.ctx.lineTo( this.padding * 0.5, this.padding * 0.5);
-    this.ctx.strokeStyle = this.darkMode ? textLightMode : textDarkMode;
-    this.ctx.lineWidth = this.padding;
     this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.padding * 0.5, 0);
+    this.ctx.lineTo( this.padding * 0.5, this.height + this.padding * 2);
+    this.ctx.strokeStyle = color;
     this.ctx.stroke();
+
+    // BL -> BR
+    this.ctx.beginPath();
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.padding * 1.5, this.height + this.padding * 1.5);
+    this.ctx.lineTo( this.width + this.padding * 0.5, this.height + this.padding * 1.5);
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+    
+    // BR -> TR
+    this.ctx.beginPath();
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.width + this.padding * 1.5, this.height + this.padding * 2);
+    this.ctx.lineTo( this.width + this.padding * 1.5, 0);
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+
+    // TR -> TL
+    this.ctx.beginPath();
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+    this.ctx.moveTo( this.width + this.padding * 0.5, this.padding * 0.5);
+    this.ctx.lineTo( this.padding * 1.5, this.padding * 0.5);
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+    
+    // // TL BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(0, 0, this.padding, this.padding);
+
+    // // BL BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(this.padding + this.width, 0, this.padding, this.padding);
+
+    // // BR BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(0, this.padding + this.height, this.padding, this.padding);
+
+    // // TR BOX
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = solidColor;
+    // this.ctx.fillRect(this.padding + this.width, this.padding + this.height, this.padding, this.padding);
 
     // outer grid lines
     this.ctx.beginPath();
@@ -130,7 +188,7 @@ module.exports = class Board {
     this.ctx.fillStyle = this.darkMode ? textDarkMode : textLightMode;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
-    this.ctx.font = boardFont;
+    this.ctx.font = `${this.gridsize * 0.35}px FleischWurst`;
 
     // Drawing the Alphabetic coordinate markers
     for (let i = 0; i <= this.width; i += this.gridsize) {
@@ -155,7 +213,7 @@ module.exports = class Board {
       this.ctx.fillText(
         character,
         this.padding + i - this.gridsize / 2,
-        this.padding - 7
+        this.padding / 2
       );
     }
 
@@ -167,18 +225,148 @@ module.exports = class Board {
 
       this.ctx.fillText(
         String(num),
-        this.padding - 8,
+        this.padding / 2,
         this.padding + i - this.gridsize / 2
       );
     }
 
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.15));
+    this.ctx.lineTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.lineWidth = 1;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.lineTo(this.padding + this.width - this.gridsize + (this.gridsize * 0.1), this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.lineWidth = 1;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.15));
+    this.ctx.lineTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.lineWidth = 1;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.lineTo(this.padding + this.width - (this.gridsize * 0.1), this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+    this.ctx.lineWidth = 1;
+    this.ctx.lineCap = "square";
+    this.ctx.stroke();
+
     // Drawing the scale marker
     this.ctx.beginPath();
+    this.ctx.fillStyle = '#808080';
+    this.ctx.textAlign = 'center';
     this.ctx.fillText(
-      "1 square = 5ft",
-      this.width - this.padding - 10,
-      this.height + this.padding + 8
+      "5ft",
+      this.padding + this.width - (this.gridsize / 2),
+      this.padding + this.height + (this.gridsize / 2),
+      this.gridsize,
     );
+
+    // Draw dotted lines
+    const drawDottedLine = (start, end) => {
+      this.ctx.beginPath();
+      this.ctx.setLineDash([5, 5]);
+      this.ctx.lineWidth = 1;
+      this.ctx.lineCap = "square";
+      this.ctx.strokeStyle = this.darkMode ? textDarkMode : textLightMode;
+      this.ctx.moveTo(start.x, start.y);
+      this.ctx.lineTo(end.x, end.y);
+      this.ctx.stroke();
+    }
+
+    const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
+    const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
+    const leftoverHeight = imgheight % this.gridsize
+    const height = imgheight - leftoverHeight;
+    const drawHeight = height - (this.panY * this.gridsize) + this.padding;
+    const leftoverWidth = imgwidth % this.gridsize
+    const width = imgwidth - leftoverWidth;
+    const drawWidth = width - (this.panX * this.gridsize) + this.padding;
+    const startHeight = this.padding + this.height;
+    const endHeight = this.padding * 2 + this.height;
+    const startWidth = this.padding + this.width;
+    const endWidth = this.padding * 2 + this.width;
+
+    if (this.panY * this.gridsize + this.height + this.gridsize - 1 < imgheight && this.panX < 1) {
+      drawDottedLine(
+        { x: this.padding, y: this.padding + this.height },
+        { x: this.padding, y: this.padding * 2 + this.height },
+      );
+    }
+
+    if (this.panX < 1 && this.panY > 0) {
+      drawDottedLine(
+        { x: this.padding, y: 0 },
+        { x: this.padding, y: this.padding },
+      );
+    }
+
+    if (this.panX * this.gridsize + this.width + this.gridsize - 1 < imgwidth && this.panY < 1) {
+      drawDottedLine(
+        { x: this.padding + this.width, y: this.padding },
+        { x: this.padding * 2 + this.width, y: this.padding }
+      );
+    }
+
+    if (this.panY < 1 && this.panX > 0) {
+      drawDottedLine(
+        { x: 0, y: this.padding },
+        { x: this.padding, y: this.padding },
+      );
+    }
+
+    if (this.panX > 0) {
+      if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+        drawDottedLine(
+          { x: 0, y: drawHeight },
+          { x: this.padding, y: drawHeight }
+        );
+      }
+
+      if (this.panY * this.gridsize + this.height + this.gridsize - 1 < imgheight) {
+        
+
+        if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+          if (drawWidth < this.width) { // dont draw over the "5ft" key
+            drawDottedLine(
+              { x: drawWidth, y: startHeight },
+              { x: drawWidth, y: endHeight },
+            );
+          }
+        }
+      }
+    }
+
+    if (this.panY > 0) {
+      if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+        drawDottedLine(
+          { x: drawWidth, y: 0 },
+          { x: drawWidth, y: this.padding },
+        );
+      }
+
+      if (this.panX * this.gridsize + this.width + this.gridsize - 1 < imgwidth) {
+        if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+          drawDottedLine(
+            { x: startWidth, y: drawHeight },
+            { x: endWidth, y: drawHeight }
+          );
+        }
+      }
+    }
+
+    
   }
 
   drawGridLines() {
@@ -217,17 +405,29 @@ module.exports = class Board {
       const img = new Image();
 
       img.onload = () => {
-        const sourceX = this.panX * this.gridsize + this.backgroundOffsetX;
-        const sourceY = this.panY * this.gridsize + this.backgroundOffsetY;
-        const destWidth = img.width * this.backgroundZoom;
-        const destHeight = img.height * this.backgroundZoom;
+        const gridsize = this.gridsize / this.zoom;
+        const offsetX = this.backgroundOffsetX / this.zoom;
+        const offsetY = this.backgroundOffsetY / this.zoom;
+        const scaledOffsetX = this.backgroundOffsetX;
+        const scaledOffsetY = this.backgroundOffsetY;
+        const offsetTrimX = (img.width * this.backgroundZoom - offsetX) % gridsize;
+        const offsetTrimY = (img.height * this.backgroundZoom - offsetY) % gridsize;
+        const scaledOffsetTrimX = offsetTrimX * this.zoom;
+        const scaledOffsetTrimY = offsetTrimY * this.zoom;
+        
+        this.imgwidth = img.width;
+        this.imgheight = img.height;
 
         this.ctx.drawImage(
           img,
-          this.padding - sourceX,
-          this.padding - sourceY,
-          destWidth,
-          destHeight,
+          offsetX,
+          offsetY,
+          img.width - offsetX - offsetTrimX,
+          img.height - offsetY - offsetTrimY,
+          this.padding - this.panX * this.gridsize,
+          this.padding - this.panY * this.gridsize,
+          (img.width * this.backgroundZoom * this.zoom) - scaledOffsetX - scaledOffsetTrimX,
+          (img.height * this.backgroundZoom * this.zoom) - scaledOffsetY - scaledOffsetTrimY,
         );
       };
       img.onerror = (err) => {

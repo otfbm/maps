@@ -8,7 +8,7 @@ exports.handler = async (event, context) => {
 
   try {
     const canvas = await drawCanvas(path, query);
-    const data = canvas.toDataURL("image/jpeg", { quality: 0.5 });
+    const data = canvas.toDataURL("image/jpeg", { quality: 0.8 });
     const stripped = data.replace(/^data:image\/\w+;base64,/, "");
 
     return {

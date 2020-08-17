@@ -16,7 +16,31 @@ const OpenPit = require("../overlays/open-pit/index.js");
 
 const { createCanvas, registerFont } = canvas;
 
-registerFont('./fonts/Titillium-Semibold.otf', { family: 'Impact' });
+registerFont('./fonts/Azo-Sans-Regular.otf', { 
+  family: 'AzoSans',
+  weight: 'normal',
+  style: 'normal',
+});
+registerFont('./fonts/Azo-Sans-Italic.otf', { 
+  family: 'AzoSans',
+  weight: 'normal',
+  style: 'italic',
+});
+registerFont('./fonts/Azo-Sans-Bold.otf', {
+  family: 'AzoSans',
+  weight: 'bold',
+  style: 'normal',
+});
+registerFont('./fonts/Azo-Sans-Bold-Italic.otf', {
+  family: 'AzoSans',
+  weight: 'bold',
+  style: 'italic',
+});
+registerFont('./fonts/Fleisch-Wurst.otf', {
+  family: 'FleischWurst',
+  weight: 'normal',
+  style: 'normal',
+});
 
 module.exports = class Renderer {
   constructor(options) {
