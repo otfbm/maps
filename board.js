@@ -195,20 +195,10 @@ module.exports = class Board {
       const num = i / this.gridsize;
       if (num < 1) continue;
 
-      this.ctx.beginPath();
-      let character = String.fromCharCode(num + 64 + this.panX);
-      if (num + this.panX > 26) {
-        const char = String.fromCharCode(num + 38 + this.panX);
-        character = `${char}${char}`;
-      }
-      if (num + this.panX > 52) {
-        const char = String.fromCharCode(num + 12 + this.panX);
-        character = `${char}${char}${char}`;
-      }
-      if (num + this.panX > 78) {
-        const char = String.fromCharCode(num - 14 + this.panX);
-        character = `${char}${char}${char}${char}`;
-      }
+      let x = num + this.panX - 1;
+      let character = String.fromCharCode(x % 26 + 65);
+      if (x >= 26)
+        character = String.fromCharCode(Math.floor(x / 26) + 64) + character;
 
       this.ctx.fillText(
         character,

@@ -244,3 +244,42 @@ test("dotted lines: pan y only - to the end", async () => {
   const image = await page.screenshot();
   expect(image).toMatchImageSnapshot();
 });
+
+test("edge case: border between z and aa", async () => {
+  const page = await browser.newPage();
+  await page.goto(`${address}/x1:5x5/z1/aa1`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("edge case: border between az and ba", async () => {
+  const page = await browser.newPage();
+  await page.goto(`${address}/ax1:5x5/az1/ba1`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("edge cases: overlays", async () => {
+  const page = await browser.newPage();
+  const overlays = ["aa1$T", "ab1$P", "ac1$p", "ad1$S", "ae1$F", "af1$O", "ag1$o"];
+  await page.goto(`${address}/x1:10x10/${overlays.join("/")}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("edge cases: walls", async () => {
+  const page = await browser.newPage();
+  const walls =
+    "_ah2aj2aj7aa7aa1ah1_ae1aE4]aD4aA4_aB1aB2$aA2_aH1aH4[aG4aE4_aD4]aD5aD7_aD5]aE5aF5aF7_aF5]aG5aH5aH7_aH5aI5-aJ5_aI3aI4aH4";
+  await page.goto(`${address}/aa1:10x10/${walls}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
+
+test("edge cases: effects", async () => {
+  const page = await browser.newPage();
+  const effects = ["*s15cc1ac5", "*c20rah3", "*l40,2ya6aj6", "*t15f10af3"];
+  await page.goto(`${address}/aa1:10x10/${effects.join("/")}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
