@@ -198,19 +198,15 @@ module.exports = class Grid {
       }
     }
 
-    let start = 0;
-    if (characters.length > 3) {
-      start = 78;
-    } else if (characters.length > 2) {
-      start = 52;
-    } else if (characters.length > 1) {
-      start = 26;
+    if (characters.length === 2) {
+      const letter1 = characters[0].toUpperCase().charCodeAt(0);
+      const letter2 = characters[1].toUpperCase().charCodeAt(0);
+      const x = (26 * (letter1 - 64)) + (letter2 - 65);
+      return { x, y };
     }
 
     const code = characters[0].toUpperCase().charCodeAt(0);
-    const x = code - 64 + start - 1;
-
-    return { x, y };
+    return { x: code - 65, y };
   }
 
   levels() {
