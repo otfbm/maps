@@ -41,6 +41,7 @@ module.exports = async function main(pathname, query) {
     backgroundOffsetX: input.backgroundOffsetX * input.zoom,
     backgroundOffsetY: input.backgroundOffsetY * input.zoom,
     backgroundZoom: input.backgroundZoom,
+    edgeOpacity: input.edgeOpacity,
   });
 
   // TODO: refactor to match the TODO below

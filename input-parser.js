@@ -12,6 +12,7 @@ const EffectParser = require("./parsers/effect-parser.js");
 const GridsizeParser = require('./parsers/gridsize.js');
 const BackgroundOffsetParser = require('./parsers/background-offset.js');
 const BackgroundZoomParser = require('./parsers/background-zoom.js');
+const OpaqueEdgeParser = require('./parsers/opaque-edge.js');
 
 module.exports = class InputParser {
   constructor() {
@@ -30,6 +31,7 @@ module.exports = class InputParser {
     this.backgroundOffsetX = 0;
     this.backgroundOffsetY = 0;
     this.backgroundZoom = 1;
+    this.edgeOpacity = 0.6;
 
     this.backgroundParser = new BackgroundParser();
     this.boardParser = new BoardParser();
@@ -44,6 +46,7 @@ module.exports = class InputParser {
     this.gridsizeParser = new GridsizeParser();
     this.backgroundOffsetParser = new BackgroundOffsetParser();
     this.backgroundZoomParser = new BackgroundZoomParser();
+    this.opaqueEdgeParser = new OpaqueEdgeParser();
   }
 
   async parse(pathname = "", query = {}) {
@@ -110,6 +113,11 @@ module.exports = class InputParser {
       if (null !== parsed) {
         /* This check is like this because one of the valid returns is 0.0 */
         this.gridOpacity = parsed;
+      }
+
+      parsed = this.opaqueEdgeParser.parse(part);
+      if (parsed) {
+        this.edgeOpacity = parsed;
       }
 
       let p = {str: part};

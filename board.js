@@ -10,9 +10,7 @@ const fillLightMode = "#f4f6ff"; // Powdered Sugar
 const fillDarkMode = "#07031a"; // Midnight Blue
 
 const textLightMode = "rgb(7, 3, 26)";
-const textLightModeAlpha = "rgba(7, 3, 26, 0.6)";
 const textDarkMode = "rgb(244, 246, 255)";
-const textDarkModeAlpha = "rgba(244, 246, 255, 0.6)";
 
 module.exports = class Board {
   constructor({
@@ -30,6 +28,7 @@ module.exports = class Board {
     backgroundOffsetX = 0,
     backgroundOffsetY = 0,
     backgroundZoom = 1,
+    edgeOpacity = 0.6,
   }) {
     this.width = width;
     this.height = height;
@@ -49,6 +48,7 @@ module.exports = class Board {
     this.backgroundOffsetX = backgroundOffsetX;
     this.backgroundOffsetY = backgroundOffsetY;
     this.backgroundZoom = backgroundZoom;
+    this.edgeOpacity = edgeOpacity;
 
     for (let x = 0; x < width; x++) {
       let arr = [];
@@ -103,13 +103,13 @@ module.exports = class Board {
     // undo padding and any pan before drawing the border
     this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
 
+    const textDarkModeAlpha = `rgba(244, 246, 255, ${this.edgeOpacity})`;
+    const textLightModeAlpha = `rgba(7, 3, 26, ${this.edgeOpacity})`;
+
     let color = '';
-    let solidColor = '';
     if (this.darkMode) {
-      solidColor = textLightMode;
       color = textLightModeAlpha;
     } else {
-      solidColor = textDarkMode;
       color = textDarkModeAlpha;
     }
 
