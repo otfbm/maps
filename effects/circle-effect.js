@@ -17,8 +17,10 @@ module.exports = class CircleEffect {
 
     ctx.beginPath();
     ctx.arc(0, 0, radius * gridSize, 0, Math.PI * 2);
-    ctx.globalAlpha = 0.4;
-    ctx.fillStyle = this.colour;
+    ctx.strokeStyle = this.colour;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = this.colour + "88";
     ctx.fill();
     ctx.restore();
   }

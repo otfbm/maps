@@ -16,11 +16,15 @@ module.exports = class TriangleEffect {
     ctx.translate(halfGrid, 0);
       
     ctx.beginPath();
-    ctx.lineTo(0,0);
+    ctx.moveTo(0,0);
     ctx.lineTo(length * gridSize, length / 2 * gridSize );
     ctx.lineTo(length * gridSize, length / -2 * gridSize ); 
-    ctx.globalAlpha = 0.4;
-    ctx.fillStyle = this.colour;
+    ctx.lineTo(0, 0); 
+
+    ctx.strokeStyle = this.colour;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = this.colour + "88";
     ctx.fill();
     ctx.restore();
   }
