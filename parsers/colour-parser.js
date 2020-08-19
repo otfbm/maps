@@ -15,8 +15,8 @@ const colourCodes = new Map([
   ["BK", "#07031a"], // black
   ["GY", "#808080"], // grey
   ["BN", "#582f29"], // brown
-  ["PU", "#582f29"], // purple
-  ["PK", "#582f29"] // pink
+  ["PU", "#b75897"], // purple
+  ["PK", "#ffc1fa"] // pink
 ]);
 
 module.exports = class ColourParser {
