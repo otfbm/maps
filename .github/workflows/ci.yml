@@ -17,3 +17,16 @@ jobs:
     - run: npm run test:unit
       env:
         CI: true
+    - run: npm prune --production
+    - name: zip
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -r ./app.zip board.js draw-canvas.js effects fonts grid.js icon.js index.js input-parser.js line.js node_modules options.js overlay.js overlays parsers renderer room.js styles.css token.js 5xx.jpg
+    - name: dev deploy
+      uses: appleboy/lambda-action@master
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: us-west-2
+        function_name: otfbm-dev
+        zip_file: app.zip
