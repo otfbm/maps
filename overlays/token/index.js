@@ -94,15 +94,9 @@ module.exports = class TokenOverlay {
    * @param {*} bgColor background color, must be in format: "#ffffff" or "#fff"
    */
   pickTextColor(bgColor) {
-    if (bgColor.length === 7) {
-      var r = parseInt(bgColor.substring(1, 3), 16);
-      var g = parseInt(bgColor.substring(3, 5), 16);
-      var b = parseInt(bgColor.substring(5, 7), 16);
-    } else if (bgColor.length === 4) {
-      var r = parseInt(bgColor.substring(1, 2), 16) * 17;
-      var g = parseInt(bgColor.substring(2, 3), 16) * 17;
-      var b = parseInt(bgColor.substring(3, 4), 16) * 17;
-    }
+    let r = parseInt(bgColor.substring(1, 3), 16);
+    let g = parseInt(bgColor.substring(3, 5), 16);
+    let b = parseInt(bgColor.substring(5, 7), 16);
 
     let L1 = 0.9236;
     let L2 = this.luminanace(r, g, b);

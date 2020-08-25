@@ -80,6 +80,7 @@ module.exports = async function main(pathname, query) {
     renderer.renderOverlay(cell);
   }
 
+  // overlays are drawn 2nd to last
   board.drawEffects();
 
   // border is drawn last so nothing overlaps it

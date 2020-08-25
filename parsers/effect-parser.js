@@ -20,7 +20,7 @@ module.exports = class EffectParser {
     if (trimmed.charAt(0) !== '*')
       return false;
 
-    const reg = /\*([TLSRCA])([tT]?)([0-9]*)(\,[0-9]*)?(GY|BK|BN|[WKEARGBYPCNO]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
+    const reg = /\*([TLSRCA])([tT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
     if (!reg.test(trimmed)) 
       return false;
 

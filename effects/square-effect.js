@@ -15,10 +15,11 @@ module.exports = class SquareEffect {
     if (this.anchorTopLeft) {
       ctx.translate((this.startPt.x - 1) * gridSize, (this.startPt.y - 1) * gridSize);
       ctx.beginPath();
-      ctx.lineTo(0, this.width * unit);
+      ctx.moveTo(0, this.width * unit);
       ctx.lineTo(this.length * unit, this.width * unit);
       ctx.lineTo(this.length * unit, 0);
       ctx.lineTo(0, 0);
+      ctx.lineTo(0, this.width * unit);
     } else {
       let halfGrid = gridSize / 2;
       ctx.translate((this.startPt.x * gridSize) - halfGrid, (this.startPt.y * gridSize) - halfGrid);
@@ -26,14 +27,17 @@ module.exports = class SquareEffect {
       ctx.rotate(angle);
       ctx.translate(halfGrid, 0);
       ctx.beginPath();
-      ctx.lineTo(0, this.width / 2 * unit);
+      ctx.moveTo(0, this.width / 2 * unit);
       ctx.lineTo(this.length * unit, this.width / 2 * unit);
       ctx.lineTo(this.length * unit, this.width / -2 * unit);
       ctx.lineTo(0, this.width / -2 * unit);
+      ctx.lineTo(0, this.width / 2 * unit);
     }
 
-    ctx.globalAlpha = 0.4;
-    ctx.fillStyle = this.colour;
+    ctx.strokeStyle = this.colour;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = this.colour + "88";
     ctx.fill();
     ctx.restore();
   }
