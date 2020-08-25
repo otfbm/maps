@@ -3,6 +3,8 @@ const { join } = require('path');
 const drawCanvas = require("./draw-canvas.js");
 
 exports.handler = async (event, context) => {
+  process.env.FONTCONFIG_PATH = join(__dirname, 'fonts');
+
   const query = (event && event.queryStringParameters) || {};
   const path = event.rawPath || event.path;
 
