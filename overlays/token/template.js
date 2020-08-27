@@ -3,11 +3,29 @@ module.exports = ({
   color,
   fontcolor,
   fontsize,
-  label
-}) => `
-<svg height="${size}" width="${size}" font-family="FleischWurst">
-  <circle cx="50%" cy="50%" r="47%" fill="${color}" stroke="#f4f6ff" stroke-width="3.5%"/>
-  <circle cx="50%" cy="50%" r="48%" fill="none" stroke="#07031a" stroke-width="2.5%" />
-  <text dy=".3em" x = "50%" y = "50%" text-anchor="middle" fill="${fontcolor}" font-family="FleischWurst" font-size="${fontsize}">${label}</text>
-</svg>
-`;
+  label,
+}, ctx) => {
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size * 0.47, 0, Math.PI * 2);
+  ctx.strokeStyle = '#f4f6ff';
+  ctx.lineWidth = '3.5%';
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size * 0.48, 0, Math.PI * 2);
+  ctx.strokeStyle = '#07031a';
+  ctx.lineWidth = '2.5%';
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = `${fontsize}px FleischWurst`;
+  ctx.fillStyle = fontcolor;
+  ctx.fillText(
+    label,
+    size / 2,
+    size / 2,
+  )
+}

@@ -74,7 +74,7 @@ module.exports = class Renderer {
   renderOverlay(cell) {
     switch (cell.overlay.type) {
       case "token":
-        this.svg.renderCell(cell, Token);
+        this.canvas.renderCell(cell, Token);
         break;
       case "trap":
         this.svg.renderCell(cell, Trap);

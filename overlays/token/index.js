@@ -9,56 +9,61 @@ module.exports = class TokenOverlay {
   }
 
   tiny(item) {
-    const { label, color, width, height } = item;
+    const { label, color, width, url } = item;
 
     return {
       color,
       label: `${label.substr(0, 1)}${label.substr(-1)}`,
-      size: width / 2
+      size: width / 2,
+      url,
     };
   }
 
   medium(item) {
-    const { label, color, width, height } = item;
+    const { label, color, width, url } = item;
 
     return {
       size: width,
       color,
-      label: label.substr(0, 4)
+      label: label.substr(0, 4),
+      url,
     };
   }
 
   large(item) {
-    const { label, color, width, height } = item;
+    const { label, color, width, url } = item;
 
     return {
       size: width * 2,
       color,
-      label: label.substr(0, 9)
+      label: label.substr(0, 9),
+      url,
     };
   }
 
   huge(item) {
-    const { label, color, width, height } = item;
+    const { label, color, width, url } = item;
 
     return {
       size: width * 3,
       color,
-      label: label.substr(0, 14)
+      label: label.substr(0, 14),
+      url,
     };
   }
 
   gargantuan(item) {
-    const { label, color, width, height } = item;
+    const { label, color, width, url } = item;
 
     return {
       size: width * 4,
       color,
-      label: label.substr(0, 18)
+      label: label.substr(0, 18),
+      url,
     };
   }
 
-  render(item) {
+  render(item, ctx) {
     let opts = {};
 
     switch (item.overlay.size) {
@@ -84,9 +89,8 @@ module.exports = class TokenOverlay {
 
     opts.fontsize = opts.size * (8 / (opts.label.length + 4)) * 0.30;
     opts.fontcolor = this.pickTextColor(opts.color);
-
-    const svg = template(opts);
-    return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+    
+    template(opts, ctx);
   }
 
   /**
