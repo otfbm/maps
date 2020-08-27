@@ -1,13 +1,31 @@
 module.exports = ({
+  gridsize,
   size,
   color,
   fontcolor,
   fontsize,
-  label
-}) => `
-<svg height="${size}" width="${size}" font-family="FleischWurst">
-  <circle cx="50%" cy="50%" r="47%" fill="${color}" stroke="#f4f6ff" stroke-width="3.5%"/>
-  <circle cx="50%" cy="50%" r="48%" fill="none" stroke="#07031a" stroke-width="2.5%" />
-  <text dy=".3em" x = "50%" y = "50%" text-anchor="middle" fill="${fontcolor}" font-family="FleischWurst" font-size="${fontsize}">${label}</text>
-</svg>
-`;
+  label,
+}, ctx) => {
+  const whitelineModifier = size < 41 ? 3.5 : 4;
+  const xy = size < gridsize ? gridsize / 2 : size / 2;
+
+  ctx.beginPath();
+  ctx.arc(xy, xy, size / 2 - whitelineModifier, 0, Math.PI * 2);
+  ctx.strokeStyle = '#f4f6ff';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(xy, xy, size / 2 - 2, 0, Math.PI * 2);
+  ctx.strokeStyle = '#07031a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = `${fontsize}px AzoSans`;
+  ctx.fillStyle = fontcolor;
+  ctx.fillText(label, xy, xy);
+}

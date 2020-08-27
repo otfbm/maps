@@ -22,17 +22,17 @@ registerFont('./fonts/Azo-Sans-Regular.otf', {
   style: 'normal',
 });
 registerFont('./fonts/Azo-Sans-Italic.otf', { 
-  family: 'AzoSans',
+  family: 'AzoSansItalic',
   weight: 'normal',
   style: 'italic',
 });
 registerFont('./fonts/Azo-Sans-Bold.otf', {
-  family: 'AzoSans',
+  family: 'AzoSansBold',
   weight: 'bold',
   style: 'normal',
 });
 registerFont('./fonts/Azo-Sans-Bold-Italic.otf', {
-  family: 'AzoSans',
+  family: 'AzoSansBoldItalic',
   weight: 'bold',
   style: 'italic',
 });
@@ -74,7 +74,7 @@ module.exports = class Renderer {
   renderOverlay(cell) {
     switch (cell.overlay.type) {
       case "token":
-        this.svg.renderCell(cell, Token);
+        this.canvas.renderCell(cell, Token);
         break;
       case "trap":
         this.svg.renderCell(cell, Trap);
