@@ -21,7 +21,7 @@ module.exports = ({
 
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = `${fontsize}px FleischWurst`;
+  ctx.font = `${fontsize}px AzoSans`;
   ctx.fillStyle = fontcolor;
   ctx.fillText(
     label,
