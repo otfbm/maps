@@ -14,7 +14,7 @@ module.exports = class TokenOverlay {
     return {
       color,
       label: `${label.substr(0, 1)}${label.substr(-1)}`,
-      size: width / 2,
+      size: width / 1.5,
       url,
     };
   }
@@ -89,6 +89,7 @@ module.exports = class TokenOverlay {
 
     opts.fontsize = opts.size * (8 / (opts.label.length + 4)) * 0.30;
     opts.fontcolor = this.pickTextColor(opts.color);
+    opts.gridsize = this.options.gridsize,
     
     template(opts, ctx);
   }
