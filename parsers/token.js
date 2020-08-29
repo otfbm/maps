@@ -1,9 +1,10 @@
 const Overlay = require("../overlay.js");
 const ColourParser = require("./colour-parser.js");
 const SizeParser = require("./size-parser.js");
+// https://token.otfbm.io/img/${code}
 
 module.exports = class TokenParser {
-  parse(str) {
+  async parse(str) {
     if (str.length < 2) return false;
 
     // a string matching a token definition eg. D3rp-asdsa
