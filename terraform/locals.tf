@@ -15,4 +15,5 @@ locals {
   token_domain_name           = "token.otfbm.io"
   lambda-token-filename = "artifacts/token.zip"
   lambda-token-function-name = "otfbm-token"
+  token_target_size = 160
 }
