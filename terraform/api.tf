@@ -4,8 +4,8 @@ resource "aws_api_gateway_rest_api" "gateway" {
 }
 
 resource "aws_api_gateway_deployment" "prod" {
-  depends_on = [aws_api_gateway_integration.background-integration, aws_api_gateway_method.background-method,
-    aws_api_gateway_resource.background, aws_api_gateway_resource.background-url,
+  depends_on = [aws_api_gateway_integration.background_integration, aws_api_gateway_method.background_method,
+    aws_api_gateway_resource.background, aws_api_gateway_resource.background_url,
     aws_api_gateway_rest_api.gateway]
   stage_name = "prod"
 
