@@ -6,7 +6,7 @@ resource "aws_acm_certificate" "token" {
 }
 
 # Record for DNS-01 cert validation
-resource "aws_route53_record" "certificate_validation" {
+resource "aws_route53_record" "token_certificate_validation" {
   for_each = {
   for dvo in aws_acm_certificate.token.domain_validation_options : dvo.domain_name => {
     name   = dvo.resource_record_name
@@ -23,10 +23,10 @@ resource "aws_route53_record" "certificate_validation" {
 }
 
 # Note this doesn't create an AWS 'resource' as such. it's a Terraform workflow-only item
-resource "aws_acm_certificate_validation" "certificate_validation" {
+resource "aws_acm_certificate_validation" "token_certificate_validation" {
   provider = aws.us-east-1
   certificate_arn         = aws_acm_certificate.token.arn
-  validation_record_fqdns = [for record in aws_route53_record.certificate_validation : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.token_certificate_validation : record.fqdn]
 }
 
 # Route53 'alias' record to point to CF distribution
@@ -68,13 +68,11 @@ EOF
   }
 
   lifecycle_rule {
-    id      = "clean"
+    id      = "multipart"
     enabled = true
-    prefix  = "img/"
 
-    # expire items after one week
-    expiration {
-      days = 7
+    noncurrent_version_expiration {
+      days = 3
     }
 
     # dont spend money on lingering/stale uploads
@@ -87,12 +85,13 @@ EOF
     routing_rules = <<EOF
 [{
   "Condition": {
-    "HttpErrorCodeReturnedEquals": "404"
+    "HttpErrorCodeReturnedEquals": "404",
+    "KeyPrefixEquals": "meta/"
   },
   "Redirect": {
     "Protocol": "https",
     "HostName": "${aws_api_gateway_rest_api.gateway.id}.execute-api.${var.region}.amazonaws.com",
-    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.action.path_part}/",
+    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.token_action.path_part}/",
     "HttpRedirectCode": "307"
   }
 }]
@@ -103,7 +102,7 @@ EOF
 }
 
 # default root document for the static website bucket
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_bucket_object" "token_index" {
   bucket  = aws_s3_bucket.tokens.bucket
   key     = local.index_key
   acl = "public-read"
@@ -159,25 +158,25 @@ resource "aws_cloudfront_distribution" "tokens" {
     ssl_support_method = "sni-only"
   }
 
-  depends_on = [aws_acm_certificate.token, aws_acm_certificate_validation.certificate_validation]
+  depends_on = [aws_acm_certificate.token, aws_acm_certificate_validation.token_certificate_validation]
 }
 
 # API Gateway
-resource "aws_api_gateway_resource" "action" {
+resource "aws_api_gateway_resource" "token_action" {
   parent_id   = aws_api_gateway_rest_api.gateway.root_resource_id
   path_part   = "token"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
-resource "aws_api_gateway_resource" "url" {
-  parent_id = aws_api_gateway_resource.action.id
+resource "aws_api_gateway_resource" "token_url" {
+  parent_id = aws_api_gateway_resource.token_action.id
   path_part = "{url}"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
-resource "aws_api_gateway_method" "method" {
+resource "aws_api_gateway_method" "token_method" {
   rest_api_id   = aws_api_gateway_rest_api.gateway.id
-  resource_id   = aws_api_gateway_resource.url.id
+  resource_id   = aws_api_gateway_resource.token_url.id
   http_method   = "GET"
   authorization = "NONE"
 
@@ -186,10 +185,10 @@ resource "aws_api_gateway_method" "method" {
   }
 }
 
-resource "aws_api_gateway_integration" "integration" {
+resource "aws_api_gateway_integration" "token_integration" {
   rest_api_id             = aws_api_gateway_rest_api.gateway.id
-  resource_id             = aws_api_gateway_resource.url.id
-  http_method             = aws_api_gateway_method.method.http_method
+  resource_id             = aws_api_gateway_resource.token_url.id
+  http_method             = aws_api_gateway_method.token_method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.token.invoke_arn
@@ -200,7 +199,7 @@ resource "aws_api_gateway_integration" "integration" {
 }
 
 # Lambda Function Bits
-resource "aws_lambda_permission" "apigw_lambda" {
+resource "aws_lambda_permission" "token_apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.token.arn
@@ -213,7 +212,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 resource "aws_lambda_function" "token" {
   filename      = local.lambda-token-filename
   function_name = local.lambda-token-function-name
-  role          = aws_iam_role.token-lambda.arn
+  role          = aws_iam_role.token_lambda.arn
   runtime       = "python3.8"
   handler = "${local.lambda-token-function-name}.lambda_handler"
   layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
@@ -226,12 +225,14 @@ resource "aws_lambda_function" "token" {
     variables = {
       BUCKET = local.token_domain_name
       URL = local.token_domain_name
+      DYNAMODB_TABLE = aws_dynamodb_table.token_table.name
+      TARGET_SIZE = local.token_target_size
     }
   }
 }
 
 # IAM
-resource "aws_iam_role" "token-lambda" {
+resource "aws_iam_role" "token_lambda" {
   name = "token-lambda"
 
   assume_role_policy = <<POLICY
@@ -251,7 +252,7 @@ resource "aws_iam_role" "token-lambda" {
 POLICY
 }
 
-resource "aws_iam_policy" "token-lambda" {
+resource "aws_iam_policy" "token_lambda" {
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -261,18 +262,44 @@ resource "aws_iam_policy" "token-lambda" {
             "Effect": "Allow",
             "Action": "s3:PutObject",
             "Resource": "${aws_s3_bucket.tokens.arn}/*"
+        },
+        {
+          "Sid": "LambdaDynamoDb",
+          "Effect": "Allow",
+          "Action": ["dynamodb:UpdateItem"],
+          "Resource": ["${aws_dynamodb_table.token_table.arn}"]
         }
     ]
 }
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "token-lambda" {
-  policy_arn = aws_iam_policy.token-lambda.arn
-  role = aws_iam_role.token-lambda.name
+resource "aws_iam_role_policy_attachment" "token_lambda" {
+  policy_arn = aws_iam_policy.token_lambda.arn
+  role = aws_iam_role.token_lambda.name
 }
 
-resource "aws_iam_role_policy_attachment" "token-lamba-basicexecutionrole" {
-  role       = "${aws_iam_role.token-lambda.name}"
+resource "aws_iam_role_policy_attachment" "token_lamba_basicexecutionrole" {
+  role       = "${aws_iam_role.token_lambda.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_dynamodb_table" "token_table" {
+  name = "tokens"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  server_side_encryption {
+    enabled = true  # may as well, will use AWS key
+  }
+
+  ttl {
+    attribute_name = ""
+    enabled        = false
+  }
 }
