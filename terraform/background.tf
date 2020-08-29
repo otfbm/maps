@@ -1,9 +1,9 @@
 locals {
   index_key             = "index.html"
-  domain_name           = "bg.otfbm.io"
-  lambda-layer-background-s3-key = "lambda/background-layer.zip"
+  background_domain_name           = "bg.otfbm.io"
+  lambda-layer-preload-s3-key = "lambda/preload-layer.zip"
   lambda-background-filename = "artifacts/background.zip"
-  lambda-python-layer-filename = "artifacts/python-layer.zip"
+  lambda-layer-preload-filename = "artifacts/preload-layer.zip"
   lambda-background-function-name = "background"
   target_image_bytes = 1048576
   target_image_bytes_tolerance = 5
@@ -21,22 +21,22 @@ data "aws_s3_bucket" "infra" {
 # Certificate creation and validation
 resource "aws_acm_certificate" "bg" {
   provider = aws.us-east-1   # CF distributions require certificates in us-east-1
-  domain_name               = local.domain_name
+  domain_name               = local.background_domain_name
   validation_method         = "DNS"
 }
 
-resource "aws_s3_bucket_object" "background-lambda-layer" {
+resource "aws_s3_bucket_object" "preload-lambda-layer" {
   bucket = data.aws_s3_bucket.infra.bucket
-  key = local.lambda-layer-background-s3-key
-  source = local.lambda-python-layer-filename
+  key = local.lambda-layer-preload-s3-key
+  source = local.lambda-layer-preload-filename
   content_type = "application/zip"
 }
 
-resource "aws_lambda_layer_version" "background-lambda-layer" {
+resource "aws_lambda_layer_version" "preload-lambda-layer" {
   s3_bucket   = data.aws_s3_bucket.infra.bucket
-  s3_key      = local.lambda-layer-background-s3-key
-  layer_name  = "background"
-  description = "A layer that contains the necessary packages for the background lambda function"
+  s3_key      = local.lambda-layer-preload-s3-key
+  layer_name  = "preload"
+  description = "A layer that contains the necessary packages for the preloading lambda functions"
 
   compatible_runtimes = ["python3.8"]
 }
@@ -68,7 +68,7 @@ resource "aws_acm_certificate_validation" "certificate_validation" {
 # Route53 'alias' record to point to CF distribution
 resource "aws_route53_record" "backgrounds" {
   zone_id = data.aws_route53_zone.otfbm.zone_id
-  name    = local.domain_name
+  name    = local.background_domain_name
   type    = "A"
 
   alias {
@@ -80,7 +80,7 @@ resource "aws_route53_record" "backgrounds" {
 
 # s3 bucket to hold all the images. allow anything to read as a static website
 resource "aws_s3_bucket" "backgrounds" {
-  bucket = local.domain_name
+  bucket = local.background_domain_name
   acl = "public-read"
 
   policy = <<EOF
@@ -92,7 +92,7 @@ resource "aws_s3_bucket" "backgrounds" {
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::${local.domain_name}/*"
+            "Resource": "arn:aws:s3:::${local.background_domain_name}/*"
         }
     ]
 }
@@ -153,11 +153,11 @@ resource "aws_cloudfront_distribution" "backgrounds" {
   enabled             = true
   default_root_object = local.index_key
   price_class  = "PriceClass_100"
-  aliases = [local.domain_name]
+  aliases = [local.background_domain_name]
 
   origin {
     domain_name = aws_s3_bucket.backgrounds.website_endpoint
-    origin_id   = local.domain_name
+    origin_id   = local.background_domain_name
 
     custom_origin_config {
       http_port              = "80"
@@ -170,7 +170,7 @@ resource "aws_cloudfront_distribution" "backgrounds" {
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = local.domain_name
+    target_origin_id       = local.background_domain_name
     viewer_protocol_policy = "allow-all"
     compress = true
     default_ttl            = 0
@@ -273,7 +273,7 @@ resource "aws_lambda_function" "bg" {
   role          = aws_iam_role.bg-lambda.arn
   runtime       = "python3.8"
   handler = "${local.lambda-background-function-name}.lambda_handler"
-  layers = [aws_lambda_layer_version.background-lambda-layer.arn]
+  layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
   memory_size = 1024
   timeout = 20
 
@@ -281,8 +281,8 @@ resource "aws_lambda_function" "bg" {
 
   environment {
     variables = {
-      BUCKET = local.domain_name
-      URL = local.domain_name
+      BUCKET = local.background_domain_name
+      URL = local.background_domain_name
       TARGET_BYTES = local.target_image_bytes
       SIZE_TOLERANCE = local.target_image_bytes_tolerance
     }
