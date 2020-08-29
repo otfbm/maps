@@ -1,10 +1,10 @@
 locals {
   index_key             = "index.html"
   domain_name           = "bg.otfbm.io"
-  lambda-layer-preload-s3-key = "lambda/preload-layer.zip"
-  lambda-preload-filename = "artifacts/preload.zip"
-  lambda-preload-layer-filename = "artifacts/preload-layer.zip"
-  lambda-preload-function-name = "preload"
+  lambda-layer-background-s3-key = "lambda/background-layer.zip"
+  lambda-background-filename = "artifacts/background.zip"
+  lambda-python-layer-filename = "artifacts/python-layer.zip"
+  lambda-background-function-name = "background"
   target_image_bytes = 1048576
   target_image_bytes_tolerance = 5
 }
@@ -25,18 +25,18 @@ resource "aws_acm_certificate" "bg" {
   validation_method         = "DNS"
 }
 
-resource "aws_s3_bucket_object" "preload-lambda-layer" {
+resource "aws_s3_bucket_object" "background-lambda-layer" {
   bucket = data.aws_s3_bucket.infra.bucket
-  key = local.lambda-layer-preload-s3-key
-  source = local.lambda-preload-layer-filename
+  key = local.lambda-layer-background-s3-key
+  source = local.lambda-python-layer-filename
   content_type = "application/zip"
 }
 
-resource "aws_lambda_layer_version" "preload-lambda-layer" {
+resource "aws_lambda_layer_version" "background-lambda-layer" {
   s3_bucket   = data.aws_s3_bucket.infra.bucket
-  s3_key      = local.lambda-layer-preload-s3-key
-  layer_name  = "preload"
-  description = "A layer that contains the necessary packages for the preload lambda function"
+  s3_key      = local.lambda-layer-background-s3-key
+  layer_name  = "background"
+  description = "A layer that contains the necessary packages for the background lambda function"
 
   compatible_runtimes = ["python3.8"]
 }
@@ -200,12 +200,12 @@ resource "aws_cloudfront_distribution" "backgrounds" {
 
 # API Gateway
 resource "aws_api_gateway_rest_api" "bg" {
-  name = "Background Preload API GW"
+  name = "Background API GW"
 }
 
 resource "aws_api_gateway_resource" "action" {
   parent_id   = aws_api_gateway_rest_api.bg.root_resource_id
-  path_part   = "preload"
+  path_part   = "background"
   rest_api_id = aws_api_gateway_rest_api.bg.id
 }
 
@@ -268,16 +268,16 @@ resource "aws_lambda_permission" "apigw_lambda" {
 }
 
 resource "aws_lambda_function" "bg" {
-  filename      = local.lambda-preload-filename
-  function_name = local.lambda-preload-function-name
+  filename      = local.lambda-background-filename
+  function_name = local.lambda-background-function-name
   role          = aws_iam_role.bg-lambda.arn
   runtime       = "python3.8"
-  handler = "${local.lambda-preload-function-name}.lambda_handler"
-  layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
+  handler = "${local.lambda-background-function-name}.lambda_handler"
+  layers = [aws_lambda_layer_version.background-lambda-layer.arn]
   memory_size = 1024
   timeout = 20
 
-  source_code_hash = filebase64sha256(local.lambda-preload-filename)
+  source_code_hash = filebase64sha256(local.lambda-background-filename)
 
   environment {
     variables = {
@@ -291,7 +291,7 @@ resource "aws_lambda_function" "bg" {
 
 # IAM
 resource "aws_iam_role" "bg-lambda" {
-  name = "preload-lambda"
+  name = "background-lambda"
 
   assume_role_policy = <<POLICY
 {
