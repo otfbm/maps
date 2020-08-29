@@ -1,16 +1,6 @@
 const Overlay = require("../overlay.js");
 const ColourParser = require("./colour-parser.js");
-
-const sizeLookups = new Map([
-  ["T", "tiny"],
-  ["S", "small"],
-  ["M", "medium"],
-  ["L", "large"],
-  ["H", "huge"],
-  ["G", "gargantuan"],
-]);
-
-const sizes = ["T", "S", "M", "L", "H", "G"];
+const SizeParser = require("./size-parser.js");
 
 module.exports = class TokenParser {
   parse(str) {
@@ -31,13 +21,8 @@ module.exports = class TokenParser {
         matches[3] = "y";
       }
 
-      let color = ColourParser.parse(matches[3]);
-
-      let size = "medium";
-      for (const char of matches[2] || "") {
-        let upperChar = char.toUpperCase();
-        if (sizes.includes(upperChar)) size = sizeLookups.get(upperChar);
-      }
+      const color = ColourParser.parse(matches[3]);
+      const size = SizeParser.parse(matches[2]);
 
       // handle uri encoded strings
       let label = matches[5];
