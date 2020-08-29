@@ -6,7 +6,7 @@ resource "aws_acm_certificate" "bg" {
 }
 
 # Record for DNS-01 cert validation
-resource "aws_route53_record" "certificate_validation" {
+resource "aws_route53_record" "background_certificate_validation" {
   for_each = {
     for dvo in aws_acm_certificate.bg.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -23,10 +23,10 @@ resource "aws_route53_record" "certificate_validation" {
 }
 
 # Note this doesn't create an AWS 'resource' as such. it's a Terraform workflow-only item
-resource "aws_acm_certificate_validation" "certificate_validation" {
+resource "aws_acm_certificate_validation" "background_certificate_validation" {
   provider = aws.us-east-1
   certificate_arn         = aws_acm_certificate.bg.arn
-  validation_record_fqdns = [for record in aws_route53_record.certificate_validation : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.background_certificate_validation : record.fqdn]
 }
 
 # Route53 'alias' record to point to CF distribution
@@ -103,7 +103,7 @@ EOF
 }
 
 # default root document for the static website bucket
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_bucket_object" "background_index" {
   bucket  = aws_s3_bucket.backgrounds.bucket
   key     = local.index_key
   acl = "public-read"
@@ -159,7 +159,7 @@ resource "aws_cloudfront_distribution" "backgrounds" {
     ssl_support_method = "sni-only"
   }
 
-  depends_on = [aws_acm_certificate.bg, aws_acm_certificate_validation.certificate_validation]
+  depends_on = [aws_acm_certificate.bg, aws_acm_certificate_validation.background_certificate_validation]
 }
 
 # API Gateway
@@ -169,15 +169,15 @@ resource "aws_api_gateway_resource" "background" {
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
-resource "aws_api_gateway_resource" "background-url" {
+resource "aws_api_gateway_resource" "background_url" {
   parent_id = aws_api_gateway_resource.background.id
   path_part = "{url}"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
-resource "aws_api_gateway_method" "background-method" {
+resource "aws_api_gateway_method" "background_method" {
   rest_api_id   = aws_api_gateway_rest_api.gateway.id
-  resource_id   = aws_api_gateway_resource.background-url.id
+  resource_id   = aws_api_gateway_resource.background_url.id
   http_method   = "GET"
   authorization = "NONE"
 
@@ -186,10 +186,10 @@ resource "aws_api_gateway_method" "background-method" {
   }
 }
 
-resource "aws_api_gateway_integration" "background-integration" {
+resource "aws_api_gateway_integration" "background_integration" {
   rest_api_id             = aws_api_gateway_rest_api.gateway.id
-  resource_id             = aws_api_gateway_resource.background-url.id
-  http_method             = aws_api_gateway_method.background-method.http_method
+  resource_id             = aws_api_gateway_resource.background_url.id
+  http_method             = aws_api_gateway_method.background_method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.bg.invoke_arn
@@ -200,7 +200,7 @@ resource "aws_api_gateway_integration" "background-integration" {
 }
 
 # Lambda Function Bits
-resource "aws_lambda_permission" "apigw-background-lambda" {
+resource "aws_lambda_permission" "background_apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.bg.arn
@@ -213,7 +213,7 @@ resource "aws_lambda_permission" "apigw-background-lambda" {
 resource "aws_lambda_function" "bg" {
   filename      = local.lambda-background-filename
   function_name = local.lambda-background-function-name
-  role          = aws_iam_role.bg-lambda.arn
+  role          = aws_iam_role.bg_lambda.arn
   runtime       = "python3.8"
   handler = "${local.lambda-background-function-name}.lambda_handler"
   layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
@@ -233,7 +233,7 @@ resource "aws_lambda_function" "bg" {
 }
 
 # IAM
-resource "aws_iam_role" "bg-lambda" {
+resource "aws_iam_role" "bg_lambda" {
   name = "background-lambda"
 
   assume_role_policy = <<POLICY
@@ -253,7 +253,7 @@ resource "aws_iam_role" "bg-lambda" {
 POLICY
 }
 
-resource "aws_iam_policy" "bg-lambda" {
+resource "aws_iam_policy" "bg_lambda" {
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -269,12 +269,12 @@ resource "aws_iam_policy" "bg-lambda" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "bg-lambda" {
-  policy_arn = aws_iam_policy.bg-lambda.arn
-  role = aws_iam_role.bg-lambda.name
+resource "aws_iam_role_policy_attachment" "bg_lambda" {
+  policy_arn = aws_iam_policy.bg_lambda.arn
+  role = aws_iam_role.bg_lambda.name
 }
 
-resource "aws_iam_role_policy_attachment" "bg-lamba-basicexecutionrole" {
-  role       = "${aws_iam_role.bg-lambda.name}"
+resource "aws_iam_role_policy_attachment" "bg_lamba_basicexecutionrole" {
+  role       = "${aws_iam_role.bg_lambda.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
