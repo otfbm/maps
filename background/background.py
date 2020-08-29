@@ -11,10 +11,10 @@ import requests
 from PIL import Image
 
 warnings.simplefilter('error', Image.DecompressionBombWarning)
-s3_client = boto3.client('s3')
 
 
 def lambda_handler(event, context):
+    s3_client = boto3.client('s3')g
     imgUrlEnc = event['pathParameters']['url']
     imgUrl = base64.b64decode(event['pathParameters']['url'])
     bucket = os.environ['BUCKET']
