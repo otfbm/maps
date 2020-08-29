@@ -91,7 +91,7 @@ EOF
   },
   "Redirect": {
     "Protocol": "https",
-    "HostName": "${aws_api_gateway_rest_api.bg.id}.execute-api.${var.region}.amazonaws.com",
+    "HostName": "${aws_api_gateway_rest_api.gateway.id}.execute-api.${var.region}.amazonaws.com",
     "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.action.path_part}/",
     "HttpRedirectCode": "307"
   }
@@ -163,24 +163,20 @@ resource "aws_cloudfront_distribution" "backgrounds" {
 }
 
 # API Gateway
-resource "aws_api_gateway_rest_api" "bg" {
-  name = "Background API GW"
-}
-
 resource "aws_api_gateway_resource" "action" {
-  parent_id   = aws_api_gateway_rest_api.bg.root_resource_id
+  parent_id   = aws_api_gateway_rest_api.gateway.root_resource_id
   path_part   = "background"
-  rest_api_id = aws_api_gateway_rest_api.bg.id
+  rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
 resource "aws_api_gateway_resource" "url" {
   parent_id = aws_api_gateway_resource.action.id
   path_part = "{url}"
-  rest_api_id = aws_api_gateway_rest_api.bg.id
+  rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
 resource "aws_api_gateway_method" "method" {
-  rest_api_id   = aws_api_gateway_rest_api.bg.id
+  rest_api_id   = aws_api_gateway_rest_api.gateway.id
   resource_id   = aws_api_gateway_resource.url.id
   http_method   = "GET"
   authorization = "NONE"
@@ -191,7 +187,7 @@ resource "aws_api_gateway_method" "method" {
 }
 
 resource "aws_api_gateway_integration" "integration" {
-  rest_api_id             = aws_api_gateway_rest_api.bg.id
+  rest_api_id             = aws_api_gateway_rest_api.gateway.id
   resource_id             = aws_api_gateway_resource.url.id
   http_method             = aws_api_gateway_method.method.http_method
   integration_http_method = "POST"
@@ -203,23 +199,6 @@ resource "aws_api_gateway_integration" "integration" {
   }
 }
 
-resource "aws_api_gateway_deployment" "prod" {
-  depends_on = [aws_api_gateway_integration.integration, aws_api_gateway_method.method,
-                aws_api_gateway_resource.action, aws_api_gateway_resource.url,
-                aws_api_gateway_rest_api.bg]
-  stage_name = "prod"
-
-  rest_api_id = aws_api_gateway_rest_api.bg.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  variables = {
-    deployed_at = timestamp()
-  }
-}
-
 # Lambda Function Bits
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
@@ -228,7 +207,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
   principal     = "apigateway.amazonaws.com"
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  source_arn = "${aws_api_gateway_rest_api.bg.execution_arn}/*/*/*"
+  source_arn = "${aws_api_gateway_rest_api.gateway.execution_arn}/*/*/*"
 }
 
 resource "aws_lambda_function" "bg" {
