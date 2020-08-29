@@ -59,6 +59,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "basic tokens should match"
@@ -76,6 +77,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "basic tokens should match"
@@ -93,6 +95,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "basic tokens should match"
@@ -110,6 +113,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
       {
         tl: "C3",
@@ -118,6 +122,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "multiple basic tokens should match"
@@ -135,6 +140,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#e63c3c",
         size: "medium",
+        imageCode: null,
       },
     ],
     "tokens with color should match"
@@ -152,6 +158,7 @@ tap.test("token parsing", async (t) => {
         label: "Pizza",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "tokens with names should match"
@@ -169,6 +176,7 @@ tap.test("token parsing", async (t) => {
         label: "",
         color: "#07031a",
         size: "large",
+        imageCode: null,
       },
     ],
     "tokens with size should match"
@@ -186,6 +194,7 @@ tap.test("token parsing", async (t) => {
         label: "ZOM1",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "tokens with size should match"
@@ -203,6 +212,7 @@ tap.test("token parsing", async (t) => {
         label: "9ZOM1",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "tokens with size should match"
@@ -220,6 +230,7 @@ tap.test("token parsing", async (t) => {
         label: "123456",
         color: "#07031a",
         size: "medium",
+        imageCode: null,
       },
     ],
     "tokens with size should match"

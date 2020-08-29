@@ -1,7 +1,6 @@
 const Overlay = require("../overlay.js");
 const ColourParser = require("./colour-parser.js");
 const SizeParser = require("./size-parser.js");
-// https://token.otfbm.io/img/${code}
 
 module.exports = class TokenParser {
   async parse(str) {

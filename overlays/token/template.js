@@ -7,12 +7,12 @@ module.exports = ({
   fontcolor,
   fontsize,
   label,
-  url,
+  image,
 }, ctx) => {
   const whitelineModifier = size < 41 ? 3.5 : 4;
   const xy = size < gridsize ? gridsize / 2 : size / 2;
 
-  if (url) {
+  if (image) {
     ctx.beginPath();
     ctx.arc(xy, xy, size / 2 - 2, 0, Math.PI * 2);
     ctx.strokeStyle = '#07031a';
@@ -26,7 +26,7 @@ module.exports = ({
     const img = new Image();
     img.onload = () => ctx.drawImage(img, 0, 0, size, size);
     img.onerror = err => { throw err };
-    img.src = url;
+    img.src = image;
   } else {
     ctx.beginPath();
     ctx.arc(xy, xy, size / 2 - whitelineModifier, 0, Math.PI * 2);
@@ -43,7 +43,7 @@ module.exports = ({
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  if (!url) {
+  if (!image) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `${fontsize}px AzoSans`;
