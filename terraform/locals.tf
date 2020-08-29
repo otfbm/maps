@@ -12,7 +12,7 @@ locals {
   background_target_image_bytes_tolerance = 5
 
   # token
-  background_domain_name           = "token.otfbm.io"
-  lambda-background-filename = "artifacts/token.zip"
-  lambda-background-function-name = "token"
+  token_domain_name           = "token.otfbm.io"
+  lambda-token-filename = "artifacts/token.zip"
+  lambda-token-function-name = "token"
 }

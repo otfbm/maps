@@ -92,7 +92,7 @@ EOF
   "Redirect": {
     "Protocol": "https",
     "HostName": "${aws_api_gateway_rest_api.gateway.id}.execute-api.${var.region}.amazonaws.com",
-    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.action.path_part}/",
+    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.background.path_part}/",
     "HttpRedirectCode": "307"
   }
 }]
@@ -163,21 +163,21 @@ resource "aws_cloudfront_distribution" "backgrounds" {
 }
 
 # API Gateway
-resource "aws_api_gateway_resource" "action" {
+resource "aws_api_gateway_resource" "background" {
   parent_id   = aws_api_gateway_rest_api.gateway.root_resource_id
   path_part   = "background"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
-resource "aws_api_gateway_resource" "url" {
-  parent_id = aws_api_gateway_resource.action.id
+resource "aws_api_gateway_resource" "background-url" {
+  parent_id = aws_api_gateway_resource.background.id
   path_part = "{url}"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
-resource "aws_api_gateway_method" "method" {
+resource "aws_api_gateway_method" "background-method" {
   rest_api_id   = aws_api_gateway_rest_api.gateway.id
-  resource_id   = aws_api_gateway_resource.url.id
+  resource_id   = aws_api_gateway_resource.background-url.id
   http_method   = "GET"
   authorization = "NONE"
 
@@ -186,10 +186,10 @@ resource "aws_api_gateway_method" "method" {
   }
 }
 
-resource "aws_api_gateway_integration" "integration" {
+resource "aws_api_gateway_integration" "background-integration" {
   rest_api_id             = aws_api_gateway_rest_api.gateway.id
-  resource_id             = aws_api_gateway_resource.url.id
-  http_method             = aws_api_gateway_method.method.http_method
+  resource_id             = aws_api_gateway_resource.background-url.id
+  http_method             = aws_api_gateway_method.background-method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.bg.invoke_arn
@@ -200,7 +200,7 @@ resource "aws_api_gateway_integration" "integration" {
 }
 
 # Lambda Function Bits
-resource "aws_lambda_permission" "apigw_lambda" {
+resource "aws_lambda_permission" "apigw-background-lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.bg.arn
