@@ -1,44 +1,8 @@
-locals {
-  index_key             = "index.html"
-  background_domain_name           = "bg.otfbm.io"
-  lambda-layer-preload-s3-key = "lambda/preload-layer.zip"
-  lambda-background-filename = "artifacts/background.zip"
-  lambda-layer-preload-filename = "artifacts/preload-layer.zip"
-  lambda-background-function-name = "background"
-  target_image_bytes = 1048576
-  target_image_bytes_tolerance = 5
-}
-
-data "aws_route53_zone" "otfbm" {
-  name         = "otfbm.io"
-  private_zone = false
-}
-
-data "aws_s3_bucket" "infra" {
-  bucket = "otfbm-infra"
-}
-
 # Certificate creation and validation
 resource "aws_acm_certificate" "bg" {
   provider = aws.us-east-1   # CF distributions require certificates in us-east-1
   domain_name               = local.background_domain_name
   validation_method         = "DNS"
-}
-
-resource "aws_s3_bucket_object" "preload-lambda-layer" {
-  bucket = data.aws_s3_bucket.infra.bucket
-  key = local.lambda-layer-preload-s3-key
-  source = local.lambda-layer-preload-filename
-  content_type = "application/zip"
-}
-
-resource "aws_lambda_layer_version" "preload-lambda-layer" {
-  s3_bucket   = data.aws_s3_bucket.infra.bucket
-  s3_key      = local.lambda-layer-preload-s3-key
-  layer_name  = "preload"
-  description = "A layer that contains the necessary packages for the preloading lambda functions"
-
-  compatible_runtimes = ["python3.8"]
 }
 
 # Record for DNS-01 cert validation
