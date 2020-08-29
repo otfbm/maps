@@ -1,11 +1,12 @@
 module.exports = class Overlay {
-  constructor({ cells = [], cell = "", type, label, color, size } = {}) {
+  constructor({ cells = [], cell = "", type, label, color, size, url } = {}) {
     this._cells = cells;
     this._cell = cell;
     this._type = type;
     this._label = label;
     this._color = color;
     this._size = size;
+    this._url = url;
     this._width;
     this._height;
   }
@@ -66,6 +67,14 @@ module.exports = class Overlay {
 
   set size(size) {
     this._size = size;
+  }
+
+  get url() {
+    return this._url;
+  }
+
+  set url(url) {
+    this._url = url;
   }
 
   toJSON() {
