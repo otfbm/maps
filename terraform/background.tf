@@ -226,8 +226,8 @@ resource "aws_lambda_function" "bg" {
     variables = {
       BUCKET = local.background_domain_name
       URL = local.background_domain_name
-      TARGET_BYTES = local.target_image_bytes
-      SIZE_TOLERANCE = local.target_image_bytes_tolerance
+      TARGET_BYTES = local.background_target_image_bytes
+      SIZE_TOLERANCE = local.background_target_image_bytes_tolerance
     }
   }
 }

@@ -1,10 +1,18 @@
 locals {
+  # shared
   index_key             = "index.html"
-  background_domain_name           = "bg.otfbm.io"
   lambda-layer-preload-s3-key = "lambda/preload-layer.zip"
-  lambda-background-filename = "artifacts/background.zip"
   lambda-layer-preload-filename = "artifacts/preload-layer.zip"
+
+  # background
+  background_domain_name           = "bg.otfbm.io"
+  lambda-background-filename = "artifacts/background.zip"
   lambda-background-function-name = "background"
-  target_image_bytes = 1048576
-  target_image_bytes_tolerance = 5
+  background_target_image_bytes = 1048576
+  background_target_image_bytes_tolerance = 5
+
+  # token
+  background_domain_name           = "token.otfbm.io"
+  lambda-background-filename = "artifacts/token.zip"
+  lambda-background-function-name = "token"
 }
