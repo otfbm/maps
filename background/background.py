@@ -14,7 +14,7 @@ warnings.simplefilter('error', Image.DecompressionBombWarning)
 
 
 def lambda_handler(event, context):
-    s3_client = boto3.client('s3')g
+    s3_client = boto3.client('s3')
     imgUrlEnc = event['pathParameters']['url']
     imgUrl = base64.b64decode(event['pathParameters']['url'])
     bucket = os.environ['BUCKET']
