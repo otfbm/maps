@@ -92,3 +92,11 @@ test('parsing: position, size, hex colour and name', async (t) => {
     t.equal(label, 'name');
     t.end();
 });
+
+test('parsing: token image shortcode', async (t) => {
+    const parser = new TokenParser();
+    const { imageCode } = await parser.parse('D3L-name-a1b2c3d4');
+
+    t.equal(imageCode, 'a1b2c3d4');
+    t.end();
+});

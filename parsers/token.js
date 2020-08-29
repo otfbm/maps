@@ -8,7 +8,7 @@ module.exports = class TokenParser {
     if (str.length < 2) return false;
 
     // a string matching a token definition eg. D3rp-asdsa
-    const reg = /^([A-Z]{1,2}[0-9]{1,2})([TSMLHG]*?)(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-f]{6}|~[0-9A-f]{3})?(-(.+))?$/i;
+    const reg = /^([A-Z]{1,2}[0-9]{1,2})([TSMLHG]*?)(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-f]{6}|~[0-9A-f]{3})?(-([^-]+))?(-([^-]+))?$/i;
     if (reg.test(str)) {
       const matches = str.match(reg);
 
@@ -39,6 +39,7 @@ module.exports = class TokenParser {
         size,
         type: "token",
         label: label || "",
+        imageCode: matches[7] || null
       });
     }
 
