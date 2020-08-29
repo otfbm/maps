@@ -14,5 +14,5 @@ locals {
   # token
   token_domain_name           = "token.otfbm.io"
   lambda-token-filename = "artifacts/token.zip"
-  lambda-token-function-name = "token"
+  lambda-token-function-name = "otfbm-token"
 }
