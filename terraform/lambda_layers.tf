@@ -12,4 +12,5 @@ resource "aws_lambda_layer_version" "preload-lambda-layer" {
   description = "A layer that contains the necessary packages for the preloading lambda functions"
 
   compatible_runtimes = ["python3.8"]
+  depends_on = [aws_s3_bucket_object.preload-lambda-layer]
 }
