@@ -1,18 +1,18 @@
 # Certificate creation and validation
 resource "aws_acm_certificate" "token" {
-  provider = aws.us-east-1   # CF distributions require certificates in us-east-1
-  domain_name               = local.token_domain_name
-  validation_method         = "DNS"
+  provider          = aws.us-east-1 # CF distributions require certificates in us-east-1
+  domain_name       = local.token_domain_name
+  validation_method = "DNS"
 }
 
 # Record for DNS-01 cert validation
 resource "aws_route53_record" "token_certificate_validation" {
   for_each = {
-  for dvo in aws_acm_certificate.token.domain_validation_options : dvo.domain_name => {
-    name   = dvo.resource_record_name
-    type   = dvo.resource_record_type
-    record = dvo.resource_record_value
-  }
+    for dvo in aws_acm_certificate.token.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
   }
   allow_overwrite = true
   name            = each.value.name
@@ -24,7 +24,7 @@ resource "aws_route53_record" "token_certificate_validation" {
 
 # Note this doesn't create an AWS 'resource' as such. it's a Terraform workflow-only item
 resource "aws_acm_certificate_validation" "token_certificate_validation" {
-  provider = aws.us-east-1
+  provider                = aws.us-east-1
   certificate_arn         = aws_acm_certificate.token.arn
   validation_record_fqdns = [for record in aws_route53_record.token_certificate_validation : record.fqdn]
 }
@@ -45,7 +45,7 @@ resource "aws_route53_record" "token" {
 # s3 bucket to hold all the images. allow anything to read as a static website
 resource "aws_s3_bucket" "tokens" {
   bucket = local.token_domain_name
-  acl = "public-read"
+  acl    = "public-read"
 
   policy = <<EOF
 {
@@ -103,20 +103,20 @@ EOF
 
 # default root document for the static website bucket
 resource "aws_s3_bucket_object" "token_index" {
-  bucket  = aws_s3_bucket.tokens.bucket
-  key     = local.index_key
-  acl = "public-read"
-  content = "<html>Thar be tokens here</html>"
+  bucket       = aws_s3_bucket.tokens.bucket
+  key          = local.index_key
+  acl          = "public-read"
+  content      = "<html>Thar be tokens here</html>"
   content_type = "text/html"
 }
 
 # CF distribution to regionally cache images for increased geo performance
 resource "aws_cloudfront_distribution" "tokens" {
-  provider = aws.us-east-1
+  provider            = aws.us-east-1
   enabled             = true
   default_root_object = local.index_key
-  price_class  = "PriceClass_100"
-  aliases = [local.token_domain_name]
+  price_class         = "PriceClass_100"
+  aliases             = [local.token_domain_name]
 
   origin {
     domain_name = aws_s3_bucket.tokens.website_endpoint
@@ -135,7 +135,7 @@ resource "aws_cloudfront_distribution" "tokens" {
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = local.token_domain_name
     viewer_protocol_policy = "allow-all"
-    compress = true
+    compress               = true
     default_ttl            = 0
     forwarded_values {
       query_string = false
@@ -155,7 +155,7 @@ resource "aws_cloudfront_distribution" "tokens" {
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.token.arn
-    ssl_support_method = "sni-only"
+    ssl_support_method  = "sni-only"
   }
 
   depends_on = [aws_acm_certificate.token, aws_acm_certificate_validation.token_certificate_validation]
@@ -169,8 +169,8 @@ resource "aws_api_gateway_resource" "token_action" {
 }
 
 resource "aws_api_gateway_resource" "token_url" {
-  parent_id = aws_api_gateway_resource.token_action.id
-  path_part = "{url}"
+  parent_id   = aws_api_gateway_resource.token_action.id
+  path_part   = "{url}"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
@@ -214,19 +214,19 @@ resource "aws_lambda_function" "token" {
   function_name = local.lambda-token-function-name
   role          = aws_iam_role.token_lambda.arn
   runtime       = "python3.8"
-  handler = "${local.lambda-token-function-name}.lambda_handler"
-  layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
-  memory_size = 1024
-  timeout = 20
+  handler       = "${local.lambda-token-function-name}.lambda_handler"
+  layers        = [aws_lambda_layer_version.preload-lambda-layer.arn]
+  memory_size   = 1024
+  timeout       = 20
 
   source_code_hash = filebase64sha256(local.lambda-token-filename)
 
   environment {
     variables = {
-      BUCKET = local.token_domain_name
-      URL = local.token_domain_name
+      BUCKET         = local.token_domain_name
+      URL            = local.token_domain_name
       DYNAMODB_TABLE = aws_dynamodb_table.token_table.name
-      TARGET_SIZE = local.token_target_size
+      TARGET_SIZE    = local.token_target_size
     }
   }
 }
@@ -276,7 +276,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "token_lambda" {
   policy_arn = aws_iam_policy.token_lambda.arn
-  role = aws_iam_role.token_lambda.name
+  role       = aws_iam_role.token_lambda.name
 }
 
 resource "aws_iam_role_policy_attachment" "token_lamba_basicexecutionrole" {
@@ -285,9 +285,9 @@ resource "aws_iam_role_policy_attachment" "token_lamba_basicexecutionrole" {
 }
 
 resource "aws_dynamodb_table" "token_table" {
-  name = "tokens"
+  name         = "tokens"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key = "id"
+  hash_key     = "id"
 
   attribute {
     name = "id"
@@ -295,7 +295,7 @@ resource "aws_dynamodb_table" "token_table" {
   }
 
   server_side_encryption {
-    enabled = true  # may as well, will use AWS key
+    enabled = true # may as well, will use AWS key
   }
 
   ttl {

@@ -1,8 +1,8 @@
 # Certificate creation and validation
 resource "aws_acm_certificate" "bg" {
-  provider = aws.us-east-1   # CF distributions require certificates in us-east-1
-  domain_name               = local.background_domain_name
-  validation_method         = "DNS"
+  provider          = aws.us-east-1 # CF distributions require certificates in us-east-1
+  domain_name       = local.background_domain_name
+  validation_method = "DNS"
 }
 
 # Record for DNS-01 cert validation
@@ -24,7 +24,7 @@ resource "aws_route53_record" "background_certificate_validation" {
 
 # Note this doesn't create an AWS 'resource' as such. it's a Terraform workflow-only item
 resource "aws_acm_certificate_validation" "background_certificate_validation" {
-  provider = aws.us-east-1
+  provider                = aws.us-east-1
   certificate_arn         = aws_acm_certificate.bg.arn
   validation_record_fqdns = [for record in aws_route53_record.background_certificate_validation : record.fqdn]
 }
@@ -45,7 +45,7 @@ resource "aws_route53_record" "backgrounds" {
 # s3 bucket to hold all the images. allow anything to read as a static website
 resource "aws_s3_bucket" "backgrounds" {
   bucket = local.background_domain_name
-  acl = "public-read"
+  acl    = "public-read"
 
   policy = <<EOF
 {
@@ -104,20 +104,20 @@ EOF
 
 # default root document for the static website bucket
 resource "aws_s3_bucket_object" "background_index" {
-  bucket  = aws_s3_bucket.backgrounds.bucket
-  key     = local.index_key
-  acl = "public-read"
-  content = "<html>Thar be backgrounds here</html>"
+  bucket       = aws_s3_bucket.backgrounds.bucket
+  key          = local.index_key
+  acl          = "public-read"
+  content      = "<html>Thar be backgrounds here</html>"
   content_type = "text/html"
 }
 
 # CF distribution to regionally cache images for increased geo performance
 resource "aws_cloudfront_distribution" "backgrounds" {
-  provider = aws.us-east-1
+  provider            = aws.us-east-1
   enabled             = true
   default_root_object = local.index_key
-  price_class  = "PriceClass_100"
-  aliases = [local.background_domain_name]
+  price_class         = "PriceClass_100"
+  aliases             = [local.background_domain_name]
 
   origin {
     domain_name = aws_s3_bucket.backgrounds.website_endpoint
@@ -136,7 +136,7 @@ resource "aws_cloudfront_distribution" "backgrounds" {
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = local.background_domain_name
     viewer_protocol_policy = "allow-all"
-    compress = true
+    compress               = true
     default_ttl            = 0
     forwarded_values {
       query_string = false
@@ -150,13 +150,13 @@ resource "aws_cloudfront_distribution" "backgrounds" {
   restrictions {
     geo_restriction {
       restriction_type = "none"
-   #   locations        = []
+      #   locations        = []
     }
   }
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.bg.arn
-    ssl_support_method = "sni-only"
+    ssl_support_method  = "sni-only"
   }
 
   depends_on = [aws_acm_certificate.bg, aws_acm_certificate_validation.background_certificate_validation]
@@ -170,8 +170,8 @@ resource "aws_api_gateway_resource" "background" {
 }
 
 resource "aws_api_gateway_resource" "background_url" {
-  parent_id = aws_api_gateway_resource.background.id
-  path_part = "{url}"
+  parent_id   = aws_api_gateway_resource.background.id
+  path_part   = "{url}"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
@@ -215,18 +215,18 @@ resource "aws_lambda_function" "bg" {
   function_name = local.lambda-background-function-name
   role          = aws_iam_role.bg_lambda.arn
   runtime       = "python3.8"
-  handler = "${local.lambda-background-function-name}.lambda_handler"
-  layers = [aws_lambda_layer_version.preload-lambda-layer.arn]
-  memory_size = 1024
-  timeout = 20
+  handler       = "${local.lambda-background-function-name}.lambda_handler"
+  layers        = [aws_lambda_layer_version.preload-lambda-layer.arn]
+  memory_size   = 1024
+  timeout       = 20
 
   source_code_hash = filebase64sha256(local.lambda-background-filename)
 
   environment {
     variables = {
-      BUCKET = local.background_domain_name
-      URL = local.background_domain_name
-      TARGET_BYTES = local.background_target_image_bytes
+      BUCKET         = local.background_domain_name
+      URL            = local.background_domain_name
+      TARGET_BYTES   = local.background_target_image_bytes
       SIZE_TOLERANCE = local.background_target_image_bytes_tolerance
     }
   }
@@ -271,7 +271,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "bg_lambda" {
   policy_arn = aws_iam_policy.bg_lambda.arn
-  role = aws_iam_role.bg_lambda.name
+  role       = aws_iam_role.bg_lambda.name
 }
 
 resource "aws_iam_role_policy_attachment" "bg_lamba_basicexecutionrole" {
