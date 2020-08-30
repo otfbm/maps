@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "us-east-1"
+  alias   = "us-east-1"
   region  = "us-east-1"
   version = "~> 3.0"
 }
@@ -24,4 +24,3 @@ locals {
   # This should match bucket in the S3 backend above.
   infra-bucket = "otfbm-infra"
 }
-

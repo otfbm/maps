@@ -5,5 +5,5 @@ variable "region" {
 
 variable "account" {
   description = "AWS Account ID"
-  type = string
+  type        = string
 }
