@@ -12,7 +12,7 @@ module.exports = ({
   const whitelineModifier = size < 41 ? 3.5 : 4;
   const xy = size < gridsize ? gridsize / 2 : size / 2;
 
-  if (image) {
+  if (image && size >= 40) {
     ctx.beginPath();
     ctx.arc(xy, xy, size / 2 - 2, 0, Math.PI * 2);
     ctx.strokeStyle = color;
@@ -43,7 +43,7 @@ module.exports = ({
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  if (!image) {
+  if (!image || size < 40) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `${fontsize}px AzoSans`;
