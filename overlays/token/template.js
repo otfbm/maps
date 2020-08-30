@@ -15,8 +15,8 @@ module.exports = ({
   if (image) {
     ctx.beginPath();
     ctx.arc(xy, xy, size / 2 - 2, 0, Math.PI * 2);
-    ctx.strokeStyle = '#07031a';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
     ctx.stroke();
 
     ctx.beginPath();
