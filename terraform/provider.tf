@@ -24,4 +24,3 @@ locals {
   # This should match bucket in the S3 backend above.
   infra-bucket = "otfbm-infra"
 }
-
