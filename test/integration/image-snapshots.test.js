@@ -283,3 +283,20 @@ test("edge cases: effects", async () => {
   const image = await page.screenshot();
   expect(image).toMatchImageSnapshot();
 });
+
+test("token image backgrounds", async () => {
+  const page = await browser.newPage();
+  const tokens = [
+    'a2-skelly-n242n',
+    'a1b-broken-asd789ad',
+    'a3y-skelly-n242n',
+    'b1-skelly-n242n',
+    'a4lw-skelly-n242n',
+    'c1ho-skelly-n242n',
+    'c4gr-skelly-n242n',
+    'f1tb-skelly-n242n',
+  ];
+  await page.goto(`${address}/${tokens.join("/")}`);
+  const image = await page.screenshot();
+  expect(image).toMatchImageSnapshot();
+});
