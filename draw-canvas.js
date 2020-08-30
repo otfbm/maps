@@ -17,7 +17,6 @@ const fetchTokenImageAsBase64 = async (code) => {
     const buffer = await res.buffer();
     return `data:${res.headers.get("content-type")};base64,${buffer.toString("base64")}`
   } catch(err) {
-    console.log(err);
     if (!fallbackTokenImage) {
       const buff = await fs.readFile(join(__dirname, 'missing-token.jpg'));
       fallbackTokenImage = buff.toString('base64');
