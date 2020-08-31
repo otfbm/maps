@@ -71,7 +71,7 @@ module.exports = class InputParser {
         continue;
       }
 
-      parsed = this.tokenParser.parse(part);
+      parsed = await this.tokenParser.parse(part);
       if (parsed) {
         this.tokens.push(parsed);
         continue;

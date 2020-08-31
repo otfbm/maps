@@ -9,57 +9,57 @@ module.exports = class TokenOverlay {
   }
 
   tiny(item) {
-    const { label, color, width, url } = item;
+    const { label, color, width, image } = item;
 
     return {
       color,
       label: `${label.substr(0, 1)}${label.substr(-1)}`,
       size: width / 1.5,
-      url,
+      image,
     };
   }
 
   medium(item) {
-    const { label, color, width, url } = item;
+    const { label, color, width, image } = item;
 
     return {
       size: width,
       color,
       label: label.substr(0, 4),
-      url,
+      image,
     };
   }
 
   large(item) {
-    const { label, color, width, url } = item;
+    const { label, color, width, image } = item;
 
     return {
       size: width * 2,
       color,
       label: label.substr(0, 9),
-      url,
+      image,
     };
   }
 
   huge(item) {
-    const { label, color, width, url } = item;
+    const { label, color, width, image } = item;
 
     return {
       size: width * 3,
       color,
       label: label.substr(0, 14),
-      url,
+      image,
     };
   }
 
   gargantuan(item) {
-    const { label, color, width, url } = item;
+    const { label, color, width, image } = item;
 
     return {
       size: width * 4,
       color,
       label: label.substr(0, 18),
-      url,
+      image,
     };
   }
 

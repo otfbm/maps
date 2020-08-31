@@ -26,7 +26,7 @@ jobs:
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -r ./app.zip board.js draw-canvas.js effects fonts grid.js icon.js index.js input-parser.js line.js node_modules options.js overlay.js overlays parsers renderer room.js styles.css token.js 5xx.jpg
+          args: zip -r ./app.zip board.js draw-canvas.js effects fonts grid.js icon.js index.js input-parser.js line.js node_modules options.js overlay.js overlays parsers renderer room.js styles.css token.js 5xx.jpg missing-token.jpg 
       - name: default deploy
         uses: appleboy/lambda-action@master
         with:
