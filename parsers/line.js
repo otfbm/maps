@@ -20,21 +20,21 @@ module.exports = class LineParser {
   }
 
   icons = new Map([
-    [']', "door"],
-    ['[', "double-door"],
-    ['-', "open-door"],
-    ['$', "secret-door"]
+    ['D', "door"],
+    ['B', "double-door"],
+    ['O', "open-door"],
+    ['S', "secret-door"]
   ])
 
   parseCoords(str) {
-    const reg = /[\-\[\]\$]?[a-zA-Z][a-zA-Z]?[0-9][0-9]?/g;
+    const reg = /(\-[A-Z])?[A-Z]{1,2}[0-9]{1,2}/gi;
     let result = [];
     let coords = str.match(reg) || [];
     for (let pt of coords) {
       let icon = "";
-      if (this.icons.has(pt.charAt(0))) {
-        icon = this.icons.get(pt.charAt(0));
-        pt = pt.substr(1)
+      if (pt.charAt(0) === '-') {
+        icon = this.icons.get(pt.charAt(1).toUpperCase()) || "";
+        pt = pt.substr(2)
       }
 
       let coords = CoordParser.parse(pt);
