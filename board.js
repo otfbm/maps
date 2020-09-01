@@ -12,7 +12,8 @@ const fillDarkMode = "#07031a"; // Midnight Blue
 const textLightMode = "rgb(7, 3, 26)";
 const textDarkMode = "rgb(244, 246, 255)";
 
-const gridLineColour = "#888888";
+const gridLineColour = "#f4f6ff"; // Powdered Sugar
+const scaleMarkerColour = "#888888"; // Grey
 
 module.exports = class Board {
   constructor({
@@ -315,7 +316,7 @@ module.exports = class Board {
     this.ctx.setLineDash([]);
     this.ctx.lineWidth = 2;
     this.ctx.lineCap = "square";
-    this.ctx.strokeStyle = atBottom ? gridLineColour : fg;
+    this.ctx.strokeStyle = atBottom ? scaleMarkerColour : fg;
 
     this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.15));
     this.ctx.lineTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.65));
@@ -333,7 +334,7 @@ module.exports = class Board {
 
     // Scale text
     this.ctx.beginPath();
-    this.ctx.fillStyle = atBottom ? gridLineColour : fg;
+    this.ctx.fillStyle = atBottom ? scaleMarkerColour : fg;
     this.ctx.textAlign = 'center';
     this.ctx.fillText(
       "5ft",
