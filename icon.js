@@ -22,7 +22,7 @@ module.exports = class Icon {
       );
     };
     img.onerror = (err) => {
-      throw err;
+      throw new Error('Failed to load icon');
     };
     img.src = this.icon;
   }

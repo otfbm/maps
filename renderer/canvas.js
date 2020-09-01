@@ -12,7 +12,7 @@ module.exports = class CanvasRenderer {
           this.ctx.drawImage(img, (x - 1) * this.gridsize, (y - 1) * this.gridsize);
         };
         img.onerror = (err) => {
-          throw err;
+          throw new Error('Failed to render image');
         };
         img.src = new renderer(this.options).render(item);
       }

@@ -27,7 +27,7 @@ module.exports = ({
 
     const img = new Image();
     img.onload = () => ctx.drawImage(img, imageTL, imageTL, size, size);
-    img.onerror = err => { throw err };
+    img.onerror = err => { throw new Error('Failed to load token image') };
     img.src = image;
   } else {
     ctx.beginPath();
