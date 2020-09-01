@@ -12,6 +12,7 @@ module.exports = ({
   const whitelineModifier = size < 41 ? 1.5 : 2;
   const radius = (size + 1) / 2 - 3;
   const xy = size < gridsize ? (gridsize + 1) / 2 : (size + 1) / 2;
+  const imageTL = size < gridsize ? (gridsize - size) / 2 : 0;
 
   if (image && size >= 40) {
     ctx.beginPath();
@@ -25,7 +26,7 @@ module.exports = ({
     ctx.clip();
 
     const img = new Image();
-    img.onload = () => ctx.drawImage(img, 0, 0, size, size);
+    img.onload = () => ctx.drawImage(img, imageTL, imageTL, size, size);
     img.onerror = err => { throw err };
     img.src = image;
   } else {
