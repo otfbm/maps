@@ -144,7 +144,7 @@ module.exports = class Board {
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
 
-    const isEdgeOpaque = this.edgeOpacity == 1;
+    const isEdgeOpaque = this.edgeOpacity == 1 || this.background === null;
 
     const atLeft = isEdgeOpaque || this.panX < 1;
     const atRight = isEdgeOpaque || this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
