@@ -17,7 +17,7 @@ module.exports = ({
     ctx.beginPath();
     ctx.arc(xy, xy, radius - whitelineModifier, 0, Math.PI * 2);
     ctx.strokeStyle = color;
-    ctx.lineWidth = whitelineModifier;
+    ctx.lineWidth = whitelineModifier + 3;
     ctx.stroke();
 
     ctx.beginPath();
