@@ -144,10 +144,12 @@ module.exports = class Board {
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
 
-    const atLeft = this.panX < 1;
-    const atRight = this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
-    const atTop = this.panY < 1;
-    const atBottom = this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
+    const isEdgeOpaque = this.edgeOpacity == 1;
+
+    const atLeft = isEdgeOpaque || this.panX < 1;
+    const atRight = isEdgeOpaque || this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
+    const atTop = isEdgeOpaque || this.panY < 1;
+    const atBottom = isEdgeOpaque || this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
 
     const drawGridEdgeLine = (start, end, isSolid) => {
       this.ctx.beginPath();
@@ -185,93 +187,93 @@ module.exports = class Board {
     );
 
     // Draw dotted lines
-    this.ctx.strokeStyle = fg;
+    if (!isEdgeOpaque) {    
+      this.ctx.strokeStyle = fg;
 
-    const drawDottedLine = (start, end) => {
-      drawGridEdgeLine(start, end, false);
-    }
-
-    const leftoverHeight = imgheight % this.gridsize
-    const height = imgheight - leftoverHeight;
-    const drawHeight = height - (this.panY * this.gridsize) + this.padding;
-    const leftoverWidth = imgwidth % this.gridsize
-    const width = imgwidth - leftoverWidth;
-    const drawWidth = width - (this.panX * this.gridsize) + this.padding;
-    const startHeight = this.padding + this.height;
-    const endHeight = this.padding * 2 + this.height;
-    const startWidth = this.padding + this.width;
-    const endWidth = this.padding * 2 + this.width;
-
-    if (atLeft) {
-      if (!atBottom) {
-        drawDottedLine(
-          { x: this.padding, y: this.padding + this.height },
-          { x: this.padding, y: this.padding * 2 + this.height },
-        );
+      const drawDottedLine = (start, end) => {
+        drawGridEdgeLine(start, end, false);
       }
 
-      if (!atTop) {
-        drawDottedLine(
-          { x: this.padding, y: 0 },
-          { x: this.padding, y: this.padding },
-        );
-      }
-    }
+      const leftoverHeight = imgheight % this.gridsize
+      const height = imgheight - leftoverHeight;
+      const drawHeight = height - (this.panY * this.gridsize) + this.padding;
+      const leftoverWidth = imgwidth % this.gridsize
+      const width = imgwidth - leftoverWidth;
+      const drawWidth = width - (this.panX * this.gridsize) + this.padding;
+      const startHeight = this.padding + this.height;
+      const endHeight = this.padding * 2 + this.height;
+      const startWidth = this.padding + this.width;
+      const endWidth = this.padding * 2 + this.width;
 
-    if (atTop) {
-      if (!atRight) {
-        drawDottedLine(
-          { x: this.padding + this.width, y: this.padding },
-          { x: this.padding * 2 + this.width, y: this.padding }
-        );
+      if (atLeft) {
+        if (!atBottom) {
+          drawDottedLine(
+            { x: this.padding, y: this.padding + this.height },
+            { x: this.padding, y: this.padding * 2 + this.height },
+          );
+        }
+        if (!atTop) {
+          drawDottedLine(
+            { x: this.padding, y: 0 },
+            { x: this.padding, y: this.padding },
+          );
+        }
+      }
+
+      if (atTop) {
+        if (!atRight) {
+          drawDottedLine(
+            { x: this.padding + this.width, y: this.padding },
+            { x: this.padding * 2 + this.width, y: this.padding }
+          );
+        }
+        if (!atLeft) {
+          drawDottedLine(
+            { x: 0, y: this.padding },
+            { x: this.padding, y: this.padding },
+          );
+        }
       }
 
       if (!atLeft) {
-        drawDottedLine(
-          { x: 0, y: this.padding },
-          { x: this.padding, y: this.padding },
-        );
-      }
-    }
-
-    if (!atLeft) {
-      if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
-        drawDottedLine(
-          { x: 0, y: drawHeight },
-          { x: this.padding, y: drawHeight }
-        );
-      }
-    }
-
-    if (!atBottom) {
-      if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
-        if (drawWidth < this.width) { // dont draw over the "5ft" key
+        if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
           drawDottedLine(
-            { x: drawWidth, y: startHeight },
-            { x: drawWidth, y: endHeight },
+            { x: 0, y: drawHeight },
+            { x: this.padding, y: drawHeight }
+          );
+        }
+      }
+
+      if (!atBottom) {
+        if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+          if (drawWidth < this.width) { // dont draw over the "5ft" key
+            drawDottedLine(
+              { x: drawWidth, y: startHeight },
+              { x: drawWidth, y: endHeight },
+            );
+          }
+        }
+      }
+
+      if (!atTop) {
+        if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+          drawDottedLine(
+            { x: drawWidth, y: 0 },
+            { x: drawWidth, y: this.padding },
+          );
+        }
+      }
+
+      if (!atRight) {
+        if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+          drawDottedLine(
+            { x: startWidth, y: drawHeight },
+            { x: endWidth, y: drawHeight }
           );
         }
       }
     }
-
-    if (!atTop) {
-      if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
-        drawDottedLine(
-          { x: drawWidth, y: 0 },
-          { x: drawWidth, y: this.padding },
-        );
-      }
-    }
-
-    if (!atRight) {
-      if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
-        drawDottedLine(
-          { x: startWidth, y: drawHeight },
-          { x: endWidth, y: drawHeight }
-        );
-      }
-    }
-
+    
     // grid label settings
     this.ctx.fillStyle = fg;
     this.ctx.textAlign = "center";
@@ -329,6 +331,7 @@ module.exports = class Board {
 
     this.ctx.stroke();
 
+    // Scale text
     this.ctx.beginPath();
     this.ctx.fillStyle = atBottom ? gridLineColour : fg;
     this.ctx.textAlign = 'center';
@@ -424,8 +427,7 @@ module.exports = class Board {
     this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
-        if (item.type === 'token') {
-        } else {
+        if (item.type !== 'token') {
           item.draw(this.ctx, x, y, this.gridsize, this.zoom);
         }
       }
