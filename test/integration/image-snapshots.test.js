@@ -57,7 +57,7 @@ test("overlays", async () => {
 test("walls", async () => {
   const page = await browser.newPage();
   const walls =
-    "_H2J2J7A7A1H1_E1E4]D4A4_B1B2$A2_H1H4[G4E4_D4]D5D7_D5]E5F5F7_F5]G5H5H7_H5I5-J5_I3I4H4";
+    "_H2J2J7A7A1H1_E1E4-dD4A4_B1B2-oA2_H1H4-dG4E4_D4-bD5D7_D5-bE5F5F7_F5-dG5H5H7_H5I5-oJ5_I3I4H4";
   await page.goto(`${address}/${walls}`);
   const image = await page.screenshot();
   expect(image).toMatchImageSnapshot();
@@ -270,7 +270,7 @@ test("edge cases: overlays", async () => {
 test("edge cases: walls", async () => {
   const page = await browser.newPage();
   const walls =
-    "_ah2aj2aj7aa7aa1ah1_ae1aE4]aD4aA4_aB1aB2$aA2_aH1aH4[aG4aE4_aD4]aD5aD7_aD5]aE5aF5aF7_aF5]aG5aH5aH7_aH5aI5-aJ5_aI3aI4aH4";
+    "_ah2aj2aj7aa7aa1ah1_ae1aE4-daD4aA4_aB1aB2-saA2_aH1aH4-daG4aE4_aD4-baD5aD7_aD5-baE5aF5aF7_aF5-daG5aH5aH7_aH5aI5-oaJ5_aI3aI4aH4";
   await page.goto(`${address}/aa1:10x10/${walls}`);
   const image = await page.screenshot();
   expect(image).toMatchImageSnapshot();
