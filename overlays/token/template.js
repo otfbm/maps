@@ -13,12 +13,6 @@ module.exports = ({
   const radius = (size + 1) / 2 - 3;
   const xy = size < gridsize ? (gridsize + 1) / 2 : (size + 1) / 2;
 
-  console.log({
-    gridsize,
-    size,
-    xy,
-  })
-
   if (image && size >= 40) {
     ctx.beginPath();
     ctx.arc(xy, xy, radius - whitelineModifier, 0, Math.PI * 2);
