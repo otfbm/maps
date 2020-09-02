@@ -16,6 +16,4 @@ locals {
   lambda-token-filename      = "artifacts/token.zip"
   lambda-token-function-name = "otfbm-token"
   token_target_size          = 160
-  token_face_padding         = 0.2
-  token_zoom_level           = 1.7
 }
