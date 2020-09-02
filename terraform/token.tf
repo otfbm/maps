@@ -270,7 +270,7 @@ resource "aws_iam_policy" "token_lambda" {
           "Effect": "Allow",
           "Action": ["dynamodb:UpdateItem"],
           "Resource": ["${aws_dynamodb_table.token_table.arn}"]
-        }
+        },
         {
           "Sid": "LambdaRekognition",
           "Effect": "Allow",
