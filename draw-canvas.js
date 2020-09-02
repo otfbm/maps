@@ -1,37 +1,58 @@
-const {join} = require('path');
-const fs = require('fs').promises;
-const fetch = require('node-fetch');
+const { join } = require("path");
+const fs = require("fs").promises;
+const fetch = require("node-fetch");
 const InputParser = require("./input-parser.js");
 const Board = require("./board.js");
 const Options = require("./options.js");
 const Renderer = require("./renderer/index.js");
 const Grid = require("./grid.js");
 
+const base64Fetch = async (url) => {
+  const res = await fetch(url);
+  if (res.ok) {
+    const buffer = await res.buffer();
+    return `data:${res.headers.get("content-type")};base64,${buffer.toString(
+      "base64"
+    )}`;
+  }
+  const err = new Error(
+    `We couldn't seem to get our claws on the token image you asked for`
+  );
+  err.status = res.status;
+  throw err;
+};
+
 let fallbackTokenImage;
 const fetchTokenImageAsBase64 = async (code) => {
   if (!code) return null;
+
   try {
-    const url = `https://token.otfbm.io/img/${code}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Non 200 status code');
-    const buffer = await res.buffer();
-    return `data:${res.headers.get("content-type")};base64,${buffer.toString("base64")}`
-  } catch(err) {
-    if (!fallbackTokenImage) {
-      const buff = await fs.readFile(join(__dirname, 'missing-token.jpg'));
-      fallbackTokenImage = buff.toString('base64');
+    return await base64Fetch(`https://token.otfbm.io/face/${code}`);
+  } catch (err) {
+    // swallow error and try img instead of face
+    if (err.status === 404) {
+      try {
+        return await base64Fetch(`https://token.otfbm.io/img/${code}`);
+      } catch (err) {
+        // noop
+      }
     }
-    return `data:image/jpeg;base64,${fallbackTokenImage}`;
   }
-}
+
+  if (!fallbackTokenImage) {
+    const buff = await fs.readFile(join(__dirname, "missing-token.jpg"));
+    fallbackTokenImage = buff.toString("base64");
+  }
+  return `data:image/jpeg;base64,${fallbackTokenImage}`;
+};
 
 module.exports = async function main(pathname, query) {
-  const input = new InputParser()
+  const input = new InputParser();
   await input.parse(pathname, query);
   const gridsize = input.gridsize * input.zoom;
   const width = input.board.width * gridsize;
   const height = input.board.height * gridsize;
-  
+
   const options = new Options({
     padding: gridsize,
     gridsize,
@@ -47,7 +68,7 @@ module.exports = async function main(pathname, query) {
   const zoom = input.zoom;
 
   const renderer = new Renderer(options);
-  
+
   const board = new Board({
     ctx: renderer.ctx,
     width,
@@ -94,9 +115,9 @@ module.exports = async function main(pathname, query) {
   }
 
   const tokenImages = await Promise.all(
-    input.tokens.map(tn => fetchTokenImageAsBase64(tn.imageCode))
+    input.tokens.map((tn) => fetchTokenImageAsBase64(tn.imageCode))
   );
-  for (let i=0; i<input.tokens.length; i++) {
+  for (let i = 0; i < input.tokens.length; i++) {
     input.tokens[i].image = tokenImages[i];
   }
   for (const overlay of input.tokens) {
@@ -114,4 +135,4 @@ module.exports = async function main(pathname, query) {
   board.drawBorder();
 
   return renderer.canv;
-}
+};
