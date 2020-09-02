@@ -40,6 +40,7 @@ def lambda_handler(event, context):
 
     with io.BytesIO() as orig_buffer:
         download_img(orig_buffer, imgUrl)
+        convert_alpha(orig_buffer)
 
         # create a token with a naive crop to target_size
         with io.BytesIO() as buffer:
@@ -99,6 +100,17 @@ def copy_buf_to_buf(src, dst, bufsize=16384):
             break
         dst.write(buf)
     dst.seek(0)
+
+
+def convert_alpha(buffer):
+    rgba = Image.open(buffer)
+    if len(rgba.split()) > 3:
+        rgba.load()
+        image = Image.new("RGB", rgba.size, "WHITE")
+        image.paste(rgba, mask=rgba.split()[3])
+        buffer.seek(0)
+        buffer.truncate(0)
+        image.save(buffer, "JPEG", quality=100)
 
 
 def download_img(buffer, url):
@@ -217,6 +229,7 @@ def token_resize_face(buffer, size, padding, debug=False):
 
 def test():
     images = [
+        ("frog", "https://i.imgur.com/CQHKccM.png"),
         (
             "skeleton",
             "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/1000/1000/636376294573239565.jpeg"),
@@ -230,6 +243,7 @@ def test():
         print(f"Working on {image[0]}")
         with io.BytesIO() as orig_buffer:
             download_img(orig_buffer, image[1])
+            convert_alpha(orig_buffer)
             with open(f"/tmp/{image[0]}.jpg", "wb") as f:
                 f.write(orig_buffer.getvalue())
 
