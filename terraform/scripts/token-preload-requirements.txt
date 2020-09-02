@@ -1,0 +1,9 @@
+boto3==1.14.42
+botocore==1.17.42
+Pillow==7.2.0
+requests==2.24.0
+short-url==1.2.2
+dlib==19.21.0
+face-recognition==1.3.0
+face-recognition-models==0.3.0
+
