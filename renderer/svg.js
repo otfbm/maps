@@ -15,7 +15,7 @@ module.exports = class SVGRenderer {
       this.ctx.drawImage(img, (x - 1) * this.gridsize, (y - 1) * this.gridsize);
     };
     img.onerror = (err) => {
-      throw new Error('Failed to render SVG image');
+      throw err;
     };
     img.src = new renderer(this.options).render(item);
   }
@@ -34,7 +34,7 @@ module.exports = class SVGRenderer {
       this.ctx.restore();
     };
     img.onerror = (err) => {
-      throw new Error('Failed to render svg image into cell');
+      throw err;
     };
     img.src = new renderer(this.options).render(cell);
   }

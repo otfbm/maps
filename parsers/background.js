@@ -11,12 +11,12 @@ module.exports = class BackgroundParser {
       const contentLength = res.headers.get("content-length");
       if (contentLength > 1102000) {
         res.destroy();
-        throw new Error("Background image too large");
+        throw new Error("Background too large");
       }
 
       const buffer = await res.buffer();
 
-      if (buffer.byteLength > 1102000) throw new Error("Background image too large");
+      if (buffer.byteLength > 1102000) throw new Error("Background too large");
 
       backgroundImage = `data:${res.headers.get(
         "content-type"
