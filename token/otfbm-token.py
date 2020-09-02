@@ -39,57 +39,67 @@ def lambda_handler(event, context):
     number = int(response['Attributes']['token_counter'])  # this is the number we have to shorturl
     shortCode = short_url.encode_url(number)
 
-    # create a token with a naive crop to target_size
-    with io.BytesIO() as buffer:
-        download_img(buffer, imgUrl)
-        token_resize(
-            buffer,
-            int(os.environ['TARGET_SIZE']))  # target image width and height
-        buffer.seek(0)  # rewind file pointer before read
+    with io.BytesIO() as orig_buffer:
+        download_img(orig_buffer, imgUrl)
 
-        s3_client.upload_fileobj(buffer, bucket, f'img/{shortCode}',
-                                 ExtraArgs={'CacheControl': 'max-age=86400', 'ContentType': 'image/jpeg'})
+        # create a token with a naive crop to target_size
+        with io.BytesIO() as buffer:
+            copy_buf_to_buf(orig_buffer, buffer)
+            token_resize(
+                buffer,
+                int(os.environ['TARGET_SIZE']))  # target image width and height
+            buffer.seek(0)  # rewind file pointer before read
 
-    # create a token with scaling
-    with io.BytesIO() as buffer:
-        download_img(buffer, imgUrl)
-        token_resize(
-            buffer,
-            size=int(os.environ['TARGET_SIZE']),  # target image width and height
-            scale=2)
-        buffer.seek(0)  # rewind file pointer before read
-
-        s3_client.upload_fileobj(buffer, bucket, f'zoom/{shortCode}',
-                                 ExtraArgs={'CacheControl': 'max-age=86400', 'ContentType': 'image/jpeg'})
-
-    # attempt to create a token with face recognition
-    with io.BytesIO() as buffer:
-        download_img(buffer, imgUrl)
-        found = token_resize_face(
-            buffer,
-            size=int(os.environ['TARGET_SIZE']),  # target image width and height
-            padding=0.2
-        )
-        buffer.seek(0)  # rewind file pointer before read
-
-        if found:
-            s3_client.upload_fileobj(buffer, bucket, f'face/{shortCode}',
+            s3_client.upload_fileobj(buffer, bucket, f'img/{shortCode}',
                                      ExtraArgs={'CacheControl': 'max-age=86400', 'ContentType': 'image/jpeg'})
 
-    # write the metadata
-    contents = f'<html><head><title>Token ID for {imgUrl.decode("utf-8")}</title><meta name="description" content="Token short code -> {shortCode}"></head><body>{shortCode}</body></html>'
-    body = contents.encode()
+        # create a token with scaling
+        with io.BytesIO() as buffer:
+            copy_buf_to_buf(orig_buffer, buffer)
+            token_resize(
+                buffer,
+                size=int(os.environ['TARGET_SIZE']),  # target image width and height
+                scale=float(os.environ['ZOOM_LEVEL'])
+            buffer.seek(0)  # rewind file pointer before read
 
-    s3_client.put_object(Body=body, Bucket=bucket, Key=f'meta/{imgUrlEnc}',
-                         CacheControl='max-age=3600', ContentType='text/html')
+            s3_client.upload_fileobj(buffer, bucket, f'zoom/{shortCode}',
+                                     ExtraArgs={'CacheControl': 'max-age=86400', 'ContentType': 'image/jpeg'})
 
-    response = {}
-    response['statusCode'] = 301
-    response['headers'] = {'Location': f'https://{s3Url}/meta/{imgUrlEnc}'}
+        # attempt to create a token with face recognition
+        with io.BytesIO() as buffer:
+            copy_buf_to_buf(orig_buffer, buffer)
+            found = token_resize_face(
+                buffer,
+                size=int(os.environ['TARGET_SIZE']),  # target image width and height
+                padding=float(os.environ['FACE_RECOGNITION_PADDING'])
+            )
+            buffer.seek(0)  # rewind file pointer before read
+
+            if found:
+                s3_client.upload_fileobj(buffer, bucket, f'face/{shortCode}',
+                                         ExtraArgs={'CacheControl': 'max-age=86400', 'ContentType': 'image/jpeg'})
+
+        # write the metadata
+        contents = f'<html><head><title>Token ID for {imgUrl.decode("utf-8")}</title><meta name="description" content="Token short code -> {shortCode}"></head><body>{shortCode}</body></html>'
+        body = contents.encode()
+
+        s3_client.put_object(Body=body, Bucket=bucket, Key=f'meta/{imgUrlEnc}',
+                             CacheControl='max-age=3600', ContentType='text/html')
+
+    response = {'statusCode': 301, 'headers': {'Location': f'https://{s3Url}/meta/{imgUrlEnc}'}}
     data = {}
     response['body'] = json.dumps(data)
     return response
 
+
+def copy_buf_to_buf(src, dst, bufsize=16384):
+    src.seek(0)
+    while True:
+        buf = src.read(bufsize)
+        if not buf:
+            break
+        dst.write(buf)
+    dst.seek(0)
 
 def download_img(buffer, url):
     resp = requests.get(url, stream=True)
@@ -99,14 +109,26 @@ def download_img(buffer, url):
             buffer.write(chunk)
 
 
-def token_resize(buffer, size, scale=1, debug=False):
+def zoom_at(img, x, y, zoom):
+    w, h = img.size
+    zoom2 = zoom * 2
+    img = img.crop((x - w / zoom2, y - h / zoom2,
+                    x + w / zoom2, y + h / zoom2))
+    return img.resize((w, h), Image.LANCZOS)
+
+
+def token_resize(buffer, size, zoom=1, debug=False):
     img = Image.open(buffer).convert('RGB')
     width, height = img.size
 
     # crop the image to a square, saving the center bits
-    if width > height:
+    if width > height:  # landscape
+        if zoom != 1:
+            img = zoom_at(img, width * 0.5, height * 0.5, zoom)
         img = img.crop(box=((width - height) / 2, 0, ((width - height) / 2) + height, height))
-    elif width < height:
+    elif width < height:  # portrait, let's assume the interesting section will be toward the top
+        if zoom != 1:
+            img = zoom_at(img, width * 0.5, height * 0.3, zoom)
         img = img.crop(box=(0, (height - width) / 2, width, ((height - width) / 2) + width))
 
     # resize the image up or down to size x size
@@ -192,12 +214,15 @@ def token_resize_face(buffer, size, padding, debug=False):
     img.save(buffer, format="JPEG", optimize=True, quality=75)
     return True
 
+
 def test():
     images = [
         ("orc", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/301/1000/1000/636252771691385727.jpeg"),
         ("goblin", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/351/218/315/636252777818652432.jpeg"),
-        ("silver_dragon", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/143/243/315/636252757538355953.jpeg"),
-        ("skeleton", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/1000/1000/636376294573239565.jpeg"),
+        ("silver_dragon",
+         "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/143/243/315/636252757538355953.jpeg"),
+        (
+        "skeleton", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/1000/1000/636376294573239565.jpeg"),
         ("zombie", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/71/1000/1000/636252733510786769.jpeg"),
         ("ghost", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/413/1000/1000/636252786639798307.jpeg"),
         ("ghast", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/1000/1000/636252786516023032.jpeg"),
@@ -207,33 +232,45 @@ def test():
 
     for image in images:
         print(f"Working on {image[0]}")
-        with io.BytesIO() as buffer:
-            download_img(buffer, image[1])
-            buffer.seek(0)
+        with io.BytesIO() as orig_buffer:
+            download_img(orig_buffer, image[1])
             with open(f"/tmp/{image[0]}.jpg", "wb") as f:
-                f.write(buffer.getvalue())
-                buffer.seek(0)
-            token_resize(
-                buffer,
-                size=size,
-                debug=True
-            )
-            buffer.seek(0)
-            with open(f"/tmp/{image[0]}_token.jpg", "wb") as f:
-                f.write(buffer.getvalue())
+                f.write(orig_buffer.getvalue())
 
-        with io.BytesIO() as buffer:
-            download_img(buffer, image[1])
-            buffer.seek(0)
-            token_resize_face(
-                buffer,
-                size=size,
-                padding=0.2,
-                debug=True
-            )
-            buffer.seek(0)
-            with open(f"/tmp/{image[0]}_token_face.jpg", "wb") as f:
-                f.write(buffer.getvalue())
+            with io.BytesIO() as buffer:
+                copy_buf_to_buf(orig_buffer, buffer)
+                token_resize(
+                    buffer,
+                    size=size,
+                    debug=True
+                )
+                buffer.seek(0)
+                with open(f"/tmp/{image[0]}_token.jpg", "wb") as f:
+                    f.write(buffer.getvalue())
+
+            with io.BytesIO() as buffer:
+                copy_buf_to_buf(orig_buffer, buffer)
+                token_resize(
+                    buffer,
+                    size=size,
+                    zoom=1.7,
+                    debug=True
+                )
+                buffer.seek(0)
+                with open(f"/tmp/{image[0]}_token_scaled.jpg", "wb") as f:
+                    f.write(buffer.getvalue())
+
+            with io.BytesIO() as buffer:
+                copy_buf_to_buf(orig_buffer, buffer)
+                token_resize_face(
+                    buffer,
+                    size=size,
+                    padding=0.2,
+                    debug=True
+                )
+                buffer.seek(0)
+                with open(f"/tmp/{image[0]}_token_face.jpg", "wb") as f:
+                    f.write(buffer.getvalue())
 
 
 if __name__ == '__main__':
