@@ -215,7 +215,7 @@ resource "aws_lambda_function" "token" {
   role          = aws_iam_role.token_lambda.arn
   runtime       = "python3.8"
   handler       = "${local.lambda-token-function-name}.lambda_handler"
-  layers        = [aws_lambda_layer_version.preload-lambda-layer.arn]
+  layers        = [aws_lambda_layer_version.preload-token-lambda-layer.arn]
   memory_size   = 1024
   timeout       = 20
 

@@ -14,3 +14,20 @@ resource "aws_lambda_layer_version" "preload-lambda-layer" {
   compatible_runtimes = ["python3.8"]
   depends_on          = [aws_s3_bucket_object.preload-lambda-layer]
 }
+
+resource "aws_s3_bucket_object" "preload-token-lambda-layer" {
+  bucket       = data.aws_s3_bucket.infra.bucket
+  key          = local.lambda-layer-preload-token-s3-key
+  source       = local.lambda-layer-preload-token-filename
+  content_type = "application/zip"
+}
+
+resource "aws_lambda_layer_version" "preload-token-lambda-layer" {
+  s3_bucket   = data.aws_s3_bucket.infra.bucket
+  s3_key      = local.lambda-layer-preload-token-s3-key
+  layer_name  = "preload-token"
+  description = "A layer that contains the necessary packages for the token preloading lambda functions"
+
+  compatible_runtimes = ["python3.8"]
+  depends_on          = [aws_s3_bucket_object.preload-token-lambda-layer]
+}
