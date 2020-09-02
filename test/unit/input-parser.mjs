@@ -265,6 +265,46 @@ tap.test("token parsing", async (t) => {
   t.same(input.gridOpacity, 0.5, "grid should be visible");
 
   input = new InputParser();
+  await input.parse("/@h");
+  t.same(
+    input.gridOpacity,
+    0.25,
+    "grid should be half transparent"
+  );
+
+  input = new InputParser();
+  await input.parse("/@zh");
+  t.same(
+    input.gridOpacity,
+    0.25,
+    "grid should be half transparent"
+  );
+
+  input = new InputParser();
+  await input.parse("/@hz");
+  t.same(
+    input.gridOpacity,
+    0.25,
+    "grid should be half transparent"
+  );
+
+  input = new InputParser();
+  await input.parse("/@2h");
+  t.same(
+    input.gridOpacity,
+    0.25,
+    "grid should be half transparent"
+  );
+
+  input = new InputParser();
+  await input.parse("/@h10");
+  t.same(
+    input.gridOpacity,
+    0.1,
+    "grid should be 10% transparent"
+  );
+
+  input = new InputParser();
   await input.parse("/@n");
   t.same(input.gridOpacity, 0.0, "grid should be invisible");
 

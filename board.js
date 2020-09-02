@@ -157,7 +157,7 @@ module.exports = class Board {
       if (isSolid)
         this.ctx.setLineDash([]);
       else
-        this.ctx.setLineDash([5, 6]);
+        this.ctx.setLineDash([5 * this.zoom - 2, 5 * this.zoom + 2]);
       this.ctx.moveTo(start.x, start.y);
       this.ctx.lineTo(end.x, end.y);
       this.ctx.stroke();
