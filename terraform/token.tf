@@ -223,11 +223,11 @@ resource "aws_lambda_function" "token" {
 
   environment {
     variables = {
-      BUCKET         = local.token_domain_name
-      URL            = local.token_domain_name
-      DYNAMODB_TABLE = aws_dynamodb_table.token_table.name
-      TARGET_SIZE    = local.token_target_size
-      ZOOM_LEVEL     = local.token_zoom_level
+      BUCKET                   = local.token_domain_name
+      URL                      = local.token_domain_name
+      DYNAMODB_TABLE           = aws_dynamodb_table.token_table.name
+      TARGET_SIZE              = local.token_target_size
+      ZOOM_LEVEL               = local.token_zoom_level
       FACE_RECOGNITION_PADDING = local.token_face_padding
     }
   }
