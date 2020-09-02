@@ -35,14 +35,6 @@ test('parsing 4', (t) => {
     t.end();
 });
 
-test('parsing 5', (t) => {
-    const parser = new ZoomParser();
-    const result = parser.parse({str:'/@3'});
-    
-    t.equal(result, 3);
-    t.end();
-});
-
 test('parsing 6', (t) => {
     const parser = new ZoomParser();
     const result = parser.parse({str:'@4.321'});

@@ -109,18 +109,18 @@ module.exports = class InputParser {
         this.darkMode = parsed;
       }
 
-      parsed = this.gridOpacityParser.parse(part);
-      if (null !== parsed) {
-        /* This check is like this because one of the valid returns is 0.0 */
-        this.gridOpacity = parsed;
-      }
-
       parsed = this.opaqueEdgeParser.parse(part);
       if (parsed) {
         this.edgeOpacity = parsed;
       }
 
       let p = {str: part};
+
+      parsed = this.gridOpacityParser.parse(p);
+      if (null !== parsed) {
+        /* This check is like this because one of the valid returns is 0.0 */
+        this.gridOpacity = parsed;
+      }
 
       parsed = this.gridsizeParser.parse(p);
       if (parsed) {
