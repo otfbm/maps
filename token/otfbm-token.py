@@ -10,7 +10,6 @@ from decimal import Decimal
 import boto3
 import short_url
 import requests
-import face_recognition
 from PIL import Image
 
 warnings.simplefilter('error', Image.DecompressionBombWarning)
@@ -59,7 +58,7 @@ def lambda_handler(event, context):
             token_resize(
                 buffer,
                 size=int(os.environ['TARGET_SIZE']),  # target image width and height
-                scale=float(os.environ['ZOOM_LEVEL'])
+                zoom=float(os.environ['ZOOM_LEVEL']))
             buffer.seek(0)  # rewind file pointer before read
 
             s3_client.upload_fileobj(buffer, bucket, f'zoom/{shortCode}',
@@ -101,6 +100,7 @@ def copy_buf_to_buf(src, dst, bufsize=16384):
         dst.write(buf)
     dst.seek(0)
 
+
 def download_img(buffer, url):
     resp = requests.get(url, stream=True)
     # TODO err handling
@@ -117,7 +117,7 @@ def zoom_at(img, x, y, zoom):
     return img.resize((w, h), Image.LANCZOS)
 
 
-def token_resize(buffer, size, zoom=1, debug=False):
+def token_resize(buffer, size, zoom=1.0, debug=False):
     img = Image.open(buffer).convert('RGB')
     width, height = img.size
 
@@ -140,63 +140,62 @@ def token_resize(buffer, size, zoom=1, debug=False):
 
 
 def token_resize_face(buffer, size, padding, debug=False):
-    face_image = face_recognition.load_image_file(buffer)
-    face_locations = []
-
-    if len(face_locations) == 0:
-        if debug:
-            print("Trying HOG..")
-        face_locations = face_recognition.face_locations(face_image, number_of_times_to_upsample=0)
-
-    if len(face_locations) == 0:
-        if debug:
-            print("Trying upsampled HOG..")
-        face_locations = face_recognition.face_locations(face_image, number_of_times_to_upsample=1)
-
-    if len(face_locations) == 0:
-        if debug:
-            print("Trying CNN..")
-        face_locations = face_recognition.face_locations(face_image, number_of_times_to_upsample=0, model="cnn")
-
-    if len(face_locations) == 0:
-        if debug:
-            print("Trying upsampled CNN..")
-        face_locations = face_recognition.face_locations(face_image, number_of_times_to_upsample=1, model="cnn")
+    client = boto3.client('rekognition')
+    response = client.detect_faces(Attributes=["DEFAULT"], Image={'Bytes': buffer.read()})
 
     if debug:
-        print(f"Found {len(face_locations)} face(s).")
+        print(f"Found {len(response['FaceDetails'])} face(s).")
 
-    if len(face_locations) == 0:
+    if len(response['FaceDetails']) == 0:
         # no faces to work on :'(
+        # opportunity to farm this out here
         buffer.seek(0)
         buffer.truncate(0)
         return False
 
-    # find the largest face
-    largest_face = None
-    for face in face_locations:
-        if largest_face is None:
-            largest_face = face
-        else:
-            face_top, face_right, face_bottom, face_left = face
-            largest_top, largest_right, largest_bottom, largest_left = largest_face
-            if ((face_right - face_left) * (face_bottom - face_top)) > (
-                    (largest_right - largest_left) * (largest_bottom - largest_top)):
-                largest_face = face
-
-    # try to "zoom" out by 20%
-    face_top, face_right, face_bottom, face_left = largest_face
-    face_width = face_right - face_left
-    face_height = face_bottom - face_top
+    # get the biggest face in the image
+    largest_face = {}
+    largest_area = 0
+    for faceDetail in response['FaceDetails']:
+        bb = faceDetail["BoundingBox"]
+        area = bb["Height"] * bb["Width"]
+        if debug:
+            print(f"Face Bounding Box: {bb}")
+            print(f"Face Area: {area}")
+        if area > largest_area:
+            largest_area = area
+            largest_face = faceDetail
 
     buffer.seek(0)
     img = Image.open(buffer).convert('RGB')  # still convert the color space
-
     width, height = img.size
+
+    print(largest_face)
+    # largest_face.BoundingBox elements are expressed as a ratio
+    bb = largest_face["BoundingBox"]
+    face_top = bb["Top"] * height
+    face_bottom = (bb["Top"] * height) + (bb["Height"] * height)
+    face_left = bb["Left"] * width
+    face_right = (bb["Left"] * width) + (bb["Width"] * width)
+    face_width = face_right - face_left
+    face_height = face_bottom - face_top
+
     new_left = max(face_left - (face_width * padding), 0)
     new_right = min(face_right + face_width * padding, width)
     new_top = max(face_top - face_height * padding, 0)
     new_bottom = min(face_bottom + face_height * padding, height)
+
+    new_height = new_bottom - new_top
+    new_width = new_right - new_left
+
+    if new_height > new_width:  # portrait
+        diff = new_height - new_width
+        new_left = max(new_left - diff / 2, 0)
+        new_right = min(new_right + diff / 2, width)
+    elif new_width > new_height:  # landscape
+        diff = new_width - new_height
+        new_top = max(new_top - diff / 2, 0)
+        new_bottom = min(new_bottom + diff / 2, 0)
 
     if debug:
         print(f"height,width=({height}, {width})")
@@ -206,6 +205,7 @@ def token_resize_face(buffer, size, padding, debug=False):
 
     # Pillow's crop takes a box of tuple(left, upper, right, lower)
     img = img.crop(box=(new_left, new_top, new_right, new_bottom))
+
     # resize the image up or down to size x size
     img = img.resize((size, size))
 
@@ -217,16 +217,12 @@ def token_resize_face(buffer, size, padding, debug=False):
 
 def test():
     images = [
-        ("orc", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/301/1000/1000/636252771691385727.jpeg"),
-        ("goblin", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/351/218/315/636252777818652432.jpeg"),
-        ("silver_dragon",
-         "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/143/243/315/636252757538355953.jpeg"),
         (
-        "skeleton", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/1000/1000/636376294573239565.jpeg"),
+            "skeleton",
+            "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/1000/1000/636376294573239565.jpeg"),
         ("zombie", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/71/1000/1000/636252733510786769.jpeg"),
         ("ghost", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/413/1000/1000/636252786639798307.jpeg"),
-        ("ghast", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/1000/1000/636252786516023032.jpeg"),
-        ("mimic", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/211/1000/1000/636252764731637373.jpeg")
+        ("ghast", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/1000/1000/636252786516023032.jpeg")
     ]
     size = 160
 
