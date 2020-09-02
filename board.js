@@ -408,7 +408,7 @@ module.exports = class Board {
         );
       };
       img.onerror = (err) => {
-        throw err;
+        throw new Error('Failed to load background image');
       };
       img.src = this.background;
     }
