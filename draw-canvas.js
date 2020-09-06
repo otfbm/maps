@@ -55,24 +55,10 @@ module.exports = async function main(pathname, query) {
 
   const board = new Board({
     ctx: renderer.ctx,
-    options,
-    width: options.widthPx,
-    height: options.heightPx,
-    gridsize: options.cellSizePx,
-    zoom: options.zoom,
-    padding: options.cellSizePx,
-    darkMode: options.darkMode,
-    gridOpacity: options.gridOpacity,
-    panX: options.view.panX,
-    panY: options.view.panY,
-    backgroundOffsetX: options.background.offsetX * options.zoom,
-    backgroundOffsetY: options.background.offsetY * options.zoom,
-    backgroundZoom: options.background.zoom,
-    edgeOpacity: options.edgeOpacity,
+    options
   });
 
   // TODO: refactor to match the TODO below
-  board.addBackground(options.background.image);
   for (const { x, y, item } of input.icons) {
     board.placeItem(x, y, item);
   }

@@ -27,9 +27,12 @@ module.exports = class Options {
     if (str.charAt(0) !== '@')
       return false;
 
-    this.parseZoom(str);
+    let parsed = this.parseZoom(str);
 
     let matches = str.match(/[DEF]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
+
+    if (!matches)
+      return parsed;
 
     for (const match of matches) {
       switch (match.charAt(0)) {
@@ -90,7 +93,9 @@ module.exports = class Options {
     if (match) {
       let zoom = Number(match[1]);
       this.zoom = zoom <= 3 ? zoom : 3;
+      return true;
     }
+    return false;
   }
 
   get cellSizePx() {
