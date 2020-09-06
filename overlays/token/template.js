@@ -8,6 +8,7 @@ module.exports = ({
   fontsize,
   label,
   image,
+  font
 }, ctx) => {
   const whitelineModifier = size < 41 ? 1.5 : 2;
   const radius = (size + 1) / 2 - 3;
@@ -48,7 +49,7 @@ module.exports = ({
   if (!image || size < 40) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `${fontsize}px AzoSans`;
+    ctx.font = `${fontsize}px ${font}`;
     ctx.fillStyle = fontcolor;
     ctx.fillText(label, xy, xy);
   }

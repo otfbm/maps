@@ -90,6 +90,7 @@ module.exports = class TokenOverlay {
     opts.fontsize = opts.size * (8 / (opts.label.length + 4)) * 0.30;
     opts.fontcolor = this.pickTextColor(opts.color);
     opts.gridsize = this.options.gridsize,
+    opts.font = 'FleischWurst'
     
     template(opts, ctx);
   }

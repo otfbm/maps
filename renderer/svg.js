@@ -5,14 +5,13 @@ module.exports = class SVGRenderer {
   constructor(ctx, options) {
     this.ctx = ctx;
     this.options = options;
-    this.gridsize = options.gridsize;
-    this.padding = options.padding;
   }
 
   render({ renderer, item, x, y }) {
+    const cellSize = options.cellSizePx;
     const img = new Image();
     img.onload = () => {
-      this.ctx.drawImage(img, (x - 1) * this.gridsize, (y - 1) * this.gridsize);
+      this.ctx.drawImage(img, (x - 1) * cellSize, (y - 1) * cellSize);
     };
     img.onerror = (err) => {
       throw new Error('Failed to render SVG image');

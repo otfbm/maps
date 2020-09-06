@@ -47,47 +47,32 @@ const fetchTokenImageAsBase64 = async (code) => {
 };
 
 module.exports = async function main(pathname, query) {
+  const options = new Options();  
   const input = new InputParser();
-  await input.parse(pathname, query);
-  const gridsize = input.gridsize * input.zoom;
-  const width = input.board.width * gridsize;
-  const height = input.board.height * gridsize;
-
-  const options = new Options({
-    padding: gridsize,
-    gridsize,
-    zoom: input.zoom,
-    width,
-    height,
-    panX: input.board.panX,
-    panY: input.board.panY,
-    backgroundOffsetX: input.backgroundOffsetX * input.zoom,
-    backgroundOffsetY: input.backgroundOffsetY * input.zoom,
-    backgroundZoom: input.backgroundZoom,
-  });
-  const zoom = input.zoom;
+  await input.parse(pathname, query, options);
 
   const renderer = new Renderer(options);
 
   const board = new Board({
     ctx: renderer.ctx,
-    width,
-    height,
-    gridsize,
-    zoom,
-    padding: gridsize,
-    darkMode: input.darkMode,
-    gridOpacity: input.gridOpacity,
-    panX: input.board.panX,
-    panY: input.board.panY,
-    backgroundOffsetX: input.backgroundOffsetX * input.zoom,
-    backgroundOffsetY: input.backgroundOffsetY * input.zoom,
-    backgroundZoom: input.backgroundZoom,
-    edgeOpacity: input.edgeOpacity,
+    options,
+    width: options.widthPx,
+    height: options.heightPx,
+    gridsize: options.cellSizePx,
+    zoom: options.zoom,
+    padding: options.cellSizePx,
+    darkMode: options.darkMode,
+    gridOpacity: options.gridOpacity,
+    panX: options.view.panX,
+    panY: options.view.panY,
+    backgroundOffsetX: options.background.offsetX * options.zoom,
+    backgroundOffsetY: options.background.offsetY * options.zoom,
+    backgroundZoom: options.background.zoom,
+    edgeOpacity: options.edgeOpacity,
   });
 
   // TODO: refactor to match the TODO below
-  board.addBackground(input.background);
+  board.addBackground(options.background);
   for (const { x, y, item } of input.icons) {
     board.placeItem(x, y, item);
   }

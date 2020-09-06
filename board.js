@@ -17,13 +17,13 @@ const scaleMarkerColour = "#888888"; // Grey
 
 module.exports = class Board {
   constructor({
+    ctx,
+    options,
     width,
     height,
     gridsize = 40,
     zoom = 1,
     padding,
-    ctx,
-    strokeStyle = "#CCCCCC",
     darkMode = false,
     gridOpacity = 1.0,
     panX = 0,
@@ -37,8 +37,8 @@ module.exports = class Board {
     this.height = height;
     this.gridsize = gridsize;
     this.ctx = ctx;
+    this.options = options;
     this.padding = padding;
-    this.strokeStyle = strokeStyle;
     this.state = [];
     this.background = null;
     this.zoom = zoom;
@@ -145,7 +145,7 @@ module.exports = class Board {
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
 
-    const isEdgeOpaque = this.edgeOpacity == 1 || this.background === null;
+    const isEdgeOpaque = this.edgeOpacity == 1 || this.background.image === null;
 
     const atLeft = isEdgeOpaque || this.panX < 1;
     const atRight = isEdgeOpaque || this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
