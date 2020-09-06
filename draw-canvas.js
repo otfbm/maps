@@ -72,7 +72,7 @@ module.exports = async function main(pathname, query) {
   });
 
   // TODO: refactor to match the TODO below
-  board.addBackground(options.background);
+  board.addBackground(options.background.image);
   for (const { x, y, item } of input.icons) {
     board.placeItem(x, y, item);
   }
