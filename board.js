@@ -42,9 +42,9 @@ module.exports = class Board {
     this.backgroundZoom = options.background.zoom;
     this.edgeOpacity = options.edgeOpacity;
 
-    for (let x = 0; x < this.width; x++) {
+    for (let x = 0; x < options.view.width; x++) {
       let arr = [];
-      for (let y = 0; y < this.height; y++) {
+      for (let y = 0; y < options.view.height; y++) {
         arr[y] = null;
       }
       this.state[x] = arr;
