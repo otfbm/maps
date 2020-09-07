@@ -29,7 +29,7 @@ module.exports = class Options {
 
     let parsed = this.parseZoom(str);
 
-    let matches = str.match(/[DEF]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
+    let matches = str.match(/[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
 
     if (!matches)
       return parsed;
@@ -69,6 +69,10 @@ module.exports = class Options {
           }
           else
             this.gridOpacity = 0.25;
+          break;
+
+        case 'n':
+          this.gridOpacity = 0;
           break;
 
         case 'o':
