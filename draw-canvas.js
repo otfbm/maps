@@ -49,7 +49,7 @@ const fetchTokenImageAsBase64 = async (code) => {
 module.exports = async function main(pathname, query) {
   const options = new Options();  
   const input = new InputParser();
-  await input.parse(pathname, query, options);
+  await input.parse(options, pathname, query);
 
   const renderer = new Renderer(options);
 

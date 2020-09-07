@@ -1,28 +1,31 @@
 import tap from 'tap';
-import GridsizeParser from '../../../parsers/gridsize.js';
+import Options from '../../../options.js';
 
 const { test } = tap;
 
 test('parsing 1', (t) => {
-    const parser = new GridsizeParser();
-    const result = parser.parse({str:'@c40'});
+    const options = new Options();
+    const result = options.parseOptions('@c45');
     
-    t.same(result, { size: 40 });
+    t.same(result, true);
+    t.same(options.cellSize, 45 );
     t.end();
 });
 
 test('parsing 2', (t) => {
-    const parser = new GridsizeParser();
-    const result = parser.parse({str:'@dnc40'});
+    const options = new Options();
+    const result = options.parseOptions('@dnc60');
     
-    t.same(result, { size: 40 });
+    t.same(result, true);
+    t.same(options.cellSize, 60 );
     t.end();
 });
 
 test('parsing 3', (t) => {
-    const parser = new GridsizeParser();
-    const result = parser.parse({str:'@dnc40o13:12'});
-    
-    t.same(result, { size: 40 });
+    const options = new Options();
+    const result = options.parseOptions('@dnc60o13:12');
+
+    t.same(result, true);
+    t.same(options.cellSize, 60 );
     t.end();
 });

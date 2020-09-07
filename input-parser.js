@@ -24,7 +24,7 @@ module.exports = class InputParser {
     this.effectParser = new EffectParser();
   }
 
-  async parse(pathname = "", query = {}, options) {
+  async parse(options, pathname = "", query = {}) {
     let parts = [];
     // trim off leading /
     if (pathname[0] === "/") parts = pathname.substr(1);
