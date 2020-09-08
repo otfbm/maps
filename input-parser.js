@@ -42,7 +42,7 @@ module.exports = class InputParser {
 
       let parsed = this.boardParser.parse(part);
       if (parsed) {
-        options.setView(parsed);
+        options.view = parsed;
         continue;
       }
 
