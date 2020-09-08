@@ -50,7 +50,7 @@ module.exports = class Renderer {
     );
 
     // const canv = createCanvas(width + 2 * PADDING, height + 2 * PADDING);
-    this.canv = createCanvas(options.width + 2 * options.padding, options.height + 2 * options.padding);
+    this.canv = createCanvas(options.widthPx + 2 * options.cellSizePx, options.heightPx + 2 * options.cellSizePx);
     this.ctx = this.canv.getContext("2d");
 
     this.canvas = new CanvasRenderer(this.ctx, options);

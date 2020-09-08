@@ -2,6 +2,8 @@ const assert = require("assert");
 const Options = require("./options.js");
 const Overlay = require("./overlay.js");
 
+const gridDepth = 5;
+
 module.exports = class Grid {
   constructor(options) {
     assert(
@@ -38,8 +40,8 @@ module.exports = class Grid {
     const rotation = this.rotation(this.convertCellNameToXY(overlay.tl), bbox);
     const { width, height } = this.dimensions(rotation, bbox);
 
-    overlay.width = width * this.options.gridsize;
-    overlay.height = height * this.options.gridsize;
+    overlay.width = width * this.options.cellSizePx;
+    overlay.height = height * this.options.cellSizePx;
 
     const tlpx = this.tlpx(bbox[0]);
     const brpx = this.brpx(bbox[2]);
@@ -89,7 +91,7 @@ module.exports = class Grid {
   }
 
   tlpx({ x, y } = {}) {
-    const { gridsize } = this.options;
+    const gridsize = this.options.cellSizePx;
     return {
       x: x * gridsize,
       y: y * gridsize,
@@ -97,7 +99,7 @@ module.exports = class Grid {
   }
 
   brpx({ x, y } = {}) {
-    const { gridsize } = this.options;
+    const gridsize = this.options.cellSizePx;
     return {
       x: x * gridsize + gridsize,
       y: y * gridsize + gridsize,
@@ -211,12 +213,11 @@ module.exports = class Grid {
 
   levels() {
     let level = 0;
-    const depth = this.options.depth;
     return {
       [Symbol.iterator]() {
         return {
           next() {
-            if (level < depth) {
+            if (level < gridDepth) {
               return { value: level++, done: false };
             } else {
               return { done: true };

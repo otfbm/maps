@@ -17,45 +17,34 @@ const scaleMarkerColour = "#888888"; // Grey
 
 module.exports = class Board {
   constructor({
-    width,
-    height,
-    gridsize = 40,
-    zoom = 1,
-    padding,
     ctx,
-    strokeStyle = "#CCCCCC",
-    darkMode = false,
-    gridOpacity = 1.0,
-    panX = 0,
-    panY = 0,
-    backgroundOffsetX = 0,
-    backgroundOffsetY = 0,
-    backgroundZoom = 1,
-    edgeOpacity = 0.6,
+    options
   }) {
-    this.width = width;
-    this.height = height;
-    this.gridsize = gridsize;
-    this.ctx = ctx;
-    this.padding = padding;
-    this.strokeStyle = strokeStyle;
     this.state = [];
-    this.background = null;
-    this.zoom = zoom;
     this.lines = [];
     this.effects = [];
-    this.darkMode = darkMode;
-    this.gridOpacity = gridOpacity;
-    this.panX = Number(panX);
-    this.panY = Number(panY);
-    this.backgroundOffsetX = backgroundOffsetX;
-    this.backgroundOffsetY = backgroundOffsetY;
-    this.backgroundZoom = backgroundZoom;
-    this.edgeOpacity = edgeOpacity;
 
-    for (let x = 0; x < width; x++) {
+    this.ctx = ctx;
+    this.options = options;
+
+    this.width = options.widthPx;
+    this.height = options.heightPx;
+    this.gridsize = options.cellSizePx;
+    this.zoom = options.zoom;
+    this.padding = options.cellSizePx;
+    this.darkMode = options.darkMode;
+    this.gridOpacity = options.gridOpacity;
+    this.panX = Number(options.view.panX);
+    this.panY = Number(options.view.panY);
+    this.background = options.background.image;
+    this.backgroundOffsetX = options.background.offsetX * options.zoom;
+    this.backgroundOffsetY = options.background.offsetY * options.zoom;
+    this.backgroundZoom = options.background.zoom;
+    this.edgeOpacity = options.edgeOpacity;
+
+    for (let x = 0; x < options.view.width; x++) {
       let arr = [];
-      for (let y = 0; y < height; y++) {
+      for (let y = 0; y < options.view.height; y++) {
         arr[y] = null;
       }
       this.state[x] = arr;
@@ -64,10 +53,6 @@ module.exports = class Board {
 
   placeItem(x, y, item) {
     this.state[x][y] = item;
-  }
-
-  addBackground(background) {
-    this.background = background;
   }
 
   addLines(lines) {
