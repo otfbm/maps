@@ -3,8 +3,6 @@ const canvas = require("canvas");
 const { Image } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
-const boardFont = '1em FleischWurst';
-const tokenFont = '12px bold AzoSans';
 
 const fillLightMode = "#f4f6ff"; // Powdered Sugar
 const fillDarkMode = "#07031a"; // Midnight Blue
@@ -29,13 +27,13 @@ module.exports = class Board {
 
     this.width = options.widthPx;
     this.height = options.heightPx;
+    this.panX = Number(options.view.panX);
+    this.panY = Number(options.view.panY);
     this.gridsize = options.cellSizePx;
     this.zoom = options.zoom;
     this.padding = options.cellSizePx;
     this.darkMode = options.darkMode;
     this.gridOpacity = options.gridOpacity;
-    this.panX = Number(options.view.panX);
-    this.panY = Number(options.view.panY);
     this.background = options.background.image;
     this.backgroundOffsetX = options.background.offsetX * options.zoom;
     this.backgroundOffsetY = options.background.offsetY * options.zoom;
@@ -95,37 +93,17 @@ module.exports = class Board {
     const textLightModeAlpha = `rgba(7, 3, 26, ${this.edgeOpacity})`;
 
     let bg = '';
+    let bgAlpha = '';
     let fg = '';
     if (this.darkMode) {
-      bg = textLightModeAlpha;
+      bg = textLightMode;
+      bgAlpha = textLightModeAlpha;
       fg = textDarkMode;
     } else {
-      bg = textDarkModeAlpha;
+      bg = textDarkMode;
+      bgAlpha = textDarkModeAlpha;
       fg = textLightMode;
     }
-
-    // fill the edges
-    this.ctx.beginPath();
-    this.ctx.lineCap = "square";
-    this.ctx.lineWidth = this.padding;
-    this.ctx.strokeStyle = bg;
-    // TL -> BL
-    this.ctx.moveTo(this.padding * 0.5, 0);
-    this.ctx.lineTo(this.padding * 0.5, this.height + this.padding * 2);
-    // BL -> BR
-    this.ctx.moveTo(this.padding * 1.5, this.height + this.padding * 1.5);
-    this.ctx.lineTo(this.width + this.padding * 0.5, this.height + this.padding * 1.5);
-    // BR -> TR
-    this.ctx.moveTo(this.width + this.padding * 1.5, this.height + this.padding * 2);
-    this.ctx.lineTo(this.width + this.padding * 1.5, 0);
-    // TR -> TL
-    this.ctx.moveTo(this.width + this.padding * 0.5, this.padding * 0.5);
-    this.ctx.lineTo(this.padding * 1.5, this.padding * 0.5);
-    this.ctx.stroke();
-
-    // outer grid lines
-    this.ctx.lineWidth = 2;
-    this.ctx.strokeStyle = fg;
 
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
@@ -136,6 +114,66 @@ module.exports = class Board {
     const atRight = isEdgeOpaque || this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
     const atTop = isEdgeOpaque || this.panY < 1;
     const atBottom = isEdgeOpaque || this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
+
+    // fill the edges
+    this.ctx.lineCap = "square";
+    this.ctx.lineWidth = this.padding;
+
+    const fillEdge = (start, end, colour) => {
+      this.ctx.beginPath();
+      this.ctx.moveTo(start.x, start.y);
+      this.ctx.lineTo(end.x, end.y);
+      this.ctx.strokeStyle = colour;
+      this.ctx.stroke();
+    }
+
+    // TL -> BL
+    fillEdge(
+      { x: this.padding * 0.5, y: 0 },
+      { x: this.padding * 0.5, y: this.height + this.padding * 2 },
+      atLeft ? bg : bgAlpha
+    );
+
+    // BL -> BR
+    if (atBottom) {
+      fillEdge(
+        { x: this.padding * 0.5, y: this.height + this.padding * 1.5 },
+        { x: this.width + this.padding * 1.5, y: this.height + this.padding * 1.5 },
+        bg
+      );
+    } else {
+      fillEdge(
+        { x: this.padding * 1.5, y: this.height + this.padding * 1.5 },
+        { x: this.width + this.padding * 0.5, y: this.height + this.padding * 1.5 },
+        bgAlpha
+      );
+    }
+
+    // TR -> BR
+    fillEdge(
+      { x: this.width + this.padding * 1.5, y: 0 },
+      { x: this.width + this.padding * 1.5, y: this.height + this.padding * 2 },
+      atRight ? bg : bgAlpha
+    );
+
+    // TL -> TR
+    if (atTop) {
+      fillEdge(
+        { x: this.padding * 0.5, y: this.padding * 0.5 },
+        { x: this.width + this.padding * 1.5, y: this.padding * 0.5 },
+        bg
+      );
+    } else {
+      fillEdge(
+        { x: this.padding * 1.5, y: this.padding * 0.5 },
+        { x: this.width + this.padding * 0.5, y: this.padding * 0.5 },
+        bgAlpha
+      );
+    }
+
+    // outer grid lines
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeStyle = fg;
 
     const drawGridEdgeLine = (start, end, isSolid) => {
       this.ctx.beginPath();
@@ -173,7 +211,7 @@ module.exports = class Board {
     );
 
     // Draw dotted lines
-    if (!isEdgeOpaque) {    
+    if (!isEdgeOpaque) {
       this.ctx.strokeStyle = fg;
 
       const drawDottedLine = (start, end) => {
@@ -259,7 +297,7 @@ module.exports = class Board {
         }
       }
     }
-    
+
     // grid label settings
     this.ctx.fillStyle = fg;
     this.ctx.textAlign = "center";
@@ -409,7 +447,6 @@ module.exports = class Board {
     }
 
     /* Keep the light text for tokens */
-    this.ctx.font = tokenFont;
     this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
