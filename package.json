@@ -22,7 +22,6 @@
     "fastify-static": "^2.7.0",
     "jest": "^26.2.2",
     "jest-image-snapshot": "^4.1.0",
-    "puppeteer": "^3.3.0",
     "tap": "^14.10.7"
   }
 }
