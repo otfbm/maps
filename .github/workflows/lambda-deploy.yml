@@ -19,7 +19,7 @@ jobs:
       - name: npm install and build
         run: |
           npm ci
-          npm run test:unit
+          npm run test
           npm prune --production
         env:
           CI: true
