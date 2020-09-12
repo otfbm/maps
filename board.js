@@ -305,27 +305,25 @@ module.exports = class Board {
     this.ctx.font = `${this.gridsize * 0.35}px FleischWurst`;
 
     // Drawing the Alphabetic coordinate markers
-    for (let i = 0; i <= this.width; i += this.gridsize) {
-      const num = i / this.gridsize;
-      if (num < 1) continue;
-
-      let x = num + this.panX - 1;
-      let character = String.fromCharCode(x % 26 + 65);
-      if (x >= 26)
-        character = String.fromCharCode(Math.floor(x / 26) + 64) + character;
+    let num = this.panX;
+    for (let i = this.gridsize; i <= this.width; i += this.gridsize) {
+      let character = String.fromCharCode(num % 26 + 65);
+      if (num >= 26)
+        character = String.fromCharCode(Math.floor(num / 26) + 64) + character;
 
       this.ctx.fillText(
         character,
         this.padding + i - this.gridsize / 2,
         this.padding / 2
       );
+
+      num += 1;
     }
 
     // Drawing the numeral coordinate markers
+    num = this.panY;
     for (let i = this.gridsize; i <= this.height; i += this.gridsize) {
-      this.ctx.beginPath();
-      const num = i / this.gridsize + this.panY;
-      if (num < 1) continue;
+      num += 1;
 
       this.ctx.fillText(
         String(num),
