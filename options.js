@@ -1,3 +1,6 @@
+const lightColour = "#f4f6ff"; // Powdered Sugar
+const darkColour = "#07031a"; // Midnight Blue
+
 module.exports = class Options {
 
   constructor() {
@@ -102,6 +105,7 @@ module.exports = class Options {
     return false;
   }
 
+  // derived properties
   get cellSizePx() {
     return this._cellSize * this._zoom;
   }
@@ -114,6 +118,15 @@ module.exports = class Options {
     return this._view.height * this.cellSizePx;
   }
 
+  get fg () {
+    return this.darkMode ? lightColour : darkColour;
+  }
+
+  get bg () {
+    return this.darkMode ? darkColour : lightColour;
+  }
+
+  // basic properties
   get view() {
     return this._view;
   }

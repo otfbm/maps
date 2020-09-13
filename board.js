@@ -3,13 +3,6 @@ const canvas = require("canvas");
 const { Image } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
-
-const fillLightMode = "#f4f6ff"; // Powdered Sugar
-const fillDarkMode = "#07031a"; // Midnight Blue
-
-const textLightMode = "rgb(7, 3, 26)";
-const textDarkMode = "rgb(244, 246, 255)";
-
 const gridLineColour = "#f4f6ff"; // Powdered Sugar
 const scaleMarkerColour = "#888888"; // Grey
 
@@ -32,7 +25,6 @@ module.exports = class Board {
     this.gridsize = options.cellSizePx;
     this.zoom = options.zoom;
     this.padding = options.cellSizePx;
-    this.darkMode = options.darkMode;
     this.gridOpacity = options.gridOpacity;
     this.background = options.background.image;
     this.backgroundOffsetX = options.background.offsetX * options.zoom;
@@ -91,19 +83,7 @@ module.exports = class Board {
 
     const textDarkModeAlpha = `rgba(244, 246, 255, ${this.edgeOpacity})`;
     const textLightModeAlpha = `rgba(7, 3, 26, ${this.edgeOpacity})`;
-
-    let bg = '';
-    let bgAlpha = '';
-    let fg = '';
-    if (this.darkMode) {
-      bg = textLightMode;
-      bgAlpha = textLightModeAlpha;
-      fg = textDarkMode;
-    } else {
-      bg = textDarkMode;
-      bgAlpha = textDarkModeAlpha;
-      fg = textLightMode;
-    }
+    let bgAlpha = this.options.darkMode ? textLightModeAlpha : textDarkModeAlpha;
 
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
@@ -131,7 +111,7 @@ module.exports = class Board {
     fillEdge(
       { x: this.padding * 0.5, y: 0 },
       { x: this.padding * 0.5, y: this.height + this.padding * 2 },
-      atLeft ? bg : bgAlpha
+      atLeft ? this.options.bg : bgAlpha
     );
 
     // BL -> BR
@@ -139,7 +119,7 @@ module.exports = class Board {
       fillEdge(
         { x: this.padding * 0.5, y: this.height + this.padding * 1.5 },
         { x: this.width + this.padding * 1.5, y: this.height + this.padding * 1.5 },
-        bg
+        this.options.bg
       );
     } else {
       fillEdge(
@@ -153,7 +133,7 @@ module.exports = class Board {
     fillEdge(
       { x: this.width + this.padding * 1.5, y: 0 },
       { x: this.width + this.padding * 1.5, y: this.height + this.padding * 2 },
-      atRight ? bg : bgAlpha
+      atRight ? this.options.bg : bgAlpha
     );
 
     // TL -> TR
@@ -161,7 +141,7 @@ module.exports = class Board {
       fillEdge(
         { x: this.padding * 0.5, y: this.padding * 0.5 },
         { x: this.width + this.padding * 1.5, y: this.padding * 0.5 },
-        bg
+        this.options.bg
       );
     } else {
       fillEdge(
@@ -173,7 +153,7 @@ module.exports = class Board {
 
     // outer grid lines
     this.ctx.lineWidth = 2;
-    this.ctx.strokeStyle = fg;
+    this.ctx.strokeStyle = this.options.fg;
 
     const drawGridEdgeLine = (start, end, isSolid) => {
       this.ctx.beginPath();
@@ -212,7 +192,7 @@ module.exports = class Board {
 
     // Draw dotted lines
     if (!isEdgeOpaque) {
-      this.ctx.strokeStyle = fg;
+      this.ctx.strokeStyle = this.options.fg;
 
       const drawDottedLine = (start, end) => {
         drawGridEdgeLine(start, end, false);
@@ -298,34 +278,32 @@ module.exports = class Board {
       }
     }
 
-    // grid label settings
-    this.ctx.fillStyle = fg;
+    // axis label settings
+    this.ctx.fillStyle = this.options.fg;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
     this.ctx.font = `${this.gridsize * 0.35}px FleischWurst`;
 
-    // Drawing the Alphabetic coordinate markers
-    for (let i = 0; i <= this.width; i += this.gridsize) {
-      const num = i / this.gridsize;
-      if (num < 1) continue;
-
-      let x = num + this.panX - 1;
-      let character = String.fromCharCode(x % 26 + 65);
-      if (x >= 26)
-        character = String.fromCharCode(Math.floor(x / 26) + 64) + character;
+    // Drawing x axis alphabetic labels
+    let num = this.panX;
+    for (let i = this.gridsize; i <= this.width; i += this.gridsize) {
+      let character = String.fromCharCode(num % 26 + 65);
+      if (num >= 26)
+        character = String.fromCharCode(Math.floor(num / 26) + 64) + character;
 
       this.ctx.fillText(
         character,
         this.padding + i - this.gridsize / 2,
         this.padding / 2
       );
+
+      num += 1;
     }
 
-    // Drawing the numeral coordinate markers
+    // Drawing y axis numeric labels
+    num = this.panY;
     for (let i = this.gridsize; i <= this.height; i += this.gridsize) {
-      this.ctx.beginPath();
-      const num = i / this.gridsize + this.panY;
-      if (num < 1) continue;
+      num += 1;
 
       this.ctx.fillText(
         String(num),
@@ -339,7 +317,7 @@ module.exports = class Board {
     this.ctx.setLineDash([]);
     this.ctx.lineWidth = 2;
     this.ctx.lineCap = "square";
-    this.ctx.strokeStyle = atBottom ? scaleMarkerColour : fg;
+    this.ctx.strokeStyle = atBottom ? scaleMarkerColour : this.options.fg;
 
     this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.15));
     this.ctx.lineTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.65));
@@ -357,7 +335,7 @@ module.exports = class Board {
 
     // Scale text
     this.ctx.beginPath();
-    this.ctx.fillStyle = atBottom ? scaleMarkerColour : fg;
+    this.ctx.fillStyle = atBottom ? scaleMarkerColour : this.options.fg;
     this.ctx.textAlign = 'center';
     this.ctx.fillText(
       "5ft",
@@ -393,7 +371,7 @@ module.exports = class Board {
 
   draw() {
     this.ctx.beginPath();
-    this.ctx.fillStyle = this.darkMode ? fillDarkMode : fillLightMode;
+    this.ctx.fillStyle = this.options.bg;
     this.ctx.fillRect(
       0,
       0,
@@ -442,12 +420,10 @@ module.exports = class Board {
     this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
 
     for (const line of this.lines) {
-      let l = new Line(line, this.darkMode ? textDarkMode : textLightMode, this.darkMode ? fillDarkMode : fillLightMode);
+      let l = new Line(line, this.options.fg, this.options.bg);
       l.draw(this.ctx, this.gridsize, this.zoom);
     }
 
-    /* Keep the light text for tokens */
-    this.ctx.fillStyle = textDarkMode;
     for (const { x, y, item } of this) {
       if (item) {
         if (item.type !== 'token') {
