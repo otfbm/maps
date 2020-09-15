@@ -3,7 +3,7 @@ const TokenParser = require("./parsers/token.js");
 const IconParser = require("./parsers/icon.js");
 const OverlayParser = require("./parsers/overlay.js");
 const BackgroundParser = require("./parsers/background.js");
-const LineParser = require("./parsers/line.js");
+const LineParser = require("./parsers/line-parser.js");
 const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
 
