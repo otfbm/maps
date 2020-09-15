@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
@@ -19,7 +19,7 @@ jobs:
       - name: npm install and build
         run: |
           npm ci
-          npm run test:unit
+          npm run test
           npm prune --production
         env:
           CI: true
