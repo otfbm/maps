@@ -37,7 +37,7 @@ module.exports = class EffectParser {
       case "circle":
         return new CircleEffect({size, colour, anchorPt: coords[0], anchorType});
       case "square":
-        if (anchorType === 'T' && coords.length >= 2)
+        if (anchorType !== 'T' && coords.length >= 2)
           return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false});  
         return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true});
       case "rectangle":
