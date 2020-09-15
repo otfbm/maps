@@ -11,7 +11,7 @@ module.exports = class Options {
     this._gridOpacity = 0.5;
     this._edgeOpacity = 0.6;
     this._background = { image: null, offsetX: 0, offsetY: 0, zoom: 1 };
-    this._tokenFont = 'AzoSans';
+    this._font = 'AzoSans';
   }
 
   set view(value) {
@@ -62,7 +62,7 @@ module.exports = class Options {
           break;
 
         case 'f':
-          this._tokenFont = 'FleischWurst';
+          this._font = 'FleischWurst';
           break;
 
         case 'h':
@@ -118,11 +118,11 @@ module.exports = class Options {
     return this._view.height * this.cellSizePx;
   }
 
-  get fg () {
+  get fg() {
     return this.darkMode ? lightColour : darkColour;
   }
 
-  get bg () {
+  get bg() {
     return this.darkMode ? darkColour : lightColour;
   }
 
@@ -151,7 +151,7 @@ module.exports = class Options {
     return this._background;
   }
 
-  get tokenFont() {
-    return this._tokenFont;
+  get font() {
+    return this._font;
   }
 }

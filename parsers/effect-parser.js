@@ -20,13 +20,13 @@ module.exports = class EffectParser {
     if (trimmed.charAt(0) !== '*')
       return false;
 
-    const reg = /\*([TLSRCA])([tT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
+    const reg = /\*([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
     if (!reg.test(trimmed)) 
       return false;
 
     const matches = trimmed.match(reg);
     let shape = effectShapes.get(matches[1]);
-    let anchorAtCenter = matches[2] ? false : true;
+    let anchorType = matches[2];
     let size = matches[3];
     let colour = ColourParser.parse(matches[5]);
     let coords = CoordParser.parseSet(matches[6]);
@@ -35,9 +35,9 @@ module.exports = class EffectParser {
       case "triangle":
         return new TriangleEffect({ size, colour, startPt: coords[0], endPt: coords[1] });
       case "circle":
-        return new CircleEffect({size, colour, anchorPt: coords[0], anchorAtCenter});
+        return new CircleEffect({size, colour, anchorPt: coords[0], anchorType});
       case "square":
-        if (anchorAtCenter && coords.length >= 2)
+        if (anchorType !== 'T' && coords.length >= 2)
           return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false});  
         return new SquareEffect({width: size, length:size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true});
       case "rectangle":

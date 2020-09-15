@@ -1,19 +1,21 @@
 module.exports = class CircleEffect {
-  constructor({ size, colour, anchorPt, offset, anchorAtCenter }) {
+  constructor({ size, colour, anchorPt, offset, anchorType }) {
     this.colour = colour;
     this.size = size;
     this.anchorPt = anchorPt;
-    this.anchorAtCenter = anchorAtCenter;
+    this.anchorType = anchorType;
   }
 
   draw(ctx, gridSize) {
     let radius = this.size / 5;
     let halfGrid = gridSize / 2;
     ctx.save();
-    if (this.anchorAtCenter)
-      ctx.translate((this.anchorPt.x * gridSize) - halfGrid, (this.anchorPt.y * gridSize) - halfGrid);
-    else
+    if (this.anchorType === 'T')
       ctx.translate((this.anchorPt.x - 1) * gridSize + radius * gridSize, (this.anchorPt.y - 1) * gridSize + radius * gridSize);
+    else if (this.anchorType === 'O')
+      ctx.translate((this.anchorPt.x - 1) * gridSize, (this.anchorPt.y - 1) * gridSize);
+    else
+      ctx.translate((this.anchorPt.x * gridSize) - halfGrid, (this.anchorPt.y * gridSize) - halfGrid);
 
     ctx.beginPath();
     ctx.arc(0, 0, radius * gridSize, 0, Math.PI * 2);

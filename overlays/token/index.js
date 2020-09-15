@@ -90,14 +90,14 @@ module.exports = class TokenOverlay {
     opts.fontsize = opts.size * (8 / (opts.label.length + 4)) * 0.30;
     opts.fontcolor = this.pickTextColor(opts.color);
     opts.gridsize = this.options.cellSizePx;
-    opts.font = this.options.tokenFont;
-    
+    opts.font = this.options.font;
+
     template(opts, ctx);
   }
 
   /**
    * choose a text colour to contrast with the background
-   * @param {*} bgColor background color, must be in format: "#ffffff" or "#fff"
+   * @param {*} bgColor background color, must be in format: "#ffffff"
    */
   pickTextColor(bgColor) {
     let r = parseInt(bgColor.substring(1, 3), 16);
