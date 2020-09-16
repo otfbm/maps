@@ -65,7 +65,7 @@ module.exports = async function main(pathname, query, metrics = true) {
     const datapoint = {
       MetricData: [
         {
-          MetricName: "MapRequests",
+          MetricName: "MapOptions",
           StorageResolution: 1,
           Dimensions: [
             {
@@ -92,6 +92,14 @@ module.exports = async function main(pathname, query, metrics = true) {
               Name: "GridOpacity",
               Value: String(options.gridOpacity),
             },
+          ],
+          Unit: "None",
+          Value: 1,
+        },
+        {
+          MetricName: "MapOverlays",
+          StorageResolution: 1,
+          Dimensions: [
             {
               Name: "NumTokens",
               Value: String(input.tokens.length),
