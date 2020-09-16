@@ -1,12 +1,12 @@
 const drawCanvas = require("./draw-canvas.js");
 const drawError = require("./draw-error.js");
 
-exports.handler = async (event, context) => {
+exports.handler = async (event, context, metrics) => {
   let stripped;
   try {
     const query = (event && event.queryStringParameters) || {};
     const path = event.rawPath || event.path;
-    const canvas = await drawCanvas(path, query);
+    const canvas = await drawCanvas(path, query, metrics);
     const data = canvas.toDataURL("image/jpeg", { quality: 0.75 });
     stripped = data.replace(/^data:image\/\w+;base64,/, "");
   } catch (err) {
