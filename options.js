@@ -11,7 +11,8 @@ module.exports = class Options {
     this._gridOpacity = 0.5;
     this._edgeOpacity = 0.6;
     this._background = { image: null, offsetX: 0, offsetY: 0, zoom: 1 };
-    this._font = 'AzoSans';
+    this._tokenFont = 'AzoSans';
+    this._borderFont = 'AzoSansBold';
   }
 
   set view(value) {
@@ -62,7 +63,8 @@ module.exports = class Options {
           break;
 
         case 'f':
-          this._font = 'FleischWurst';
+          this._borderFont = 'FleischWurst';
+          this._tokenFont = 'FleischWurst';
           break;
 
         case 'h':
@@ -151,7 +153,11 @@ module.exports = class Options {
     return this._background;
   }
 
-  get font() {
-    return this._font;
+  get tokenFont() {
+    return this._tokenFont;
+  }
+  
+  get borderFont() {
+    return this._borderFont;
   }
 }
