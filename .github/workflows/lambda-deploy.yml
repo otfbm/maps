@@ -2,24 +2,34 @@ name: deploy to lambda
 on:
   push:
     branches:
-    - master
+      - master
 jobs:
-  deploy_source:
-    name: build and deploy lambda
-    strategy:
-      matrix:
-        node-version: [12.x]
+  test:
+    name: run tests
     runs-on: macos-latest
     steps:
+    - uses: actions/checkout@v2
+    - name: Setup node env
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - run: npm install
+    - run: npm run test
+      env:
+        CI: true
+  deploy_source:
+    name: deploy to lambda
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12.x
       - name: npm install and build
         run: |
           npm ci
-          npm run test
           npm prune --production
         env:
           CI: true

@@ -1,12 +1,12 @@
 name: CI
-
-on: [push]
-
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
 jobs:
-  build:
-
+  test:
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup node env
