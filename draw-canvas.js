@@ -75,7 +75,7 @@ module.exports = async function main(pathname, query, metrics = true) {
               Value: String(!!options.background.image),
             },
             {
-              Name: "UsesBackgroundImage",
+              Name: "EdgeOpacity",
               Value: String(!!options.edgeOpacity),
             },
             {
