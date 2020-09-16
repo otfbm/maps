@@ -56,6 +56,12 @@ module.exports = async function main(pathname, query, metrics = true) {
   await input.parse(options, pathname, query);
 
   if (metrics) {
+    let cellsize = '<=20';
+    if (options.cellSizePx < 40) cellsize = '<40';
+    if (options.cellSizePx >= 40 && options.cellSizePx < 60) cellsize = '40-69';
+    if (options.cellSizePx >= 60 && options.cellSizePx < 80) cellsize = '60-79';
+    if (options.cellSizePx >= 80) cellsize = '80-99';
+
     const datapoint = {
       MetricData: [
         {
@@ -67,8 +73,8 @@ module.exports = async function main(pathname, query, metrics = true) {
               Value: String(!!options.darkMode),
             },
             {
-              Name: "CellSizePx",
-              Value: String(options.cellSizePx),
+              Name: "CellSize",
+              Value: cellsize,
             },
             {
               Name: "UsesBackgroundImage",
@@ -85,6 +91,26 @@ module.exports = async function main(pathname, query, metrics = true) {
             {
               Name: "GridOpacity",
               Value: String(options.gridOpacity),
+            },
+            {
+              Name: "NumTokens",
+              Value: String(input.tokens.length),
+            },
+            {
+              Name: "NumLines",
+              Value: String(input.lines.length),
+            },
+            {
+              Name: "NumEffects",
+              Value: String(input.effects.length),
+            },
+            {
+              Name: "NumIcons",
+              Value: String(input.icons.length),
+            },
+            {
+              Name: "NumOverlays",
+              Value: String(input.overlays.length),
             },
           ],
           Unit: "None",
