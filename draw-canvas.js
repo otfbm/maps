@@ -62,6 +62,41 @@ module.exports = async function main(pathname, query, metrics = true) {
     if (options._cellSize >= 60 && options._cellSize < 80) cellsize = '60-79';
     if (options._cellSize >= 80) cellsize = '80-99';
 
+    let numTokens = '0';
+    if (input.tokens.length > 0) numTokens = '1-5';
+    if (input.tokens.length > 5) numTokens = '6-10';
+    if (input.tokens.length > 10) numTokens = '11-15';
+    if (input.tokens.length > 15) numTokens = '16-20';
+    if (input.tokens.length > 20) numTokens = '>20';
+
+    let numLines = '0';
+    if (input.lines.length > 0) numLines = '1-5';
+    if (input.lines.length > 5) numLines = '6-10';
+    if (input.lines.length > 10) numLines = '11-15';
+    if (input.lines.length > 15) numLines = '16-20';
+    if (input.lines.length > 20) numLines = '>20';
+
+    let numEffects = '0';
+    if (input.effects.length > 0) numEffects = '1-5';
+    if (input.effects.length > 5) numEffects = '6-10';
+    if (input.effects.length > 10) numEffects = '11-15';
+    if (input.effects.length > 15) numEffects = '16-20';
+    if (input.effects.length > 20) numEffects = '>20';
+
+    let numIcons = '0';
+    if (input.icons.length > 0) numIcons = '1-5';
+    if (input.icons.length > 5) numIcons = '6-10';
+    if (input.icons.length > 10) numIcons = '11-15';
+    if (input.icons.length > 15) numIcons = '16-20';
+    if (input.icons.length > 20) numIcons = '>20';
+
+    let numOverlays = '0';
+    if (input.overlays.length > 0) numOverlays = '1-5';
+    if (input.overlays.length > 5) numOverlays = '6-10';
+    if (input.overlays.length > 10) numOverlays = '11-15';
+    if (input.overlays.length > 15) numOverlays = '16-20';
+    if (input.overlays.length > 20) numOverlays = '>20';
+
     const datapoint = {
       MetricData: [
         {
@@ -102,23 +137,23 @@ module.exports = async function main(pathname, query, metrics = true) {
           Dimensions: [
             {
               Name: "NumTokens",
-              Value: String(input.tokens.length),
+              Value: numTokens,
             },
             {
               Name: "NumLines",
-              Value: String(input.lines.length),
+              Value: numLines,
             },
             {
               Name: "NumEffects",
-              Value: String(input.effects.length),
+              Value: numEffects,
             },
             {
               Name: "NumIcons",
-              Value: String(input.icons.length),
+              Value: numIcons,
             },
             {
               Name: "NumOverlays",
-              Value: String(input.overlays.length),
+              Value: numOverlays,
             },
           ],
           Unit: "None",
