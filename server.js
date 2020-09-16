@@ -18,8 +18,8 @@ const createServer = ({ logger = true } = {}) => {
             headers: request.headers,
             isBase64Encoded: false,
         };
-        const result = await func(event);
-        reply.headers(result.headers).status(result.statusCode).send(new Buffer(result.body, 'base64'));
+        const result = await func(event, {}, false);
+        reply.headers(result.headers).status(result.statusCode).send(Buffer.from(result.body, 'base64'));
     });
     return server;
 }

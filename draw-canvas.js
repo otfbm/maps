@@ -6,6 +6,10 @@ const Board = require("./board.js");
 const Options = require("./options.js");
 const Renderer = require("./renderer/index.js");
 const Grid = require("./grid.js");
+const AWS = require("aws-sdk");
+
+AWS.config.update({ region: "us-west-2" });
+const cw = new AWS.CloudWatch({ apiVersion: "2010-08-01" });
 
 const base64Fetch = async (url) => {
   const res = await fetch(url);
@@ -46,16 +50,70 @@ const fetchTokenImageAsBase64 = async (code) => {
   return `data:image/jpeg;base64,${fallbackTokenImage}`;
 };
 
-module.exports = async function main(pathname, query) {
-  const options = new Options();  
+module.exports = async function main(pathname, query, metrics = true) {
+  const options = new Options();
   const input = new InputParser();
   await input.parse(options, pathname, query);
+
+  if (metrics) {
+    const datapoint = {
+      MetricData: [
+        {
+          MetricName: "MapRequests",
+          StorageResolution: 1,
+          Dimensions: [
+            {
+              Name: "DarkMode",
+              Value: String(!!options.darkMode),
+            },
+            {
+              Name: "CellSizePx",
+              Value: String(options.cellSizePx),
+            },
+            {
+              Name: "UsesBackgroundImage",
+              Value: String(!!options.background.image),
+            },
+            {
+              Name: "UsesBackgroundImage",
+              Value: String(!!options.edgeOpacity),
+            },
+            {
+              Name: "Font",
+              Value: options.font,
+            },
+            {
+              Name: "GridOpacity",
+              Value: String(options.gridOpacity),
+            },
+          ],
+          Unit: "None",
+          Value: 1,
+        },
+      ],
+      Namespace: "UsageData",
+    };
+
+    try {
+      await new Promise((resolve, reject) => {
+        cw.putMetricData(datapoint, function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    } catch(err) {
+      console.log('Failed to push metrics, swallowing error', err); 
+    }
+  }
 
   const renderer = new Renderer(options);
 
   const board = new Board({
     ctx: renderer.ctx,
-    options
+    options,
   });
 
   // TODO: refactor to match the TODO below
