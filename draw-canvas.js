@@ -56,11 +56,11 @@ module.exports = async function main(pathname, query, metrics = true) {
   await input.parse(options, pathname, query);
 
   if (metrics) {
-    let cellsize = '<=20';
-    if (options.cellSizePx < 40) cellsize = '<40';
-    if (options.cellSizePx >= 40 && options.cellSizePx < 60) cellsize = '40-69';
-    if (options.cellSizePx >= 60 && options.cellSizePx < 80) cellsize = '60-79';
-    if (options.cellSizePx >= 80) cellsize = '80-99';
+    let cellsize = '';
+    if (options._cellSize < 40) cellsize = '<40';
+    if (options._cellSize >= 40 && options._cellSize < 60) cellsize = '40-59';
+    if (options._cellSize >= 60 && options._cellSize < 80) cellsize = '60-79';
+    if (options._cellSize >= 80) cellsize = '80-99';
 
     const datapoint = {
       MetricData: [
