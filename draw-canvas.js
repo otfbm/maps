@@ -94,15 +94,19 @@ module.exports = async function main(pathname, query, metrics = true) {
       Namespace: "UsageData",
     };
 
-    await new Promise((resolve, reject) => {
-      cw.putMetricData(datapoint, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
+    try {
+      await new Promise((resolve, reject) => {
+        cw.putMetricData(datapoint, function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
       });
-    });
+    } catch(err) {
+      console.log('Failed to push metrics, swallowing error', err); 
+    }
   }
 
   const renderer = new Renderer(options);
