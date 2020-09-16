@@ -282,7 +282,7 @@ module.exports = class Board {
     this.ctx.fillStyle = this.options.fg;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
-    this.ctx.font = `${this.gridsize * 0.35}px ${this.options.font}`;
+    this.ctx.font = `${this.gridsize * 0.35}px ${this.options.borderFont}`;
 
     // Drawing x axis alphabetic labels
     let num = this.panX;
