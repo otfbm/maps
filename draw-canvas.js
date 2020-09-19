@@ -34,9 +34,7 @@ const imageCodeFetch = async (url) => {
     const res = await fetch(u);
     if (res.ok) {
       const text = await res.text();
-      console.log('THIS IS THE RESULT', text);
       const code = text.match(/<body>([A-Za-z0-9]*)<\/body>/);
-      console.log(code);
       return code[1];
     }
     status = res.status;
