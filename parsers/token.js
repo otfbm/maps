@@ -3,7 +3,7 @@ const ColourParser = require("./colour-parser.js");
 const SizeParser = require("./size-parser.js");
 
 module.exports = class TokenParser {
-  async parse(str) {
+  async parse(str, tokenImages) {
     if (str.length < 2) return false;
 
     // a string matching a token definition eg. D3rp-asdsa
@@ -32,16 +32,30 @@ module.exports = class TokenParser {
         // noop
       }
 
+      const imageCode = matches[7] || null;
+
+      let imageURL;
+      if (!imageCode) imageURL = this.imageForLabel(tokenImages, label);
+
       return new Overlay({
         cell: matches[1],
         color,
         size,
         type: "token",
         label: label || "",
-        imageCode: matches[7] || null
+        imageURL,
+        imageCode,
       });
     }
 
     return false;
+  }
+
+  imageForLabel(tokenImages, label) {
+    if (!tokenImages) return null;
+    for (const [pattern, url] of Object.entries(tokenImages)) {
+      const regex = new RegExp(pattern.toLowerCase().replace('#', '[0-9]*'));
+      if (regex.test(label.toLowerCase())) return url;
+    }
   }
 };

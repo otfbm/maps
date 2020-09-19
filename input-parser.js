@@ -15,6 +15,7 @@ module.exports = class InputParser {
     this.effects = [];
     this.icons = [];
     this.overlays = [];
+    this.tokenImages = {};
   
     this.configParser = new ConfigParser();
     this.backgroundParser = new BackgroundParser();
@@ -58,7 +59,7 @@ module.exports = class InputParser {
         continue;
       }
 
-      parsed = await this.tokenParser.parse(part);
+      parsed = await this.tokenParser.parse(part, this.tokenImages);
       if (parsed) {
         this.tokens.push(parsed);
         continue;
@@ -99,6 +100,10 @@ module.exports = class InputParser {
       options.background.image = await this.backgroundParser.parse({ bg: c.background });
     }
 
+    if (c.tokenImages) {
+      this.tokenImages = c.tokenImages;
+    }
+
     if (c.board) {
       const parsed = this.boardParser.parse(c.board);
       if (parsed) options.view = parsed;
@@ -106,7 +111,7 @@ module.exports = class InputParser {
 
     if (c.tokens) {
       for (const token of c.tokens) {
-        const parsed = await this.tokenParser.parse(token);
+        const parsed = await this.tokenParser.parse(token, this.tokenImages);
         if (parsed) this.tokens.push(parsed);
       }
     }
