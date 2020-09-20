@@ -4,7 +4,7 @@ const drawError = require("./draw-error.js");
 exports.handler = async (event, context, metrics) => {
   let stripped;
   try {
-    const query = (event && event.queryStringParameters) || {};
+    const query = (event && event.multiValueQueryStringParameters) || {};
     const path = event.rawPath || event.path;
     const canvas = await drawCanvas(path, query, metrics);
     const data = canvas.toDataURL("image/jpeg", { quality: 0.75 });

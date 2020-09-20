@@ -1,6 +1,14 @@
 const fastify = require('fastify');
 const func = require('./index').handler;
 
+const normalizeQueryParams = (query) => {
+    let q = {};
+    for (const [key, val] of Object.entries(query)) {
+        q[key] = Array.isArray(val) ? val : [val];
+    }
+    return q;
+};
+
 const createServer = ({ logger = true } = {}) => {
     const server = fastify({ logger });
     server.get("/*", async (request, reply) => {
@@ -8,7 +16,7 @@ const createServer = ({ logger = true } = {}) => {
         const event = {
             rawPath: request.params['*'],
             path: request.params['*'],
-            queryStringParameters: request.query,
+            multiValueQueryStringParameters: normalizeQueryParams(request.query),
             requestContext: {
                 http: {
                     method: 'GET',

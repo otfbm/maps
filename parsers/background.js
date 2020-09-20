@@ -4,7 +4,8 @@ module.exports = class BackgroundParser {
   async parse(query) {
     let backgroundImage = null;
     if (query.bg) {
-      const pathname = Buffer.from(query.bg).toString("base64");
+      const bg = Array.isArray(query.bg) ? query.bg[0] : query.bg;
+      const pathname = Buffer.from(bg).toString("base64");
       const bgBaseURL = "https://bg.otfbm.io";
       const res = await fetch(new URL(pathname, bgBaseURL));
 
