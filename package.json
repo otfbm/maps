@@ -6,8 +6,8 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit --no-cov --no-esm --timeout 30000",
-    "test:integration": "NODE_NO_WARNINGS=1 jest ./test/integration",
-    "test:integration:update": "jest ./test/integration -u",
+    "test:integration": "NODE_NO_WARNINGS=1 tap ./test/integration --no-cov --no-esm --timeout 30000",
+    "test:integration:update": "NODE_NO_WARNINGS=1 TAP_SNAPSHOT=1 tap ./test/integration --no-cov --no-esm --timeout 30000",
     "start": "node server.js"
   },
   "keywords": [],
@@ -21,8 +21,7 @@
     "canvas": "^2.6.1",
     "fastify": "^2.14.1",
     "fastify-static": "^2.7.0",
-    "jest": "^26.2.2",
-    "jest-image-snapshot": "^4.1.0",
-    "tap": "^14.10.7"
+    "tap": "^14.10.7",
+    "tap-image-snapshot": "github:gingermusketeer/tap-image-snapshot"
   }
 }
