@@ -26,6 +26,29 @@ const base64Fetch = async (url) => {
   throw err;
 };
 
+const imageCodeFetch = async (url) => {
+  if (!url) return null;
+  let status = 200;
+  try {
+    const u = new URL(join('meta', Buffer.from(url).toString('base64')), 'https://token.otfbm.io');
+    const res = await fetch(u);
+    if (res.ok) {
+      const text = await res.text();
+      const code = text.match(/<body>([A-Za-z0-9]*)<\/body>/);
+      return code[1];
+    }
+    status = res.status;
+  } catch(err) {
+    console.error(err);
+    status = 500
+  }
+  const error = new Error(
+    `We couldn't seem to get our claws on the token code for the image you asked for`
+  );
+  error.status = status;
+  throw error;
+};
+
 let fallbackTokenImage;
 const fetchTokenImageAsBase64 = async (code) => {
   if (!code) return null;
@@ -212,6 +235,14 @@ module.exports = async function main(pathname, query, metrics = true) {
     grid.add(overlay);
   }
 
+  const tokenCodes = await Promise.all(
+    input.tokens.map((tn) => imageCodeFetch(tn.imageURL))
+  );
+  for (let i = 0; i < input.tokens.length; i++) {
+    if (tokenCodes[i] && !input.tokens[i].imageCode) {
+      input.tokens[i].imageCode = tokenCodes[i];
+    }
+  }
   const tokenImages = await Promise.all(
     input.tokens.map((tn) => fetchTokenImageAsBase64(tn.imageCode))
   );
