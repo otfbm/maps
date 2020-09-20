@@ -1,8 +1,9 @@
-const fastify = require('fastify');
-const drawCanvas = require("../../draw-canvas");
-const { toMatchImageSnapshot } = require("jest-image-snapshot");
+import tap from 'tap'
+import installImageSnapshot from "tap-image-snapshot";
+import fastify from 'fastify';
+import drawCanvas from "../../draw-canvas.js";
 
-expect.extend({ toMatchImageSnapshot });
+installImageSnapshot(tap)
 
 const config = {
     tokenImages: {
@@ -11,7 +12,7 @@ const config = {
     }
 };
 
-test("tokens", async () => {
+tap.test("tokens", async (t) => {
     const server = fastify();
     server.get('/config', async (request, reply) => {
         return config;
@@ -24,6 +25,7 @@ test("tokens", async () => {
       "d4-or2",
     ];
     const canvas = await drawCanvas(`/${tokens.join("/")}`, { load: `${address}/config` }, false);
-    expect(canvas.toBuffer("image/png")).toMatchImageSnapshot();
+    t.matchImageSnapshot(canvas.toBuffer("image/png"));
     await server.close();
+    t.end();
 });
