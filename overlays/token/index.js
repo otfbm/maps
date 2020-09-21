@@ -91,6 +91,10 @@ module.exports = class TokenOverlay {
     opts.fontcolor = this.pickTextColor(opts.color);
     opts.gridsize = this.options.cellSizePx;
     opts.font = this.options.font;
+    
+    let match = item.overlay.label.match(/[0-9]+$/);
+    if (match)
+      opts.subLabel = match[0];
 
     template(opts, ctx);
   }
