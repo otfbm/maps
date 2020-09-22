@@ -18,7 +18,7 @@ module.exports = ({
     return Math.floor(num) + 0.5;
   }
 
-  const whitelineModifier = size < 41 ? 1 : 2;
+  const whitelineModifier = size < 41 ? 1.5 : 2;
   const radius = roundToHalf((size + 1) / 2 - 3);
   const xy = Math.floor(size < gridsize ? (gridsize + 1) / 2 : (size + 1) / 2);
   const imageTL = size < gridsize ? (gridsize - size) / 2 : 0;
