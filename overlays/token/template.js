@@ -41,7 +41,7 @@ module.exports = ({
   const xy = Math.floor(size < gridsize ? (gridsize + 1) / 2 : (size + 1) / 2);
   const imageTL = size < gridsize ? (gridsize - size) / 2 : 0;
   let tokenEdgeColour = '#07031a';
-  let hasSubLabel = image && size >= 40 && subLabel;
+  let hasSubLabel = Boolean(image && size >= 40 && subLabel);
 
   // inner token edge
   ctx.beginPath();
