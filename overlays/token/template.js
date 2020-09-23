@@ -14,12 +14,30 @@ module.exports = ({
   font
 }, ctx) => {
 
-  const roundToHalf = (num) => {
+  let borderWidth = 3;
+  let boxEdgeWidth = 2;
+  let whitelineModifier = 3;
+  let pixelAdjustment = 0.5;
+  if (size <= 60) {
+    borderWidth = 1;
+    boxEdgeWidth = 1;
+    whitelineModifier = 1.5;
+  } else if (size <= 120) {
+    borderWidth = 2;
+    boxEdgeWidth = 1;
+    whitelineModifier = 2;
+    pixelAdjustment = 0;
+  } 
+
+  const snapToPx = (num) => {
+    return Math.floor(num) + pixelAdjustment;
+  }
+
+  const snapToSinglePx = (num) => {
     return Math.floor(num) + 0.5;
   }
 
-  const whitelineModifier = size < 41 ? 1.5 : 2;
-  const radius = roundToHalf((size + 1) / 2 - 3);
+  const radius = snapToPx((size + 1) / 2 - 3);
   const xy = Math.floor(size < gridsize ? (gridsize + 1) / 2 : (size + 1) / 2);
   const imageTL = size < gridsize ? (gridsize - size) / 2 : 0;
   let tokenEdgeColour = '#07031a';
@@ -61,13 +79,14 @@ module.exports = ({
       ctx.fill();
 
       ctx.fillStyle = fontcolor;
-      ctx.fillText(subLabel, xy + radius / 2, xy + radius);
+      let useFullLabel = ctx.measureText(label).width < radius - 3;
+      ctx.fillText(useFullLabel ? label : subLabel, xy + radius / 2, xy + radius);
 
       ctx.beginPath();
-      ctx.lineWidth = 1;
-      ctx.moveTo(roundToHalf(xy), roundToHalf(xy + radius - whitelineModifier));
-      ctx.lineTo(roundToHalf(xy), roundToHalf(xy + radius - (subLabelFontSize + 3)));
-      ctx.lineTo(roundToHalf(xy + radius - whitelineModifier), roundToHalf(xy + radius - (subLabelFontSize + 3)));
+      ctx.lineWidth = boxEdgeWidth;
+      ctx.moveTo(snapToSinglePx(xy), snapToSinglePx(xy + radius - whitelineModifier));
+      ctx.lineTo(snapToSinglePx(xy), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
+      ctx.lineTo(snapToSinglePx(xy + radius - whitelineModifier), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
       ctx.stroke();
     }
   } else {
@@ -85,13 +104,13 @@ module.exports = ({
   ctx.beginPath();
   if (hasSubLabel) {
     ctx.arc(xy, xy, radius, 0, Math.PI * 0.5, true);
-    ctx.lineTo(roundToHalf(xy + radius), roundToHalf(xy + radius));
-    ctx.lineTo(roundToHalf(xy + radius), roundToHalf(xy));
+    ctx.lineTo(snapToPx(xy + radius), snapToPx(xy + radius));
+    ctx.lineTo(snapToPx(xy + radius), snapToPx(xy));
     ctx.strokeStyle = '#07031a';
   } else {
     ctx.arc(xy, xy, radius, 0, Math.PI * 2);
     ctx.strokeStyle = tokenEdgeColour;
   }
-  ctx.lineWidth = 1;
+  ctx.lineWidth = borderWidth;
   ctx.stroke();
 }
