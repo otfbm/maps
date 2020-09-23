@@ -104,8 +104,8 @@ module.exports = class InputParser {
       this.tokenImages = c.tokenImages;
     }
 
-    if (c.board) {
-      const parsed = this.boardParser.parse(c.board);
+    if (c.view) {
+      const parsed = this.boardParser.parse(c.view);
       if (parsed) options.view = parsed;
     }
 
@@ -116,23 +116,23 @@ module.exports = class InputParser {
       }
     }
 
-    if (c.overlays) {
+    if (c.objects) {
       for (const overlay of c.overlays) {
         const parsed = this.overlayParser.parse(overlay);
         if (parsed) this.overlays.push(parsed);
       }
     }
 
-    if (c.lines) {
-      for (const line of c.lines) {
-        const parsed = this.lineParser.parse(line);
+    if (c.walls) {
+      for (const wall of c.walls) {
+        const parsed = this.lineParser.parse(wall);
         if (parsed) this.lines = this.lines.concat(parsed);
       }
     }
 
-    if (c.effects) {
-      for (const effect of c.effects) {
-        const parsed = this.effectParser.parse(effect);
+    if (c.overlays) {
+      for (const overlay of c.overlays) {
+        const parsed = this.effectParser.parse(overlay);
         if (parsed) {
           this.effects.push(parsed);
           continue;

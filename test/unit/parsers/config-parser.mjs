@@ -5,10 +5,10 @@ import ConfigParser from '../../../parsers/config.js';
 const { test } = tap;
 
 const config1 = {
-    board: 'c2:10x10',
-    lines: ['_B2G2G4H4-dH6G6G8-sF9E10-bC10B10B2_B6-oG6'],
-    effects: ['*c20rd5'],
-    overlays: ['f4$T'],
+    view: 'c2:10x10',
+    walls: ['_B2G2G4H4-dH6G6G8-sF9E10-bC10B10B2_B6-oG6'],
+    overlays: ['*c20rd5'],
+    objects: ['f4$T'],
     options: '@h10',
     background: 'https://i.imgur.com/5ODcwpV.jpg',
 };
