@@ -30,7 +30,7 @@ module.exports = class LineParser {
   parseCoords(str) {
     const reg = /(\-[A-Z])?(\$(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))?([A-Z]{1,2}[0-9]{1,2})/gi;
     let result = [];
-    let matches = str.matchAll(reg) || [];
+    let matches = str.matchAll(reg);
     for (let match of matches) {
       let coords = CoordParser.parse(match[4]);
 
