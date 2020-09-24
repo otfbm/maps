@@ -4,7 +4,7 @@ import Options from '../../options.js';
 
 const clone = (item) => JSON.parse(JSON.stringify(item));
 
-tap.test("board parsing", async (t) => {
+tap.test("view parsing", async (t) => {
   const options = new Options();  
   let input = new InputParser();
   await input.parse(options, '');

@@ -1,6 +1,6 @@
 const CoordParser = require("./coord-parser.js");
 
-module.exports = class BoardParser {
+module.exports = class ViewParser {
     parse(str) {
         let match = str.match(/^([A-Z]{1,2}[0-9]{1,2}):([A-Z]{1,4}[0-9]{1,2})$/i);
         if (match) {

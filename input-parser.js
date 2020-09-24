@@ -1,4 +1,4 @@
-const BoardParser = require("./parsers/board.js");
+const ViewParser = require("./parsers/view-parser.js");
 const TokenParser = require("./parsers/token.js");
 const IconParser = require("./parsers/icon.js");
 const OverlayParser = require("./parsers/overlay.js");
@@ -19,7 +19,7 @@ module.exports = class InputParser {
   
     this.configParser = new ConfigParser();
     this.backgroundParser = new BackgroundParser();
-    this.boardParser = new BoardParser();
+    this.viewParser = new ViewParser();
     this.tokenParser = new TokenParser();
     this.iconParser = new IconParser();
     this.overlayParser = new OverlayParser();
@@ -53,7 +53,7 @@ module.exports = class InputParser {
       if (part[0] === '/') part = part.substr(1);
       if (part[part.length-1] === '/') part = part.substr(0, part.length - 1);
 
-      let parsed = this.boardParser.parse(part);
+      let parsed = this.viewParser.parse(part);
       if (parsed) {
         options.view = parsed;
         continue;
@@ -105,7 +105,7 @@ module.exports = class InputParser {
     }
 
     if (c.view) {
-      const parsed = this.boardParser.parse(c.view);
+      const parsed = this.viewParser.parse(c.view);
       if (parsed) options.view = parsed;
     }
 
