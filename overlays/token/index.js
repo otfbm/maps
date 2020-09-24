@@ -94,7 +94,7 @@ module.exports = class TokenOverlay {
     
     let match = item.overlay.label.match(/[0-9]+$/);
     if (match)
-      opts.subLabel = match[0];
+      opts.subLabel = match[0].toUpperCase();
 
     template(opts, ctx);
   }
