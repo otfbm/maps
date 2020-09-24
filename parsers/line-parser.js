@@ -1,4 +1,5 @@
 const CoordParser = require("./coord-parser.js");
+const ColourParser = require("./colour-parser.js");
 
 module.exports = class LineParser {
   parse(str) {
@@ -27,22 +28,25 @@ module.exports = class LineParser {
   ])
 
   parseCoords(str) {
-    const reg = /(\-[A-Z])?[A-Z]{1,2}[0-9]{1,2}/gi;
+    const reg = /(\-[A-Z])?(\$(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))?([A-Z]{1,2}[0-9]{1,2})/gi;
     let result = [];
-    let coords = str.match(reg) || [];
-    for (let pt of coords) {
-      let icon = "";
-      if (pt.charAt(0) === '-') {
-        icon = this.icons.get(pt.charAt(1).toUpperCase()) || "";
-        pt = pt.substr(2)
-      }
+    let matches = str.matchAll(reg) || [];
+    for (let match of matches) {
+      let coords = CoordParser.parse(match[4]);
 
-      let coords = CoordParser.parse(pt);
+      let icon = "";
+      if (match[1])
+        icon = this.icons.get(match[1].charAt(1).toUpperCase()) || "";
+
+      let colour = "";
+      if (match[3])
+        colour = ColourParser.parse(match[3]);
 
       result.push({
         x: coords.x - 1,
         y: coords.y - 1,
-        icon
+        icon,
+        colour
       });
     }
 

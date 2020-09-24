@@ -1,8 +1,9 @@
 module.exports = class Line {
-  constructor(line, foregroundColour, backgroundColour) {
+  static fg;
+  static bg;
+
+  constructor(line) {
     this.line = line;
-    this.fg = foregroundColour;
-    this.bg = backgroundColour;
   }
 
   get type() {
@@ -17,7 +18,10 @@ module.exports = class Line {
 
     ctx.beginPath();
     let startPt = l.shift();
-    ctx.moveTo(startPt.x * gridsize , startPt.y * gridsize );
+    ctx.moveTo(startPt.x * gridsize, startPt.y * gridsize);
+
+    if (startPt.colour)
+      Line.fg = startPt.colour;
 
     while (l.length) {
       let pt = l.shift();
@@ -31,7 +35,7 @@ module.exports = class Line {
           type: pt.icon
         });
       } else {
-        ctx.lineTo(pt.x * gridsize , pt.y * gridsize);
+        ctx.lineTo(pt.x * gridsize, pt.y * gridsize);
       }
       startPt = pt;
     }
@@ -39,7 +43,7 @@ module.exports = class Line {
     ctx.lineCap = "square";
     ctx.lineJoin = "bevel";
     ctx.lineWidth = 3 * zoom;
-    ctx.strokeStyle = this.fg;
+    ctx.strokeStyle = Line.fg;
     ctx.stroke();
 
     for (const icon of icons) {
@@ -54,7 +58,7 @@ module.exports = class Line {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.rotate(1.57079632679);
-        ctx.fillStyle = this.fg;
+        ctx.fillStyle = Line.fg;
         ctx.fillText("S", 0, zoom);
       } else if (icon.type === "door") {
         ctx.rect(unit * -1.5, unit * -0.5, unit * 3, unit);

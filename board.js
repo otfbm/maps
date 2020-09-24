@@ -419,8 +419,10 @@ module.exports = class Board {
     // move ctx to account for padding and pan
     this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
 
+    Line.fg = this.options.fg;
+    Line.bg = this.options.bg;
     for (const line of this.lines) {
-      let l = new Line(line, this.options.fg, this.options.bg);
+      let l = new Line(line);
       l.draw(this.ctx, this.gridsize, this.zoom);
     }
 
