@@ -84,9 +84,9 @@ module.exports = ({
 
       ctx.beginPath();
       ctx.lineWidth = boxEdgeWidth;
-      ctx.moveTo(snapToSinglePx(xy), snapToSinglePx(xy + radius - whitelineModifier));
+      ctx.moveTo(snapToSinglePx(xy), snapToSinglePx(xy + radius));
       ctx.lineTo(snapToSinglePx(xy), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
-      ctx.lineTo(snapToSinglePx(xy + radius - whitelineModifier), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
+      ctx.lineTo(snapToSinglePx(xy + radius), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
       ctx.stroke();
     }
   } else {

@@ -1,10 +1,10 @@
 import tap from 'tap';
-import BoardParser from '../../../parsers/board.js';
+import ViewParser from '../../../parsers/view-parser.js';
 
 const { test } = tap;
 
 test('parsing 1', (t) => {
-    const parser = new BoardParser();
+    const parser = new ViewParser();
     const result = parser.parse('/');
     
     t.equal(result, false);
@@ -12,7 +12,7 @@ test('parsing 1', (t) => {
 });
 
 test('parsing 2', (t) => {
-    const parser = new BoardParser();
+    const parser = new ViewParser();
     const result = parser.parse('');
     
     t.equal(result, false);
@@ -20,7 +20,7 @@ test('parsing 2', (t) => {
 });
 
 test('parsing 3', (t) => {
-    const parser = new BoardParser();
+    const parser = new ViewParser();
     const result = parser.parse('3x3');
     
     t.equal(result.width, 3);
@@ -29,7 +29,7 @@ test('parsing 3', (t) => {
 });
 
 test('parsing 4', (t) => {
-    const parser = new BoardParser();
+    const parser = new ViewParser();
     const result = parser.parse('37x42');
     
     t.equal(result.width, 37);
@@ -38,7 +38,7 @@ test('parsing 4', (t) => {
 });
 
 test('parsing 5', (t) => {
-    const parser = new BoardParser();
+    const parser = new ViewParser();
     const result = parser.parse('37x');
     
     t.equal(result, false);
@@ -46,7 +46,7 @@ test('parsing 5', (t) => {
 });
 
 test('parsing 6', (t) => {
-    const parser = new BoardParser();
+    const parser = new ViewParser();
     const result = parser.parse('x34');
     
     t.equal(result, false);
