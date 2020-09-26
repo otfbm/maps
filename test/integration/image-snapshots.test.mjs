@@ -4,7 +4,6 @@ import drawCanvas from "../../draw-canvas.js";
 
 installImageSnapshot(tap)
 
-
 tap.test("tokens", async (t) => {
   const tokens = [
     "A1T",
@@ -31,7 +30,7 @@ tap.test("tokens", async (t) => {
 });
 
 tap.test("overlays", async (t) => {
-  const overlays = ["A1$T", "B1$P", "C1$p", "D1$S", "E1$F", "F1$O", "G1$o"];
+  const overlays = ["A1$tr", "B1$pr", "C1$ps", "D1$ss", "E1$fi", "F1$po", "G1$pc"];
   const canvas = await drawCanvas(`/${overlays.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
@@ -190,7 +189,22 @@ tap.test("edge case: border between az and ba", async (t) => {
 });
 
 tap.test("edge cases: overlays", async (t) => {
-  const overlays = ["aa1$T", "ab1$P", "ac1$p", "ad1$S", "ae1$F", "af1$O", "ag1$o"];
+  const overlays = [
+    "x1$tr",
+    "z1$ps",
+    "ab1$pr",
+    "ad1$ss",
+    "ae1$fi",
+    "af1$po",
+    "x4$pc",
+    "x2y3$tr",
+    "z2aa3$ps",
+    "ab2ac3$pr",
+    "ad2ae3$ss",
+    "ae2af3$fi",
+    "af2ag3$po",
+    "x5y6$pc",
+  ];
   const canvas = await drawCanvas(`/x1:10x10/${overlays.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
