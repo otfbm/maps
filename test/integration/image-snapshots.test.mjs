@@ -35,6 +35,24 @@ tap.test("overlays", async (t) => {
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
 
+tap.test("overlays: sizes", async (t) => {
+  const overlays = ["A1b2$tr", "c1e3$pr", "f1i4$ps", "a5e10$ss"];
+  const canvas = await drawCanvas(`/${overlays.join("/")}`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("overlays: rotations", async (t) => {
+  const overlays = ["a5b1$tr", "c1d5$ss", "i2e1$tr"];
+  const canvas = await drawCanvas(`/${overlays.join("/")}`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("overlays: colors", async (t) => {
+  const overlays = ["A1b$tr", "B1r$pr", "C1y$ps", "D1~3366ff$ss", "F1o$po", "G1bn$pc"];
+  const canvas = await drawCanvas(`/${overlays.join("/")}`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
 tap.test("walls", async (t) => {
   const walls =
     "_H2J2J7A7A1H1_E1E4-dD4A4_B1B2-oA2_H1H4-dG4E4_D4-bD5D7_D5-bE5F5F7_F5-dG5H5H7_H5I5-oJ5_I3I4H4";

@@ -21,8 +21,8 @@ module.exports = class OverlayParser {
       const matches = str.match(reg);
       const tl = matches[1];
       const br = matches[2];
-      let color = "";
-      if (matches[3]) color = ColorParser.parse(matches[3])
+      let color = "#000000";
+      if (matches[3]) color = ColorParser.parse(matches[3]);
 
       const type = overlays.get(matches[4].toLowerCase());
 
