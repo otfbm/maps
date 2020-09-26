@@ -52,3 +52,69 @@ test('parsing: - multiletter over boundary', (t) => {
     t.end();
 });
 
+test('parsing: - color parsing 1', (t) => {
+    const parser = new OverlayParser();
+    const overlay = parser.parse('az1ba1r$T');
+    
+    t.equal(overlay.tl, 'az1');
+    t.equal(overlay.br, 'ba1');
+    t.same(overlay.type, 'trap');
+    t.same(overlay.color, '#e63c3c');
+    t.end();
+});
+
+test('parsing: - color parsing 2', (t) => {
+    const parser = new OverlayParser();
+    const overlay = parser.parse('az1ba1~070$T');
+    
+    t.equal(overlay.tl, 'az1');
+    t.equal(overlay.br, 'ba1');
+    t.same(overlay.type, 'trap');
+    t.same(overlay.color, '#007700');
+    t.end();
+});
+
+test('parsing: - color parsing 3', (t) => {
+    const parser = new OverlayParser();
+    const overlay = parser.parse('az1ba1~07031a$T');
+    
+    t.equal(overlay.tl, 'az1');
+    t.equal(overlay.br, 'ba1');
+    t.same(overlay.type, 'trap');
+    t.same(overlay.color, '#07031A');
+    t.end();
+});
+
+test('parsing: - color parsing 4', (t) => {
+    const parser = new OverlayParser();
+    const overlay = parser.parse('az1r$T');
+    
+    t.equal(overlay.tl, 'az1');
+    t.equal(overlay.br, 'az1');
+    t.same(overlay.type, 'trap');
+    t.same(overlay.color, '#e63c3c');
+    t.end();
+});
+
+test('parsing: - color parsing 5', (t) => {
+    const parser = new OverlayParser();
+    const overlay = parser.parse('az1~070$T');
+    
+    t.equal(overlay.tl, 'az1');
+    t.equal(overlay.br, 'az1');
+    t.same(overlay.type, 'trap');
+    t.same(overlay.color, '#007700');
+    t.end();
+});
+
+test('parsing: - color parsing 6', (t) => {
+    const parser = new OverlayParser();
+    const overlay = parser.parse('az1~07031a$T');
+    
+    t.equal(overlay.tl, 'az1');
+    t.equal(overlay.br, 'az1');
+    t.same(overlay.type, 'trap');
+    t.same(overlay.color, '#07031A');
+    t.end();
+});
+
