@@ -5,6 +5,7 @@ const InputParser = require("./input-parser.js");
 const Board = require("./board.js");
 const Options = require("./options.js");
 const Renderer = require("./renderer/index.js");
+const Overlay = require("./overlay.js");
 const Grid = require("./grid.js");
 const AWS = require("aws-sdk");
 
@@ -291,8 +292,32 @@ module.exports = async function main(pathname, query, metrics = true) {
   for (let i = 0; i < input.tokens.length; i++) {
     input.tokens[i].image = tokenImages[i];
   }
+  const tokenSpecsByCoords = new Map();
   for (const overlay of input.tokens) {
-    grid.add(overlay);
+    const serializedCoord = "c:" + overlay.cell + "s:" + overlay.size;
+    tokenSpecsByCoords.set(serializedCoord, [overlay, ...(tokenSpecsByCoords.get(serializedCoord) || [])]);
+  }
+
+  for (const [coord, specs] of tokenSpecsByCoords) {
+    if (specs.length === 1) {
+      grid.add(specs[0]);
+    }
+    if (specs.length > 1) {
+      // Store specs in label prop as wrapper
+      const baseSpecAsJson = specs[0].toJSON();
+      baseSpecAsJson.cell = baseSpecAsJson.tl;
+      specs.forEach(s => {
+        const [w, h] = grid.getDims(s);
+        s.width = w;
+        s.height = h;
+      })
+      const multitokenOverlay = new Overlay({
+        ...baseSpecAsJson,
+        type: "multitoken",
+        label: specs,
+      });
+      grid.add(multitokenOverlay);
+    }
   }
 
   board.drawEffects({ under: true });
