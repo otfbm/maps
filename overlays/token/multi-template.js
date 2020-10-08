@@ -55,11 +55,16 @@ module.exports = ({
     const startPercentage = specialOffset + parseInt(tokenIndex) / nTokens;
     const endPercentage = specialOffset + (parseInt(tokenIndex) + 1) / nTokens;
     ctx.beginPath();
+    const toCenter = () => ctx.lineTo(xy, xy);
     if (hasSubLabel) {
       // TODO Sublabelling for multi-tokens
+      toCenter()
       ctx.arc(xy, xy, radius - whitelineModifier, Math.PI * 2 * startPercentage, Math.PI * 2 * endPercentage);
+      toCenter()
     } else {
+      toCenter()
       ctx.arc(xy, xy, radius - whitelineModifier, Math.PI * 2 * startPercentage, Math.PI * 2 * endPercentage);
+      toCenter()
     }
     ctx.strokeStyle = '#f4f6ff';
     ctx.lineWidth = whitelineModifier;
@@ -113,10 +118,14 @@ module.exports = ({
     ctx.beginPath();
     if (hasSubLabel) {
       // TODO Sublabelling for multi-tokens
+      toCenter()
       ctx.arc(xy, xy, radius, Math.PI * 2 * startPercentage, Math.PI * 2 * endPercentage);
+      toCenter()
       ctx.strokeStyle = tokenEdgeColour;
     } else {
+      toCenter()
       ctx.arc(xy, xy, radius, Math.PI * 2 * startPercentage, Math.PI * 2 * endPercentage);
+      toCenter()
       ctx.strokeStyle = tokenEdgeColour;
     }
     ctx.lineWidth = borderWidth;
