@@ -8,7 +8,8 @@
     "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit --no-cov --no-esm --timeout 30000",
     "test:integration": "NODE_NO_WARNINGS=1 tap ./test/integration --no-cov --no-esm --timeout 30000",
     "test:integration:update": "NODE_NO_WARNINGS=1 TAP_SNAPSHOT=1 tap ./test/integration --no-cov --no-esm --timeout 30000",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "canvas": "^2.6.1",
     "fastify": "^2.14.1",
     "fastify-static": "^2.7.0",
+    "nodemon": "^2.0.4",
     "tap": "^14.10.7",
     "tap-image-snapshot": "github:gingermusketeer/tap-image-snapshot"
   }
