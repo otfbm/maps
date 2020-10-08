@@ -95,52 +95,39 @@ const fetchTokenImageAsBase64 = async (code) => {
   return `data:image/jpeg;base64,${fallbackTokenImage}`;
 };
 
-module.exports = async function main(pathname, query, metrics = false) {
+const getBracket = (val, brackets) => {
+  // Given list of brackets of form "<x", "y-z", ">s"
+  // return first bracket in list which returns true for val
+  for (bracket in brackets) {
+    if (bracket.charAt(0) === "<") {
+      if (val < parseFloat(bracket.substring(1, bracket.length))) {
+        return bracket;
+      }
+    }
+    if (bracket.charAt(0) === ">") {
+      if (val > parseFloat(bracket.substring(1, bracket.length))) {
+        return bracket;
+      }
+    }
+    const [lower, upper] = bracket.split("-");
+    if (parseFloat(lower) <= val && val <= parseFloat(upper)) {
+      return bracket
+    }
+  }
+}
+
+module.exports = async function main(pathname, query, metrics = true) {
   const options = new Options();
   const input = new InputParser();
   await input.parse(options, pathname, query);
 
   if (metrics) {
-    let cellsize = '';
-    if (options._cellSize < 40) cellsize = '<40';
-    if (options._cellSize >= 40 && options._cellSize < 60) cellsize = '40-59';
-    if (options._cellSize >= 60 && options._cellSize < 80) cellsize = '60-79';
-    if (options._cellSize >= 80) cellsize = '80-99';
-
-    let numTokens = '0';
-    if (input.tokens.length > 0) numTokens = '1-5';
-    if (input.tokens.length > 5) numTokens = '6-10';
-    if (input.tokens.length > 10) numTokens = '11-15';
-    if (input.tokens.length > 15) numTokens = '16-20';
-    if (input.tokens.length > 20) numTokens = '>20';
-
-    let numLines = '0';
-    if (input.lines.length > 0) numLines = '1-5';
-    if (input.lines.length > 5) numLines = '6-10';
-    if (input.lines.length > 10) numLines = '11-15';
-    if (input.lines.length > 15) numLines = '16-20';
-    if (input.lines.length > 20) numLines = '>20';
-
-    let numEffects = '0';
-    if (input.effects.length > 0) numEffects = '1-5';
-    if (input.effects.length > 5) numEffects = '6-10';
-    if (input.effects.length > 10) numEffects = '11-15';
-    if (input.effects.length > 15) numEffects = '16-20';
-    if (input.effects.length > 20) numEffects = '>20';
-
-    let numIcons = '0';
-    if (input.icons.length > 0) numIcons = '1-5';
-    if (input.icons.length > 5) numIcons = '6-10';
-    if (input.icons.length > 10) numIcons = '11-15';
-    if (input.icons.length > 15) numIcons = '16-20';
-    if (input.icons.length > 20) numIcons = '>20';
-
-    let numOverlays = '0';
-    if (input.overlays.length > 0) numOverlays = '1-5';
-    if (input.overlays.length > 5) numOverlays = '6-10';
-    if (input.overlays.length > 10) numOverlays = '11-15';
-    if (input.overlays.length > 15) numOverlays = '16-20';
-    if (input.overlays.length > 20) numOverlays = '>20';
+    const cellsize = getBracket(options._cellSize, ["<40", "40-59", "60-79", "80-99"]);
+    const numTokens = getBracket(input.tokens.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
+    const numLines = getBracket(input.lines.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
+    const numEffects = getBracket(input.effects.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
+    const numIcons = getBracket(input.icons.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
+    const numOverlays = getBracket(input.overlays.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
 
     const datapoint = {
       MetricData: [
@@ -251,7 +238,7 @@ module.exports = async function main(pathname, query, metrics = false) {
         });
       });
     } catch(err) {
-      console.log('Failed to push metrics, swallowing error', err); 
+      console.log('Failed to push metrics, swallowing error', err);
     }
   }
 
