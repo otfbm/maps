@@ -294,7 +294,7 @@ module.exports = async function main(pathname, query, metrics = true) {
   }
   const tokenSpecsByCoords = new Map();
   for (const overlay of input.tokens) {
-    const serializedCoord = "c:" + overlay.cell + "s:" + overlay.size;
+    const serializedCoord = "c:" + overlay.tl + "s:" + overlay.size;
     tokenSpecsByCoords.set(serializedCoord, [overlay, ...(tokenSpecsByCoords.get(serializedCoord) || [])]);
   }
 
