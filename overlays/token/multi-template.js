@@ -111,7 +111,7 @@ module.exports = ({
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       // Reduce text size depending on number of tokens (i.e. more tokens => less space)
-      ctx.font = `${fontsize * (1 - 0.1 * nTokens)}px ${font}`;
+      ctx.font = `${fontsize * (0.9 ** nTokens)}px ${font}`;
       ctx.fillStyle = fontcolor;
       // Clip text to fit inside
       ctx.save();
