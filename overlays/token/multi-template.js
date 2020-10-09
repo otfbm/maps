@@ -38,8 +38,14 @@ module.exports = ({
   const imageTL = size < gridsize ? (gridsize - size) / 2 : 0;
   let tokenEdgeColour = '#07031a';
 
+  // Since we're only drawing a partial wedge, the white line does not go the full wedge
+  // The perpendicular distance from white line to wedge edge is whitelineModifier. Call that x, and radius r
+  // The line from centre to end of white line arc is length r-x, and from end of white line perpendicular
+  // To edge of wedge is x, meaning the angle between end of white line and edge of wedge is
+  // Inverse sin of x/r-x
+  const whitelineAngularModifier = Math.asin((whitelineModifier)/(radius - whitelineModifier));
   const nTokens = tokenSpecs.length;
-  const specialOffset = nTokens === 2 ? 0.125 : 0;
+  const specialOffset = nTokens === 2 ? 1/8 : nTokens === 3 ? 1/12 : 0;
   for (tokenIndex in tokenSpecs) {
     const {
       color,
@@ -52,19 +58,31 @@ module.exports = ({
     } = tokenSpecs[tokenIndex];
     const hasSubLabel = Boolean(image && size >= 40 && subLabel);
     // inner token edge
-    const startPercentage = specialOffset + parseInt(tokenIndex) / nTokens;
-    const endPercentage = specialOffset + (parseInt(tokenIndex) + 1) / nTokens;
-    ctx.beginPath();
+    const startPercentage = specialOffset + (parseInt(tokenIndex) / nTokens);
+    const endPercentage = specialOffset + ((parseInt(tokenIndex) + 1) / nTokens);
     const toCenter = () => ctx.lineTo(xy, xy);
+    const toOffsetCenter = (offsetRadius, offsetAngle) => {
+      ctx.lineTo(xy + offsetX(offsetRadius, offsetAngle), xy + offsetY(offsetRadius, offsetAngle));
+    }
+    const offsetX = (offsetRadius, offsetAngle) => {
+      return offsetRadius * Math.cos(offsetAngle);
+    }
+    const offsetY = (offsetRadius, offsetAngle) => {
+      return offsetRadius * Math.sin(offsetAngle);
+    }
+    const averageAngle = (Math.PI * 2 * ((startPercentage + endPercentage) / 2));
+    const whitelineRadialOffset = whitelineModifier;
+    const whitelineAngularOffset = averageAngle;
+    ctx.beginPath();
     if (hasSubLabel) {
       // TODO Sublabelling for multi-tokens
-      toCenter()
-      ctx.arc(xy, xy, radius - whitelineModifier, Math.PI * 2 * startPercentage, Math.PI * 2 * endPercentage);
-      toCenter()
+      toOffsetCenter(whitelineRadialOffset, whitelineAngularOffset);
+      ctx.arc(xy, xy, radius - whitelineModifier,  (Math.PI * 2 * startPercentage) + whitelineAngularModifier, (Math.PI * 2 * endPercentage) - whitelineAngularModifier);
+      toOffsetCenter(whitelineRadialOffset, whitelineAngularOffset);
     } else {
-      toCenter()
-      ctx.arc(xy, xy, radius - whitelineModifier, Math.PI * 2 * startPercentage, Math.PI * 2 * endPercentage);
-      toCenter()
+      toOffsetCenter(whitelineRadialOffset, whitelineAngularOffset);
+      ctx.arc(xy, xy, radius - whitelineModifier,  (Math.PI * 2 * startPercentage) + whitelineAngularModifier, (Math.PI * 2 * endPercentage) - whitelineAngularModifier);
+      toOffsetCenter(whitelineRadialOffset, whitelineAngularOffset);
     }
     ctx.strokeStyle = '#f4f6ff';
     ctx.lineWidth = whitelineModifier;
@@ -72,36 +90,17 @@ module.exports = ({
   
     if (image && size >= 40) {
       // fill with image
-      ctx.save()
+      ctx.save();
       ctx.clip();
       const img = new Image();
-      img.onload = () => ctx.drawImage(img, imageTL, imageTL, size, size);
+      img.onload = () => ctx.drawImage(img, imageTL + offsetX(radius * 0.5, whitelineAngularOffset), imageTL + offsetY(radius * 0.5, whitelineAngularOffset), size, size);
       img.onerror = err => { throw new Error('Failed to load token image') };
       img.src = image;
-      ctx.restore()
+      ctx.restore();
       tokenEdgeColour = color;
   
       if (hasSubLabel) {
-        ctx.beginPath();
-  
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-        ctx.font = `${subLabelFontSize}px ${font}`;
-  
-        ctx.fillStyle = color;
-        ctx.rect(xy + radius, xy + radius, -radius, -(subLabelFontSize + 2));
-        ctx.fill();
-  
-        ctx.fillStyle = fontcolor;
-        let useFullLabel = ctx.measureText(label).width < radius - 3;
-        ctx.fillText(useFullLabel ? label : subLabel, xy + radius / 2, xy + radius);
-  
-        ctx.beginPath();
-        ctx.lineWidth = boxEdgeWidth;
-        ctx.moveTo(snapToSinglePx(xy), snapToSinglePx(xy + radius));
-        ctx.lineTo(snapToSinglePx(xy), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
-        ctx.lineTo(snapToSinglePx(xy + radius), snapToSinglePx(xy + radius - (subLabelFontSize + boxEdgeWidth + 1)));
-        ctx.stroke();
+        // TODO: Support sublabels
       }
     } else {
       // fill with colour and label
@@ -109,9 +108,12 @@ module.exports = ({
       ctx.fill();
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.font = `${fontsize}px ${font}`;
+      ctx.font = `${fontsize  * (1 - 0.1 * nTokens)}px ${font}`;
       ctx.fillStyle = fontcolor;
-      ctx.fillText(label, xy, xy);
+      ctx.save();
+      ctx.clip();
+      ctx.fillText(label, xy + offsetX(radius * 0.5, whitelineAngularOffset), xy + offsetY(radius * 0.5, whitelineAngularOffset));
+      ctx.restore();
     }
   
     // outer token edge
