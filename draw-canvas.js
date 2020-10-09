@@ -250,6 +250,9 @@ module.exports = async function main(pathname, query, metrics = true) {
     if (specs.length > 1) {
       // Store specs in label prop as wrapper
       const baseSpecAsJson = specs[0].toJSON();
+      // grid.add() has sideeffects (ew?)
+      // Since we are not adding sub-items to grid, apply those side-effects manually here
+      // TODO: refactor side effects out of grid.add
       baseSpecAsJson.cell = baseSpecAsJson.tl;
       specs.forEach(s => {
         const [w, h] = grid.getDims(s);
