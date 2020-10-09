@@ -8,7 +8,6 @@
             "program": "${workspaceFolder}/server.js",
             "request": "launch",
             "restart": true,
-            "runtimeExecutable": "nodemon",
             "skipFiles": [
                 "<node_internals>/**"
             ],
