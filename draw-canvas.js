@@ -52,18 +52,21 @@ const imageCodeFetch = async (url) => {
 let fallbackTokenImage;
 const fetchTokenImageAsBase64 = async (code) => {
   if (!code) return null;
+  const useFacialRecognition = code[code.length - 1] !== '~';
+  const c = useFacialRecognition ? code:  code.slice(0, code.length - 1);
+
+  if (useFacialRecognition) {
+    try {
+      return await base64Fetch(`https://token.otfbm.io/face/${c}`);
+    } catch (err) {
+      // noop
+    }
+  }
 
   try {
-    return await base64Fetch(`https://token.otfbm.io/face/${code}`);
+    return await base64Fetch(`https://token.otfbm.io/img/${c}`);
   } catch (err) {
-    // swallow error and try img instead of face
-    if (err.status === 404) {
-      try {
-        return await base64Fetch(`https://token.otfbm.io/img/${code}`);
-      } catch (err) {
-        // noop
-      }
-    }
+    // noop
   }
 
   if (!fallbackTokenImage) {
