@@ -11,6 +11,25 @@ const AWS = require("aws-sdk");
 AWS.config.update({ region: "us-west-2" });
 const cw = new AWS.CloudWatch({ apiVersion: "2010-08-01" });
 
+let crypto;
+try {
+  crypto = require('crypto');
+} catch (err) {
+  console.log('crypto support is disabled!');
+}
+
+const scramble = (id) => {
+  if (!id) return 'N/A';
+  if (!crypto) return String(id);
+  try {
+    const hash = crypto.createHash('sha256');
+    hash.update(String(id));
+    return String(hash.digest('hex')).slice(0, 10);
+  } catch(err) {
+    return 'N/A';
+  }
+};
+
 const base64Fetch = async (url) => {
   const res = await fetch(url);
   if (res.ok) {
@@ -180,6 +199,34 @@ module.exports = async function main(pathname, query, metrics = true) {
             {
               Name: "NumOverlays",
               Value: numOverlays,
+            },
+          ],
+          Unit: "None",
+          Value: 1,
+        },
+        {
+          MetricName: "MapContext",
+          StorageResolution: 1,
+          Dimensions: [
+            {
+              Name: "DevelopmentMode",
+              Value: query.d === "1" ? "development" : "production",
+            },
+            {
+              Name: "AliasOrWebsite",
+              Value: query.a === "1" ? "alias" : "website",
+            },
+            {
+              Name: "ChannelID",
+              Value: scramble(query.cid),
+            },
+            {
+              Name: "ServerID",
+              Value: scramble(query.sid),
+            },
+            {
+              Name: "AuthorID",
+              Value: scramble(query.uid),
             },
           ],
           Unit: "None",
