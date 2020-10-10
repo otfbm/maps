@@ -52,14 +52,21 @@ const imageCodeFetch = async (url) => {
 let fallbackTokenImage;
 const fetchTokenImageAsBase64 = async (code) => {
   if (!code) return null;
+  const noFacial = code[code.length - 1] === '~';
+  const c = noFacial ? code.slice(0, code.length - 1) : code;
 
   try {
-    return await base64Fetch(`https://token.otfbm.io/face/${code}`);
+    if (noFacial) {
+      const err = new Error('User requested no facial recognition');
+      err.status = 404;
+      throw err;
+    }
+    return await base64Fetch(`https://token.otfbm.io/face/${c}`);
   } catch (err) {
     // swallow error and try img instead of face
     if (err.status === 404) {
       try {
-        return await base64Fetch(`https://token.otfbm.io/img/${code}`);
+        return await base64Fetch(`https://token.otfbm.io/img/${c}`);
       } catch (err) {
         // noop
       }
