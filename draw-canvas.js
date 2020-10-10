@@ -210,23 +210,23 @@ module.exports = async function main(pathname, query, metrics = true) {
           Dimensions: [
             {
               Name: "DevelopmentMode",
-              Value: query.d === "1" ? "development" : "production",
+              Value: query.d && query.d[0] === "1" ? "development" : "production",
             },
             {
               Name: "AliasOrWebsite",
-              Value: query.a === "1" ? "alias" : "website",
+              Value: query.a && query.a[0] === "1" ? "alias" : "website",
             },
             {
               Name: "ChannelID",
-              Value: scramble(query.cid),
+              Value: scramble(query.cid && query.cid[0]),
             },
             {
               Name: "ServerID",
-              Value: scramble(query.sid),
+              Value: scramble(query.sid && query.sid[0]),
             },
             {
               Name: "AuthorID",
-              Value: scramble(query.uid),
+              Value: scramble(query.uid && query.uid[0]),
             },
           ],
           Unit: "None",
