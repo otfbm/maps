@@ -1,5 +1,5 @@
 module.exports = class Overlay {
-  constructor({ cells = [], cell = "", type, label, color, size, imageCode, image, imageURL } = {}) {
+  constructor({ cells = [], cell = "", type, label, color, size, imageCode, image, imageURL, width = undefined, height = undefined } = {}) {
     this._cells = cells;
     this._cell = cell;
     this._type = type;
@@ -8,8 +8,8 @@ module.exports = class Overlay {
     this._size = size;
     this._imageCode = imageCode;
     this._image = image;
-    this._width;
-    this._height;
+    this._width = width;
+    this._height = height;
     this._imageURL = imageURL;
   }
 

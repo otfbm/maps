@@ -7,6 +7,7 @@ const assert = require("assert");
 const Options = require("../options.js");
 const Stairs = require("../overlays/stairs/index.js");
 const Token = require("../overlays/token/index.js");
+const MultiToken = require("../overlays/token/index.js");
 const Trap = require("../overlays/trap/index.js");
 const PillarRound = require("../overlays/pillar-round/index.js");
 const PillarSquare = require("../overlays/pillar-square/index.js");
@@ -74,6 +75,9 @@ module.exports = class Renderer {
   renderOverlay(cell) {
     switch (cell.overlay.type) {
       case "token":
+        this.canvas.renderCell(cell, Token);
+        break;
+      case "multitoken":
         this.canvas.renderCell(cell, Token);
         break;
       case "trap":

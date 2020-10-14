@@ -1,3 +1,4 @@
+const multiTemplate = require("./multi-template.js");
 const template = require("./template.js");
 
 module.exports = class TokenOverlay {
@@ -64,26 +65,37 @@ module.exports = class TokenOverlay {
   }
 
   render(item, ctx) {
-    let opts = {};
+    const isMultiToken = item.overlay.type === "multitoken";
+    const overlay = isMultiToken ? item.overlay.label[0] : item.overlay;
+    const opts = this.getOverlayOpts(overlay);
+    if (isMultiToken) {
+      // Sub-tokens are stored in label
+      this.renderMultitoken(opts, item.overlay.label.map(o => this.getOverlayOpts(o)), ctx);
+    } else {
+      this.renderSingleToken(opts, ctx);
+    }
+  }
 
-    switch (item.overlay.size) {
+  getOverlayOpts(overlay) {
+    let opts;
+    switch (overlay.size) {
       case "tiny":
-        opts = this.tiny(item.overlay);
+        opts = this.tiny(overlay);
         break;
       case "small":
-        opts = this.medium(item.overlay);
+        opts = this.medium(overlay);
         break;
       case "medium":
-        opts = this.medium(item.overlay);
+        opts = this.medium(overlay);
         break;
       case "large":
-        opts = this.large(item.overlay);
+        opts = this.large(overlay);
         break;
       case "huge":
-        opts = this.huge(item.overlay);
+        opts = this.huge(overlay);
         break;
       case "gargantuan":
-        opts = this.gargantuan(item.overlay);
+        opts = this.gargantuan(overlay);
         break;
     }
 
@@ -92,10 +104,21 @@ module.exports = class TokenOverlay {
     opts.gridsize = this.options.cellSizePx;
     opts.font = this.options.font;
     
-    let match = item.overlay.label.match(/[0-9]+$/);
-    if (match)
+    let match = overlay.label.match(/[0-9]+$/);
+    if (match) {
       opts.subLabel = match[0].toUpperCase();
+    }
+    return opts;
+  }
 
+  renderMultitoken(opts, tokenSpecs, ctx) {
+    multiTemplate({
+      ...opts,
+      tokenSpecs
+    }, ctx);
+  }
+
+  renderSingleToken(opts, ctx) {
     template(opts, ctx);
   }
 

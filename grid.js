@@ -23,6 +23,20 @@ module.exports = class Grid {
     }
   }
 
+  getDims(overlay) {
+    const coords = this.bbox(overlay.tl, overlay.br);
+    const bbox = [
+      this.actualTopLeft(coords), 
+      this.actualTopRight(coords),
+      this.actualBottomRight(coords),
+      this.actualBottomLeft(coords),
+    ];
+    const rotation = this.rotation(this.convertCellNameToXY(overlay.tl), bbox);
+    const { width, height } = this.dimensions(rotation, bbox);
+
+    return [width * this.options.cellSizePx, height * this.options.cellSizePx];
+  }
+
   add(overlay) {
     assert(
       overlay instanceof Overlay,
