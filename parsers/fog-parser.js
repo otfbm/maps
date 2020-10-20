@@ -3,15 +3,11 @@ const FogEffect = require("../effects/fog-effect.js");
 
 module.exports = class FogParser {
   parse(str) {
-    let trimmed = str.toUpperCase();
-    if (trimmed.charAt(0) !== '*')
+    const reg = /\*F(([A-Z]{1,2}[0-9]{1,2})+)/i;
+    if (!reg.test(str))
       return false;
 
-    const reg = /\*F(([A-Z]{1,2}[0-9]{1,2})+)/;
-    if (!reg.test(trimmed))
-      return false;
-
-    const matches = trimmed.match(reg);
+    const matches = str.match(reg);
     let coords = CoordParser.parseSet(matches[1]);
 
     return new FogEffect({ startPt: coords[0], endPt: coords[1] });
