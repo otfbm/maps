@@ -1,6 +1,5 @@
 const CoordParser = require("./coord-parser.js");
 const FogEffect = require("../effects/fog-effect.js");
-const { false } = require("tap");
 
 module.exports = class FogParser {
   parse(str) {
