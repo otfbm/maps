@@ -6,6 +6,7 @@ const BackgroundParser = require("./parsers/background.js");
 const LineParser = require("./parsers/line-parser.js");
 const Icon = require("./icon.js");
 const EffectParser = require("./parsers/effect-parser.js");
+const FogParser = require("./parsers/fog-parser.js");
 const ConfigParser = require('./parsers/config.js');
 
 module.exports = class InputParser {
@@ -13,6 +14,7 @@ module.exports = class InputParser {
     this.lines = [];
     this.tokens = [];
     this.effects = [];
+    this.fog = [];
     this.icons = [];
     this.overlays = [];
     this.tokenImages = {};
@@ -25,6 +27,7 @@ module.exports = class InputParser {
     this.overlayParser = new OverlayParser();
     this.lineParser = new LineParser();
     this.effectParser = new EffectParser();
+    this.fogParser = new FogParser();
   }
 
   async parse(options, pathname = "", query = {}) {
@@ -86,6 +89,12 @@ module.exports = class InputParser {
       parsed = this.effectParser.parse(part);
       if (parsed) {
         this.effects.push(parsed);
+        continue;
+      }
+
+      parsed = this.fogParser.parse(part);
+      if (parsed) {
+        this.fog.push(parsed);
         continue;
       }
 

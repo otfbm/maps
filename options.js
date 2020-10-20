@@ -118,6 +118,14 @@ module.exports = class Options {
     return this._view.height * this.cellSizePx;
   }
 
+  get canvasWidth() {
+    return this.widthPx + 2 * this.cellSizePx;
+  }
+
+  get canvasHeight() {
+    return this.heightPx + 2 * this.cellSizePx;
+  }
+
   get fg() {
     return this.darkMode ? lightColour : darkColour;
   }

@@ -264,6 +264,7 @@ module.exports = async function main(pathname, query, metrics = true) {
   }
   board.addLines(input.lines);
   board.addEffects(input.effects);
+  board.addFog(input.fog);
 
   // TODO: recalculate icons by inspecting the data structure
 
@@ -309,6 +310,7 @@ module.exports = async function main(pathname, query, metrics = true) {
 
   // overlays are drawn 2nd to last
   board.drawEffects();
+  board.drawFog();
 
   // border is drawn last so nothing overlaps it
   board.drawBorder();

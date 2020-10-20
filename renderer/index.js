@@ -49,8 +49,7 @@ module.exports = class Renderer {
       "Renderer expects options to be instance of Options"
     );
 
-    // const canv = createCanvas(width + 2 * PADDING, height + 2 * PADDING);
-    this.canv = createCanvas(options.widthPx + 2 * options.cellSizePx, options.heightPx + 2 * options.cellSizePx);
+    this.canv = createCanvas(options.canvasWidth, options.canvasHeight);
     this.ctx = this.canv.getContext("2d");
 
     this.canvas = new CanvasRenderer(this.ctx, options);
