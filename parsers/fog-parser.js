@@ -7,7 +7,7 @@ module.exports = class FogParser {
     const matches = str.match(reg);
     if (matches) {
       let coords = CoordParser.parseSet(matches[1]);
-      return new FogEffect({ startPt: coords[0], endPt: coords[1] });
+      return new FogEffect({ startPt: coords[0], endPt: coords.length == 1 ? coords[0] : coords[1] });
     }
     return false;
   }
