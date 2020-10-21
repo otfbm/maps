@@ -222,3 +222,33 @@ tap.test("token image backgrounds", async (t) => {
   const canvas = await drawCanvas(`/${tokens.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
+
+tap.test("FoW - basic - light mode", async (t) => {
+  const bg = 'https://cdn.discordapp.com/attachments/712795723623694376/768158019535896616/Preview-Resized250percent.jpg';
+  const segments = [
+    'k9:v16',
+    '@c64',
+    '*c10rl10',
+    '*l100yj17t14',
+    '*fl10r15',
+    '*fq8t9',
+    '*fs10u13',
+  ];
+  const canvas = await drawCanvas(`/${segments.join("/")}`, { bg }, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("FoW - basic - dark mode", async (t) => {
+  const bg = 'https://cdn.discordapp.com/attachments/712795723623694376/768158019535896616/Preview-Resized250percent.jpg';
+  const segments = [
+    'k9:v16',
+    '@c64d',
+    '*c10rl10',
+    '*l100yj17t14',
+    '*fl10r15',
+    '*fq8t9',
+    '*fs10u13',
+  ];
+  const canvas = await drawCanvas(`/${segments.join("/")}`, { bg }, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});

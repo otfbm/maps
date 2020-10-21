@@ -1,6 +1,6 @@
 const Line = require("./line.js");
 const canvas = require("canvas");
-const { Image } = canvas;
+const { Image, createCanvas } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
 const gridLineColour = "#f4f6ff"; // Powdered Sugar
@@ -14,6 +14,7 @@ module.exports = class Board {
     this.state = [];
     this.lines = [];
     this.effects = [];
+    this.fog = [];
 
     this.ctx = ctx;
     this.options = options;
@@ -51,6 +52,10 @@ module.exports = class Board {
 
   addEffects(effects) {
     this.effects = effects;
+  }
+
+  addFog(fog) {
+    this.fog = fog;
   }
 
   get(x, y) {
@@ -345,28 +350,28 @@ module.exports = class Board {
     );
   }
 
-  drawGridLines() {
+  drawGridLines(ctx = this.ctx) {
     if (this.gridOpacity === 0)
       return;
 
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = gridLineColour;
-    this.ctx.globalAlpha = this.gridOpacity;
-    this.ctx.globalCompositeOperation = "difference";
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = gridLineColour;
+    ctx.globalAlpha = this.gridOpacity;
+    ctx.globalCompositeOperation = "difference";
 
-    for (let i = this.gridsize; i < this.width; i += this.gridsize) {
-      this.ctx.moveTo(0.5 + i + this.padding, this.padding);
-      this.ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);
+    for (let i = this.gridsize; i < this.width - 1; i += this.gridsize) {
+      ctx.moveTo(0.5 + i + this.padding, this.padding);
+      ctx.lineTo(0.5 + i + this.padding, this.height + this.padding);
     }
 
-    for (let i = this.gridsize; i < this.height; i += this.gridsize) {
-      this.ctx.moveTo(this.padding, 0.5 + i + this.padding);
-      this.ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
+    for (let i = this.gridsize; i < this.height - 1; i += this.gridsize) {
+      ctx.moveTo(this.padding, 0.5 + i + this.padding);
+      ctx.lineTo(this.width + this.padding, 0.5 + i + this.padding);
     }
 
-    this.ctx.stroke();
-    this.ctx.restore();
+    ctx.stroke();
+    ctx.restore();
   }
 
   draw() {
@@ -438,5 +443,34 @@ module.exports = class Board {
   drawEffects() {
     for (let effect of this.effects)
       effect.draw(this.ctx, this.gridsize);
+  }
+
+  drawFog() {
+    if (this.fog.length == 0)
+      return;
+
+    // background (fog zone with grid)
+    let bgCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
+    let bgCtx = bgCanv.getContext("2d");
+    bgCtx.beginPath();
+    bgCtx.fillStyle = this.options.bg;
+    bgCtx.fillRect(0, 0, this.width * this.gridsize, this.height * this.gridsize);
+    this.drawGridLines(bgCtx);
+
+    // fog mask
+    let fogCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
+    let fogCtx = fogCanv.getContext("2d");
+    // move fog ctx to account for padding and pan
+    fogCtx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
+    for (let f of this.fog)
+      f.draw(fogCtx, this.gridsize);
+
+    this.ctx.save();   
+    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
+    this.ctx.globalCompositeOperation = "destination-in";
+    this.ctx.drawImage(fogCanv, 0, 0);  
+    this.ctx.globalCompositeOperation = "destination-over";
+    this.ctx.drawImage(bgCanv, 0, 0);
+    this.ctx.restore();
   }
 }
