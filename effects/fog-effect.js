@@ -5,13 +5,14 @@ module.exports = class FogEffect {
   }
 
   draw(ctx, gridSize) {
-    ctx.save();
+    let edgeEffectSize = gridSize / 25;
 
     let x1 = (this.startPt.x - 1) * gridSize;
     let y1 = (this.startPt.y - 1) * gridSize;
     let x2 = (this.endPt.x) * gridSize;
     let y2 = (this.endPt.y) * gridSize;
 
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y1);
@@ -19,9 +20,8 @@ module.exports = class FogEffect {
     ctx.lineTo(x1, y2);
     ctx.closePath();
 
-    let edgeEffectSize = gridSize / 20;
-
-    ctx.strokeStyle = "#ffffff44";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#FFFFFF44";
     ctx.lineWidth = edgeEffectSize * 3;
     ctx.stroke();
     ctx.lineWidth = edgeEffectSize * 2;
