@@ -460,14 +460,16 @@ module.exports = class Board {
     // fog mask
     let fogCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
     let fogCtx = fogCanv.getContext("2d");
+    // move fog ctx to account for padding and pan
+    fogCtx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
     for (let f of this.fog)
       f.draw(fogCtx, this.gridsize);
 
     this.ctx.save();   
+    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
     this.ctx.globalCompositeOperation = "destination-in";
     this.ctx.drawImage(fogCanv, 0, 0);  
     this.ctx.globalCompositeOperation = "destination-over";
-    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
     this.ctx.drawImage(bgCanv, 0, 0);
     this.ctx.restore();
   }
