@@ -95,7 +95,7 @@ const fetchTokenImageAsBase64 = async (code) => {
   return `data:image/jpeg;base64,${fallbackTokenImage}`;
 };
 
-module.exports = async function main(pathname, query, metrics = true) {
+module.exports = async function main(pathname, query, metrics = false) {
   const options = new Options();
   const input = new InputParser();
   await input.parse(options, pathname, query);

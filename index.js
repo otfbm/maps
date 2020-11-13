@@ -7,11 +7,11 @@ exports.handler = async (event, context, metrics) => {
     const query = (event && event.multiValueQueryStringParameters) || {};
     const path = event.rawPath || event.path;
     const canvas = await drawCanvas(path, query, metrics);
-    const data = canvas.toDataURL("image/jpeg", { quality: 0.95 });
+    const data = canvas.toDataURL("image/jpeg", { quality: 0.80 });
     stripped = data.replace(/^data:image\/\w+;base64,/, "");
   } catch (err) {
     const canvas = await drawError(err.message);
-    const data = canvas.toDataURL("image/jpeg", { quality: 0.95 });
+    const data = canvas.toDataURL("image/jpeg", { quality: 0.80 });
     stripped = data.replace(/^data:image\/\w+;base64,/, "");
   }
 
