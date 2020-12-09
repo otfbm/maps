@@ -109,3 +109,12 @@ test('parsing: token image shortcode, label with - chars', async (t) => {
     t.equal(imageCode, 'a1b2c3d4');
     t.end();
 });
+
+test('parsing: token image shortcode, label with - chars and ending ~ to disable face recognition', async (t) => {
+    const parser = new TokenParser();
+    const { label, imageCode } = await parser.parse('D3L-my-name~a1b2c3d4~');
+
+    t.equal(label, 'my-name');
+    t.equal(imageCode, 'a1b2c3d4~');
+    t.end();
+});

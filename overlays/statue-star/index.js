@@ -22,8 +22,7 @@ module.exports = class StatueOverlay {
   }
 
   render(cell) {
-    const width = cell.overlay.width;
-    const height = cell.overlay.height;
+    const { width, height, color } = cell.overlay;
     const shortest = width < height ? width : height;
     const radius = shortest / 2 - 5;
     const center = { x: width / 2, y: height / 2 };
@@ -36,6 +35,7 @@ module.exports = class StatueOverlay {
       radius,
       center,
       points,
+      color,
     });
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
   }

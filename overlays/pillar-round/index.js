@@ -10,9 +10,12 @@ module.exports = class PillarRoundOverlay {
   }
 
   render(cell) {
+    const { width, height, color } = cell.overlay;
+
     const svg = template({
-      height: cell.overlay.height,
-      width: cell.overlay.width,
+      height,
+      width,
+      color,
     });
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
   }
