@@ -1,12 +1,12 @@
 const template = require("./template.js");
 
-module.exports = class StairsOverlay {
+module.exports = class SecretDoorOverlay {
   constructor(options) {
     this.options = options;
   }
 
   get name() {
-    return "stairs";
+    return "secret-door";
   }
 
   render(cell) {
