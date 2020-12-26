@@ -1,4 +1,4 @@
-const Line = require("./line.js");
+const Wall = require("./wall.js");
 const canvas = require("canvas");
 const { Image, createCanvas } = canvas;
 
@@ -424,11 +424,11 @@ module.exports = class Board {
     // move ctx to account for padding and pan
     this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
 
-    Line.fg = this.options.fg;
-    Line.bg = this.options.bg;
+    Wall.fg = this.options.fg;
+    Wall.bg = this.options.bg;
     for (const line of this.lines) {
-      let l = new Line(line);
-      l.draw(this.ctx, this.gridsize, this.zoom);
+      let wall = new Wall(line);
+      wall.draw(this.ctx, this.gridsize, this.zoom);
     }
 
     for (const { x, y, item } of this) {
@@ -442,7 +442,7 @@ module.exports = class Board {
 
   drawEffects() {
     for (let effect of this.effects)
-      effect.draw(this.ctx, this.gridsize);
+      effect.draw(this.ctx, this.gridsize, this.options.font);
   }
 
   drawFog() {
