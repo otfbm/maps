@@ -13,7 +13,7 @@ const effectShapes = new Map([
   ["CO", "circle-offset"],
   ["L", "line"],
   ["S", "square"],
-  ["ST", "square-offset"],
+  ["ST", "square-top"],
   ["R", "rectangle"],
   ["M", "move"], // aka fancy arrow
   ["A", "arrow"]
