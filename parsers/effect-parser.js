@@ -32,6 +32,7 @@ module.exports = class EffectParser {
     const matches = trimmed.match(reg);
     let shape = effectShapes.get(matches[1]);
     let size = matches[2];
+    let size2 = matches[3] ? matches[3].substr(1) : null;
     let colour = ColourParser.parse(matches[4]);
     let coords = CoordParser.parseSet(matches[5]);
 
@@ -39,11 +40,11 @@ module.exports = class EffectParser {
       case "triangle":
         return new TriangleEffect({ size, colour, startPt: coords[0], endPt: coords[1] });
       case "circle":
-        return new CircleEffect({ size, colour, anchorPt: coords[0], anchorType: null });
+        return new CircleEffect({ size, innerRadius: size2, colour, anchorPt: coords[0], anchorType: null });
       case "circle-top":
-        return new CircleEffect({ size, colour, anchorPt: coords[0], anchorType: 'T' });
+        return new CircleEffect({ size, innerRadius: size2, colour, anchorPt: coords[0], anchorType: 'T' });
       case "circle-offset":
-        return new CircleEffect({ size, colour, anchorPt: coords[0], anchorType: 'O' });
+        return new CircleEffect({ size, innerRadius: size2, colour, anchorPt: coords[0], anchorType: 'O' });
       case "square":
         if (coords.length >= 2)
           return new SquareEffect({ width: size, length: size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false });
@@ -52,8 +53,7 @@ module.exports = class EffectParser {
         return new SquareEffect({ width: size, length: size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true });
       case "rectangle":
       case "line":
-        let size2 = matches[3] ? matches[3].substr(1) : 5;
-        return new SquareEffect({ width: size2, length: size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false });
+        return new SquareEffect({ width: size2 ?? 5, length: size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false });
       case "arrow":
         if (coords.length === 2)
           return new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] });

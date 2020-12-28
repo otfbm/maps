@@ -24,8 +24,8 @@ module.exports = class MoveEffect {
     let adjustedEndPt = { x: (this.endPt.x * gridSize) - halfGrid, y: (this.endPt.y * gridSize) - halfGrid };
 
     let distance = Math.sqrt(Math.pow((adjustedEndPt.x - adjustedStartPt.x), 2) + Math.pow((adjustedEndPt.y - adjustedStartPt.y), 2));
-
-    ctx.lineWidth = unit / 4;
+ 
+    ctx.lineWidth = unit < 8 ? 2 : unit / 4;
     ctx.strokeStyle = this.colour;
     ctx.fillStyle = this.colour;
 
