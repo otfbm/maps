@@ -53,7 +53,7 @@ module.exports = class EffectParser {
         return new SquareEffect({ width: size, length: size, colour, startPt: coords[0], endPt: null, anchorTopLeft: true });
       case "rectangle":
       case "line":
-        return new SquareEffect({ width: size2 ?? 5, length: size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false });
+        return new SquareEffect({ width: size2 != null ? size2 : 5, length: size, colour, startPt: coords[0], endPt: coords[1], anchorTopLeft: false });
       case "arrow":
         if (coords.length === 2)
           return new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] });
