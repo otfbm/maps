@@ -304,6 +304,8 @@ module.exports = async function main(pathname, query, metrics = false) {
     grid.add(overlay);
   }
 
+  board.drawEffects({ under: true });
+
   for (const cell of grid) {
     renderer.renderOverlay(cell);
   }
