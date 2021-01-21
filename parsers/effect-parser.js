@@ -17,7 +17,7 @@ const effectShapes = new Map([
 const decorateUnder = (obj, under) => {
   obj.under = !!under;
   return obj;
-}
+};
 
 module.exports = class EffectParser {
   parse(str) {
@@ -35,68 +35,69 @@ module.exports = class EffectParser {
     let coords = CoordParser.parseSet(matches[6]);
     const renderUnder = matches[8];
 
+    let overlay;
     switch (shape) {
       case "triangle":
-        return decorateUnder(
-          new TriangleEffect({
-            size,
-            colour,
-            startPt: coords[0],
-            endPt: coords[1],
-          }),
-          renderUnder
-        );
+        overlay = new TriangleEffect({
+          size,
+          colour,
+          startPt: coords[0],
+          endPt: coords[1],
+        });
+        break;
       case "circle":
-        return decorateUnder(
-          new CircleEffect({ size, colour, anchorPt: coords[0], anchorType }),
-          renderUnder
-        );
+        overlay = new CircleEffect({
+          size,
+          colour,
+          anchorPt: coords[0],
+          anchorType,
+        });
+        break;
       case "square":
-        if (anchorType !== "T" && coords.length >= 2)
-          return decorateUnder(
-            new SquareEffect({
-              width: size,
-              length: size,
-              colour,
-              startPt: coords[0],
-              endPt: coords[1],
-              anchorTopLeft: false,
-            }),
-            renderUnder
-          );
-        return decorateUnder(
-          new SquareEffect({
+        if (anchorType !== "T" && coords.length >= 2) {
+          overlay = new SquareEffect({
             width: size,
-            length: size,
-            colour,
-            startPt: coords[0],
-            endPt: null,
-            anchorTopLeft: true,
-          }),
-          renderUnder
-        );
-      case "rectangle":
-      case "line":
-        let size2 = matches[4] ? matches[4].substr(1) : 5;
-        return decorateUnder(
-          new SquareEffect({
-            width: size2,
             length: size,
             colour,
             startPt: coords[0],
             endPt: coords[1],
             anchorTopLeft: false,
-          }),
-          renderUnder
-        );
+          });
+          break;
+        }
+        overlay = new SquareEffect({
+          width: size,
+          length: size,
+          colour,
+          startPt: coords[0],
+          endPt: null,
+          anchorTopLeft: true,
+        });
+        break;
+      case "rectangle":
+      case "line":
+        let size2 = matches[4] ? matches[4].substr(1) : 5;
+        overlay = new SquareEffect({
+          width: size2,
+          length: size,
+          colour,
+          startPt: coords[0],
+          endPt: coords[1],
+          anchorTopLeft: false,
+        });
+        break;
       case "arrow":
-        if (coords.length === 2)
-          return decorateUnder(
-            new ArrowEffect({ colour, startPt: coords[0], endPt: coords[1] }),
-            renderUnder
-          );
+        if (coords.length === 2) {
+          overlay = new ArrowEffect({
+            colour,
+            startPt: coords[0],
+            endPt: coords[1],
+          });
+        }
         break;
     }
-    return false;
+    if (!overlay) return false;
+
+    return decorateUnder(overlay, renderUnder);
   }
 };
