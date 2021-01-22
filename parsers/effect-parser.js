@@ -24,16 +24,16 @@ module.exports = class EffectParser {
     let trimmed = str.toUpperCase();
     if (trimmed.charAt(0) !== "*") return false;
 
-    const reg = /\*([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)(_)?/;
+    const reg = /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
     if (!reg.test(trimmed)) return false;
 
     const matches = trimmed.match(reg);
-    let shape = effectShapes.get(matches[1]);
-    let anchorType = matches[2];
-    let size = matches[3];
-    let colour = ColourParser.parse(matches[5]);
-    let coords = CoordParser.parseSet(matches[6]);
-    const renderUnder = matches[8];
+    const renderUnder = matches[1];
+    let shape = effectShapes.get(matches[2]);
+    let anchorType = matches[3];
+    let size = matches[4];
+    let colour = ColourParser.parse(matches[6]);
+    let coords = CoordParser.parseSet(matches[7]);
 
     let overlay;
     switch (shape) {
@@ -76,7 +76,7 @@ module.exports = class EffectParser {
         break;
       case "rectangle":
       case "line":
-        let size2 = matches[4] ? matches[4].substr(1) : 5;
+        let size2 = matches[5] ? matches[5].substr(1) : 5;
         overlay = new SquareEffect({
           width: size2,
           length: size,
