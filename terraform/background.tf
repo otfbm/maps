@@ -275,6 +275,6 @@ resource "aws_iam_role_policy_attachment" "bg_lambda" {
 }
 
 resource "aws_iam_role_policy_attachment" "bg_lamba_basicexecutionrole" {
-  role       = "${aws_iam_role.bg_lambda.name}"
+  role       = aws_iam_role.bg_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }

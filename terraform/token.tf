@@ -86,12 +86,12 @@ EOF
 [{
   "Condition": {
     "HttpErrorCodeReturnedEquals": "404",
-    "KeyPrefixEquals": "meta/"
+    "KeyPrefixEquals": "meta"
   },
   "Redirect": {
     "Protocol": "https",
     "HostName": "${aws_api_gateway_rest_api.gateway.id}.execute-api.${var.region}.amazonaws.com",
-    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.token_action.path_part}/",
+    "ReplaceKeyPrefixWith": "${aws_api_gateway_deployment.prod.stage_name}/${aws_api_gateway_resource.token_action.path_part}",
     "HttpRedirectCode": "307"
   }
 }]
@@ -138,7 +138,7 @@ resource "aws_cloudfront_distribution" "tokens" {
     compress               = true
     default_ttl            = 0
     forwarded_values {
-      query_string = false
+      query_string = true
       cookies {
         forward = "none"
       }
@@ -168,12 +168,14 @@ resource "aws_api_gateway_resource" "token_action" {
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
+# path for base64
 resource "aws_api_gateway_resource" "token_url" {
   parent_id   = aws_api_gateway_resource.token_action.id
   path_part   = "{url}"
   rest_api_id = aws_api_gateway_rest_api.gateway.id
 }
 
+# get for base64 /token/{url} part
 resource "aws_api_gateway_method" "token_method" {
   rest_api_id   = aws_api_gateway_rest_api.gateway.id
   resource_id   = aws_api_gateway_resource.token_url.id
@@ -185,6 +187,19 @@ resource "aws_api_gateway_method" "token_method" {
   }
 }
 
+# get for /token root method
+resource "aws_api_gateway_method" "token_root_method" {
+  rest_api_id   = aws_api_gateway_rest_api.gateway.id
+  resource_id   = aws_api_gateway_resource.token_action.id
+  http_method   = "GET"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.querystring.url" = true
+  }
+}
+
+# POST to lambda for /token/{url} part
 resource "aws_api_gateway_integration" "token_integration" {
   rest_api_id             = aws_api_gateway_rest_api.gateway.id
   resource_id             = aws_api_gateway_resource.token_url.id
@@ -195,6 +210,20 @@ resource "aws_api_gateway_integration" "token_integration" {
 
   request_parameters = {
     "integration.request.path.id" = "method.request.path.url"
+  }
+}
+
+# post to lambda for /token root method
+resource "aws_api_gateway_integration" "token_root_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.gateway.id
+  resource_id             = aws_api_gateway_resource.token_action.id
+  http_method             = aws_api_gateway_method.token_root_method.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.token.invoke_arn
+
+  request_parameters = {
+    "integration.request.querystring.url" = "method.request.querystring.url"
   }
 }
 
@@ -288,7 +317,7 @@ resource "aws_iam_role_policy_attachment" "token_lambda" {
 }
 
 resource "aws_iam_role_policy_attachment" "token_lamba_basicexecutionrole" {
-  role       = "${aws_iam_role.token_lambda.name}"
+  role       = aws_iam_role.token_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
