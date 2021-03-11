@@ -31,7 +31,7 @@ module.exports = class ArrowEffect {
 
       ctx.lineCap = "square";
       ctx.lineJoin = "bevel";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = unit < 8 ? 2 : unit / 4;
       ctx.strokeStyle = this.colour;
       ctx.stroke();
       ctx.fillStyle = this.colour;
