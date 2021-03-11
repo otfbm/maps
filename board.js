@@ -440,9 +440,14 @@ module.exports = class Board {
     }
   }
 
-  drawEffects() {
-    for (let effect of this.effects)
-      effect.draw(this.ctx, this.gridsize, this.options.font);
+  drawEffects({ under = false } = {}) {
+    for (let effect of this.effects) {
+      if (under === true) {
+        if (effect.under) effect.draw(this.ctx, this.gridsize, this.options.font);
+      } else {
+        if (!effect.under) effect.draw(this.ctx, this.gridsize, this.options.font);
+      }
+    }
   }
 
   drawFog() {
