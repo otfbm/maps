@@ -10,9 +10,11 @@ resource "aws_api_gateway_deployment" "prod" {
     aws_api_gateway_resource.background_url,
     aws_api_gateway_integration.token_integration,
     aws_api_gateway_method.token_method,
+    aws_api_gateway_method.token_root_method,
     aws_api_gateway_resource.token_action,
     aws_api_gateway_resource.token_url,
-  aws_api_gateway_rest_api.gateway]
+    aws_api_gateway_integration.token_root_integration,
+    aws_api_gateway_rest_api.gateway]
   stage_name = "prod"
 
   rest_api_id = aws_api_gateway_rest_api.gateway.id

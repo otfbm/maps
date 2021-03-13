@@ -5,6 +5,7 @@ import io
 import json
 import os
 import warnings
+import re
 
 from decimal import Decimal
 import boto3
@@ -16,8 +17,6 @@ warnings.simplefilter('error', Image.DecompressionBombWarning)
 
 
 def lambda_handler(event, context):
-    imgUrlEnc = event['pathParameters']['url']
-    imgUrl = base64.b64decode(event['pathParameters']['url'])
     region = os.environ['AWS_REGION']
     bucket = os.environ['BUCKET']
     s3Url = os.environ['URL']
@@ -25,6 +24,27 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
     dynamodb = boto3.resource('dynamodb', region_name=region)
     table = dynamodb.Table(tableName)
+
+    print(event)
+    if 'pathParameters' in event and event['pathParameters'] is not None and 'url' in event['pathParameters']:  # this is a path parameter
+        rawUrl = event['pathParameters']['url']
+    elif 'queryStringParameters' in event and event["queryStringParameters"] is not None and 'url' in event["queryStringParameters"]:  # this is a query parameter
+        rawUrl = event["queryStringParameters"]['url']
+    else:
+        raise EnvironmentError("No value found for either path parameter or query parameter")
+
+    # base64 regex stolen from https://stackoverflow.com/questions/8571501/how-to-check-whether-a-string-is-base64-encoded-or-not
+    b64pattern = re.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$")
+
+    # Check if the passed argument appears to be base64, and if it is, attempt to decode. If it's not, use as-is
+    if b64pattern.match(rawUrl):
+        # it appears as base64
+        imgUrl = base64.b64decode(rawUrl)
+        imgUrlEnc = rawUrl
+    else:
+        # not base64
+        imgUrl = rawUrl.encode()
+        imgUrlEnc = base64.b64encode(imgUrl)
 
     # get new shortcode
     response = table.update_item(
