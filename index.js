@@ -10,9 +10,10 @@ exports.handler = async (event, context, metrics) => {
     const data = canvas.toDataURL("image/jpeg", { quality: 0.80 });
     stripped = data.replace(/^data:image\/\w+;base64,/, "");
   } catch (err) {
-    const canvas = await drawError(err.message);
-    const data = canvas.toDataURL("image/jpeg", { quality: 0.80 });
-    stripped = data.replace(/^data:image\/\w+;base64,/, "");
+    // const canvas = await drawError(err.message);
+    // const data = canvas.toDataURL("image/jpeg", { quality: 0.80 });
+    // stripped = data.replace(/^data:image\/\w+;base64,/, "");
+    throw err;
   }
 
   return {
