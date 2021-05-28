@@ -18,7 +18,7 @@ exports.handler = async (event, context, metrics) => {
       headers: {
         "content-type": "application/json",
       },
-      body: { error: err.message, content: JSON.stringify(err) },
+      body: JSON.stringify({ error: err.message, content: err }),
       // isBase64Encoded: true,
     }; 
   }
