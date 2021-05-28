@@ -7,7 +7,8 @@ module.exports = class BackgroundParser {
       const bg = Array.isArray(query.bg) ? query.bg[0] : query.bg;
       const pathname = Buffer.from(bg).toString("base64");
       const bgBaseURL = "https://bg.otfbm.io";
-      const res = await fetch(new URL(pathname, bgBaseURL));
+      // const res = await fetch(new URL(pathname, bgBaseURL));
+      const res = await fetch(bg);
 
       const contentLength = res.headers.get("content-length");
       if (contentLength > 1102000) {
