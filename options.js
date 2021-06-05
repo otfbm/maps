@@ -137,6 +137,9 @@ module.exports = class Options {
   }
 
   get fg() {
+    if (this.isGridUserColour)
+      return this.gridColour;
+
     return this.darkMode ? lightColour : darkColour;
   }
 
