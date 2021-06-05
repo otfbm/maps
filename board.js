@@ -3,7 +3,6 @@ const canvas = require("canvas");
 const { Image, createCanvas } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
-const gridLineColour = "#f4f6ff"; // Powdered Sugar
 const scaleMarkerColour = "#888888"; // Grey
 
 module.exports = class Board {
