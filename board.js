@@ -27,6 +27,8 @@ module.exports = class Board {
     this.zoom = options.zoom;
     this.padding = options.cellSizePx;
     this.gridOpacity = options.gridOpacity;
+    this.gridColour = options.gridColour;
+    this.isGridUserColour = options.isGridUserColour;
     this.background = options.background.image;
     this.backgroundOffsetX = options.background.offsetX * options.zoom;
     this.backgroundOffsetY = options.background.offsetY * options.zoom;
@@ -356,9 +358,10 @@ module.exports = class Board {
 
     ctx.save();
     ctx.beginPath();
-    ctx.strokeStyle = gridLineColour;
+    ctx.strokeStyle = this.gridColour;
     ctx.globalAlpha = this.gridOpacity;
-    ctx.globalCompositeOperation = "difference";
+    if (!this.isGridUserColour)
+      ctx.globalCompositeOperation = "difference";
 
     for (let i = this.gridsize; i < this.width - 1; i += this.gridsize) {
       ctx.moveTo(0.5 + i + this.padding, this.padding);

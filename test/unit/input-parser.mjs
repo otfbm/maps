@@ -351,5 +351,10 @@ tap.test("token parsing", async (t) => {
   await input.parse(options, "/@3z");
   t.same(options.zoom, 3, "zoom level should be 3");
 
+  input = new InputParser();
+  await input.parse(options, "/@gr");
+  t.same(options.isGridUserColour, true, "isGriduserColour should be true");
+  t.same(options.gridColour, "#e63c3c", "gridlines should be red");
+
   t.end();
 });

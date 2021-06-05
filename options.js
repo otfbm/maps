@@ -1,3 +1,5 @@
+const ColourParser = require("./parsers/colour-parser.js");
+
 const lightColour = "#f4f6ff"; // Powdered Sugar
 const darkColour = "#07031a"; // Midnight Blue
 
@@ -9,6 +11,8 @@ module.exports = class Options {
     this._cellSize = 40;
     this._darkMode = false;
     this._gridOpacity = 0.5;
+    this._gridColour = "#f4f6ff"; // Powdered Sugar
+    this._isGridUserColour = false;
     this._edgeOpacity = 0.6;
     this._background = { image: null, offsetX: 0, offsetY: 0, zoom: 1 };
     this._font = 'AzoSans';
@@ -32,7 +36,7 @@ module.exports = class Options {
 
     let parsed = this.parseZoom(str);
 
-    let matches = str.match(/[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
+    let matches = str.match(/(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
 
     if (!matches)
       return parsed;
@@ -63,6 +67,12 @@ module.exports = class Options {
 
         case 'f':
           this._font = 'FleischWurst';
+          break;
+
+        case 'g':
+          this._gridColour = ColourParser.parse(match.substring(1));
+          this._isGridUserColour = true;
+          this._gridOpacity = 100;
           break;
 
         case 'h':
@@ -149,6 +159,14 @@ module.exports = class Options {
 
   get gridOpacity() {
     return this._gridOpacity;
+  }
+
+  get gridColour() {
+    return this._gridColour;
+  }
+
+  get isGridUserColour() {
+    return this._isGridUserColour;
   }
 
   get edgeOpacity() {
