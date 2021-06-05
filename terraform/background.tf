@@ -47,6 +47,14 @@ resource "aws_s3_bucket" "backgrounds" {
   bucket = local.background_domain_name
   acl    = "public-read"
 
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
   policy = <<EOF
 {
     "Version": "2012-10-17",
