@@ -36,7 +36,7 @@ module.exports = class Options {
 
     let parsed = this.parseZoom(str);
 
-    let matches = str.match(/(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
+    let matches = str.match(/(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|H[0-9]*|C[0-9]{2,3}(\.[0-9])?|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
 
     if (!matches)
       return parsed;
@@ -51,9 +51,9 @@ module.exports = class Options {
           break;
 
         case 'c':
-          let size = parseInt(match.substring(1), 10);
+          let size = parseFloat(match.substring(1));
           if (size < 20) size = 20;
-          if (size > 100) size = 100;
+          if (size > 200) size = 200;
           this._cellSize = size;
           break;
 
