@@ -4,100 +4,101 @@ const lightColour = "#f4f6ff"; // Powdered Sugar
 const darkColour = "#07031a"; // Midnight Blue
 
 module.exports = class Options {
-
   constructor() {
     this._view = { width: 10, height: 10, panX: 0, panY: 0 };
     this._zoom = 1;
     this._cellSize = 40;
     this._darkMode = false;
     this._gridOpacity = 0.5;
-    this._gridColour = "#f4f6ff"; // Powdered Sugar
+    this._gridColour = lightColour; // Powdered Sugar
     this._isGridUserColour = false;
     this._edgeOpacity = 0.6;
     this._background = { image: null, offsetX: 0, offsetY: 0, zoom: 1 };
-    this._font = 'AzoSans';
+    this._font = "AzoSans";
+    this._backgroundColour = darkColour;
+    this._isBackgroundUserColour = false;
   }
 
   set view(value) {
     this._view = value;
 
     // ensure that width and pan don't exceed 100
-    if ((this._view.width + this._view.panX) > 100) {
+    if (this._view.width + this._view.panX > 100) {
       this._view.panX = 100 - this._view.width;
     }
-    if ((this._view.height + this._view.panY) > 100) {
+    if (this._view.height + this._view.panY > 100) {
       this._view.panY = 100 - this._view.height;
     }
   }
 
   parseOptions(str) {
-    if (str.charAt(0) !== '@')
-      return false;
+    if (str.charAt(0) !== "@") return false;
 
     let parsed = this.parseZoom(str);
 
-    let matches = str.match(/(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
+    let matches = str.match(
+      /(Q(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/gi
+    );
 
-    if (!matches)
-      return parsed;
+    if (!matches) return parsed;
 
     for (const match of matches) {
       switch (match.charAt(0)) {
-
-        case 'b':
+        case "b":
           const bgZoom = parseFloat(match.substring(1), 10);
-          if (!Number.isNaN(bgZoom))
-            this._background.zoom = bgZoom;
+          if (!Number.isNaN(bgZoom)) this._background.zoom = bgZoom;
           break;
 
-        case 'c':
+        case "c":
           let size = parseInt(match.substring(1), 10);
           if (size < 20) size = 20;
           if (size > 100) size = 100;
           this._cellSize = size;
           break;
 
-        case 'd':
+        case "d":
           this._darkMode = true;
           break;
 
-        case 'e':
+        case "e":
           this._edgeOpacity = 1;
           break;
 
-        case 'f':
-          this._font = 'FleischWurst';
+        case "f":
+          this._font = "FleischWurst";
           break;
 
-        case 'g':
+        case "g":
           this._gridColour = ColourParser.parse(match.substring(1));
           this._isGridUserColour = true;
           this._gridOpacity = 100;
           break;
 
-        case 'h':
+        case "h":
           if (match.length > 1) {
             const opacity = Number(match.substring(1), 10);
             this._gridOpacity = opacity <= 100 ? opacity / 100 : 1;
-          }
-          else
-            this._gridOpacity = 0.25;
+          } else this._gridOpacity = 0.25;
           break;
 
-        case 'n':
+        case "n":
           this._gridOpacity = 0;
           break;
 
-        case 'o':
-          const offset = match.substring(1).split(':');
+        case "o":
+          const offset = match.substring(1).split(":");
           this._background.offsetX = parseInt(offset[0]);
           this._background.offsetY = parseInt(offset[1]);
           break;
 
-        case 'z':
+        case "q":
+          this._backgroundColour = ColourParser.parse(match.substring(1));
+          this._isBackgroundUserColour = true;
+          break;
+
+        case "z":
           const zoom = parseFloat(match.substring(1), 10);
-          if (!Number.isNaN(zoom))
-            this._zoom = zoom;
+          if (!Number.isNaN(zoom)) this._zoom = zoom;
           break;
       }
     }
@@ -137,13 +138,14 @@ module.exports = class Options {
   }
 
   get fg() {
-    if (this.isGridUserColour)
-      return this.gridColour;
+    if (this.isGridUserColour) return this.gridColour;
 
     return this.darkMode ? lightColour : darkColour;
   }
 
   get bg() {
+    if (this.isBackgroundUserColour) return this.backgroundColour;
+
     return this.darkMode ? darkColour : lightColour;
   }
 
@@ -172,6 +174,14 @@ module.exports = class Options {
     return this._isGridUserColour;
   }
 
+  get backgroundColour() {
+    return this._backgroundColour;
+  }
+
+  get isBackgroundUserColour() {
+    return this._isBackgroundUserColour;
+  }
+
   get edgeOpacity() {
     return this._edgeOpacity;
   }
@@ -183,4 +193,4 @@ module.exports = class Options {
   get font() {
     return this._font;
   }
-}
+};
