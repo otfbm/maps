@@ -17,6 +17,7 @@ module.exports = class Options {
     this._font = "AzoSans";
     this._backgroundColour = darkColour;
     this._isBackgroundUserColour = false;
+    this._scale = "5ft";
   }
 
   set view(value) {
@@ -37,7 +38,7 @@ module.exports = class Options {
     let parsed = this.parseZoom(str);
 
     let matches = str.match(
-      /(Q(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/gi
+      /(Q(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+|S[0-9]{1,2}(ft|m)/gi
     );
 
     if (!matches) return parsed;
@@ -94,6 +95,10 @@ module.exports = class Options {
         case "q":
           this._backgroundColour = ColourParser.parse(match.substring(1));
           this._isBackgroundUserColour = true;
+          break;
+
+        case "s":
+          this._scale = match.substring(1);
           break;
 
         case "z":
@@ -192,5 +197,9 @@ module.exports = class Options {
 
   get font() {
     return this._font;
+  }
+
+  get scale() {
+    return this._scale;
   }
 };

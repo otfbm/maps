@@ -394,7 +394,7 @@ module.exports = class Board {
     this.ctx.fillStyle = this.options.fg;
     this.ctx.textAlign = "center";
     this.ctx.fillText(
-      "5ft",
+      this.options.scale,
       this.padding + this.width - this.gridsize / 2,
       this.padding + this.height + this.gridsize / 2,
       this.gridsize
