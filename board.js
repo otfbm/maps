@@ -6,10 +6,7 @@ const { Image, createCanvas } = canvas;
 const scaleMarkerColour = "#888888"; // Grey
 
 module.exports = class Board {
-  constructor({
-    ctx,
-    options
-  }) {
+  constructor({ ctx, options }) {
     this.state = [];
     this.lines = [];
     this.effects = [];
@@ -85,11 +82,16 @@ module.exports = class Board {
 
   drawBorder() {
     // undo padding and any pan before drawing the border
-    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
+    this.ctx.translate(
+      -this.padding + this.panX * this.gridsize,
+      -this.padding + this.panY * this.gridsize
+    );
 
     const textDarkModeAlpha = `rgba(244, 246, 255, ${this.edgeOpacity})`;
     const textLightModeAlpha = `rgba(7, 3, 26, ${this.edgeOpacity})`;
-    let bgAlpha = this.options.darkMode ? textLightModeAlpha : textDarkModeAlpha;
+    let bgAlpha = this.options.darkMode
+      ? textLightModeAlpha
+      : textDarkModeAlpha;
 
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
@@ -97,9 +99,13 @@ module.exports = class Board {
     const isEdgeOpaque = this.edgeOpacity == 1 || this.background === null;
 
     const atLeft = isEdgeOpaque || this.panX < 1;
-    const atRight = isEdgeOpaque || this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
+    const atRight =
+      isEdgeOpaque ||
+      this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
     const atTop = isEdgeOpaque || this.panY < 1;
-    const atBottom = isEdgeOpaque || this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
+    const atBottom =
+      isEdgeOpaque ||
+      this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
 
     // fill the edges
     this.ctx.lineCap = "square";
@@ -111,7 +117,7 @@ module.exports = class Board {
       this.ctx.lineTo(end.x, end.y);
       this.ctx.strokeStyle = colour;
       this.ctx.stroke();
-    }
+    };
 
     // TL -> BL
     fillEdge(
@@ -124,13 +130,19 @@ module.exports = class Board {
     if (atBottom) {
       fillEdge(
         { x: this.padding * 0.5, y: this.height + this.padding * 1.5 },
-        { x: this.width + this.padding * 1.5, y: this.height + this.padding * 1.5 },
+        {
+          x: this.width + this.padding * 1.5,
+          y: this.height + this.padding * 1.5,
+        },
         this.options.bg
       );
     } else {
       fillEdge(
         { x: this.padding * 1.5, y: this.height + this.padding * 1.5 },
-        { x: this.width + this.padding * 0.5, y: this.height + this.padding * 1.5 },
+        {
+          x: this.width + this.padding * 0.5,
+          y: this.height + this.padding * 1.5,
+        },
         bgAlpha
       );
     }
@@ -163,14 +175,12 @@ module.exports = class Board {
 
     const drawGridEdgeLine = (start, end, isSolid) => {
       this.ctx.beginPath();
-      if (isSolid)
-        this.ctx.setLineDash([]);
-      else
-        this.ctx.setLineDash([5 * this.zoom - 2, 5 * this.zoom + 2]);
+      if (isSolid) this.ctx.setLineDash([]);
+      else this.ctx.setLineDash([5 * this.zoom - 2, 5 * this.zoom + 2]);
       this.ctx.moveTo(start.x, start.y);
       this.ctx.lineTo(end.x, end.y);
       this.ctx.stroke();
-    }
+    };
 
     drawGridEdgeLine(
       { x: this.padding, y: this.padding },
@@ -202,14 +212,14 @@ module.exports = class Board {
 
       const drawDottedLine = (start, end) => {
         drawGridEdgeLine(start, end, false);
-      }
+      };
 
-      const leftoverHeight = imgheight % this.gridsize
+      const leftoverHeight = imgheight % this.gridsize;
       const height = imgheight - leftoverHeight;
-      const drawHeight = height - (this.panY * this.gridsize) + this.padding;
-      const leftoverWidth = imgwidth % this.gridsize
+      const drawHeight = height - this.panY * this.gridsize + this.padding;
+      const leftoverWidth = imgwidth % this.gridsize;
       const width = imgwidth - leftoverWidth;
-      const drawWidth = width - (this.panX * this.gridsize) + this.padding;
+      const drawWidth = width - this.panX * this.gridsize + this.padding;
       const startHeight = this.padding + this.height;
       const endHeight = this.padding * 2 + this.height;
       const startWidth = this.padding + this.width;
@@ -219,13 +229,13 @@ module.exports = class Board {
         if (!atBottom) {
           drawDottedLine(
             { x: this.padding, y: this.padding + this.height },
-            { x: this.padding, y: this.padding * 2 + this.height },
+            { x: this.padding, y: this.padding * 2 + this.height }
           );
         }
         if (!atTop) {
           drawDottedLine(
             { x: this.padding, y: 0 },
-            { x: this.padding, y: this.padding },
+            { x: this.padding, y: this.padding }
           );
         }
       }
@@ -240,13 +250,14 @@ module.exports = class Board {
         if (!atLeft) {
           drawDottedLine(
             { x: 0, y: this.padding },
-            { x: this.padding, y: this.padding },
+            { x: this.padding, y: this.padding }
           );
         }
       }
 
       if (!atLeft) {
-        if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+        if (drawHeight < this.padding * 2 + this.height) {
+          // dont draw right on the edge of the canvas, it looks weird
           drawDottedLine(
             { x: 0, y: drawHeight },
             { x: this.padding, y: drawHeight }
@@ -255,27 +266,31 @@ module.exports = class Board {
       }
 
       if (!atBottom) {
-        if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
-          if (drawWidth < this.width) { // dont draw over the "5ft" key
+        if (drawWidth < this.padding * 2 + this.width) {
+          // dont draw right on the edge of the canvas, it looks weird
+          if (drawWidth < this.width) {
+            // dont draw over the "5ft" key
             drawDottedLine(
               { x: drawWidth, y: startHeight },
-              { x: drawWidth, y: endHeight },
+              { x: drawWidth, y: endHeight }
             );
           }
         }
       }
 
       if (!atTop) {
-        if (drawWidth < this.padding * 2 + this.width) { // dont draw right on the edge of the canvas, it looks weird
+        if (drawWidth < this.padding * 2 + this.width) {
+          // dont draw right on the edge of the canvas, it looks weird
           drawDottedLine(
             { x: drawWidth, y: 0 },
-            { x: drawWidth, y: this.padding },
+            { x: drawWidth, y: this.padding }
           );
         }
       }
 
       if (!atRight) {
-        if (drawHeight < this.padding * 2 + this.height) { // dont draw right on the edge of the canvas, it looks weird
+        if (drawHeight < this.padding * 2 + this.height) {
+          // dont draw right on the edge of the canvas, it looks weird
           drawDottedLine(
             { x: startWidth, y: drawHeight },
             { x: endWidth, y: drawHeight }
@@ -293,7 +308,7 @@ module.exports = class Board {
     // Drawing x axis alphabetic labels
     let num = this.panX;
     for (let i = this.gridsize; i <= this.width; i += this.gridsize) {
-      let character = String.fromCharCode(num % 26 + 65);
+      let character = String.fromCharCode((num % 26) + 65);
       if (num >= 26)
         character = String.fromCharCode(Math.floor(num / 26) + 64) + character;
 
@@ -323,44 +338,67 @@ module.exports = class Board {
     this.ctx.setLineDash([]);
     this.ctx.lineWidth = 2;
     this.ctx.lineCap = "square";
-    this.ctx.strokeStyle = atBottom ? scaleMarkerColour : this.options.fg;
+    this.ctx.strokeStyle = this.options.fg;
 
-    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.15));
-    this.ctx.lineTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.moveTo(
+      this.padding + this.width - this.gridsize,
+      this.padding + this.height + this.gridsize * 0.15
+    );
+    this.ctx.lineTo(
+      this.padding + this.width - this.gridsize,
+      this.padding + this.height + this.gridsize * 0.65
+    );
 
-    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.5));
-    this.ctx.lineTo(this.padding + this.width - this.gridsize + (this.gridsize * 0.1), this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.moveTo(
+      this.padding + this.width - this.gridsize,
+      this.padding + this.height + this.gridsize * 0.5
+    );
+    this.ctx.lineTo(
+      this.padding + this.width - this.gridsize + this.gridsize * 0.1,
+      this.padding + this.height + this.gridsize * 0.5
+    );
 
-    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.15));
-    this.ctx.lineTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.moveTo(
+      this.padding + this.width,
+      this.padding + this.height + this.gridsize * 0.15
+    );
+    this.ctx.lineTo(
+      this.padding + this.width,
+      this.padding + this.height + this.gridsize * 0.65
+    );
 
-    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.5));
-    this.ctx.lineTo(this.padding + this.width - (this.gridsize * 0.1), this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.moveTo(
+      this.padding + this.width,
+      this.padding + this.height + this.gridsize * 0.5
+    );
+    this.ctx.lineTo(
+      this.padding + this.width - this.gridsize * 0.1,
+      this.padding + this.height + this.gridsize * 0.5
+    );
 
     this.ctx.stroke();
 
     // Scale text
     this.ctx.beginPath();
-    this.ctx.fillStyle = atBottom ? scaleMarkerColour : this.options.fg;
-    this.ctx.textAlign = 'center';
+    this.ctx.fillStyle = this.options.fg;
+    console.log(this.ctx.fillStyle);
+    this.ctx.textAlign = "center";
     this.ctx.fillText(
       "5ft",
-      this.padding + this.width - (this.gridsize / 2),
-      this.padding + this.height + (this.gridsize / 2),
-      this.gridsize,
+      this.padding + this.width - this.gridsize / 2,
+      this.padding + this.height + this.gridsize / 2,
+      this.gridsize
     );
   }
 
   drawGridLines(ctx = this.ctx) {
-    if (this.gridOpacity === 0)
-      return;
+    if (this.gridOpacity === 0) return;
 
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = this.gridColour;
     ctx.globalAlpha = this.gridOpacity;
-    if (!this.isGridUserColour)
-      ctx.globalCompositeOperation = "difference";
+    if (!this.isGridUserColour) ctx.globalCompositeOperation = "difference";
 
     for (let i = this.gridsize; i < this.width - 1; i += this.gridsize) {
       ctx.moveTo(0.5 + i + this.padding, this.padding);
@@ -395,8 +433,10 @@ module.exports = class Board {
         const offsetY = this.backgroundOffsetY / this.zoom;
         const scaledOffsetX = this.backgroundOffsetX;
         const scaledOffsetY = this.backgroundOffsetY;
-        const offsetTrimX = (img.width * this.backgroundZoom - offsetX) % gridsize;
-        const offsetTrimY = (img.height * this.backgroundZoom - offsetY) % gridsize;
+        const offsetTrimX =
+          (img.width * this.backgroundZoom - offsetX) % gridsize;
+        const offsetTrimY =
+          (img.height * this.backgroundZoom - offsetY) % gridsize;
         const scaledOffsetTrimX = offsetTrimX * this.zoom;
         const scaledOffsetTrimY = offsetTrimY * this.zoom;
 
@@ -411,12 +451,16 @@ module.exports = class Board {
           img.height - offsetY - offsetTrimY,
           this.padding - this.panX * this.gridsize,
           this.padding - this.panY * this.gridsize,
-          (img.width * this.backgroundZoom * this.zoom) - scaledOffsetX - scaledOffsetTrimX,
-          (img.height * this.backgroundZoom * this.zoom) - scaledOffsetY - scaledOffsetTrimY,
+          img.width * this.backgroundZoom * this.zoom -
+            scaledOffsetX -
+            scaledOffsetTrimX,
+          img.height * this.backgroundZoom * this.zoom -
+            scaledOffsetY -
+            scaledOffsetTrimY
         );
       };
       img.onerror = (err) => {
-        throw new Error('Failed to load background image');
+        throw new Error("Failed to load background image");
       };
       img.src = this.background;
     }
@@ -424,7 +468,10 @@ module.exports = class Board {
     this.drawGridLines();
 
     // move ctx to account for padding and pan
-    this.ctx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
+    this.ctx.translate(
+      this.padding - this.panX * this.gridsize,
+      this.padding - this.panY * this.gridsize
+    );
 
     Line.fg = this.options.fg;
     Line.bg = this.options.bg;
@@ -435,7 +482,7 @@ module.exports = class Board {
 
     for (const { x, y, item } of this) {
       if (item) {
-        if (item.type !== 'token') {
+        if (item.type !== "token") {
           item.draw(this.ctx, x, y, this.gridsize, this.zoom);
         }
       }
@@ -453,31 +500,46 @@ module.exports = class Board {
   }
 
   drawFog() {
-    if (this.fog.length == 0)
-      return;
+    if (this.fog.length == 0) return;
 
     // background (fog zone with grid)
-    let bgCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
+    let bgCanv = createCanvas(
+      this.options.canvasWidth,
+      this.options.canvasHeight
+    );
     let bgCtx = bgCanv.getContext("2d");
     bgCtx.beginPath();
     bgCtx.fillStyle = this.options.bg;
-    bgCtx.fillRect(0, 0, this.width * this.gridsize, this.height * this.gridsize);
+    bgCtx.fillRect(
+      0,
+      0,
+      this.width * this.gridsize,
+      this.height * this.gridsize
+    );
     this.drawGridLines(bgCtx);
 
     // fog mask
-    let fogCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
+    let fogCanv = createCanvas(
+      this.options.canvasWidth,
+      this.options.canvasHeight
+    );
     let fogCtx = fogCanv.getContext("2d");
     // move fog ctx to account for padding and pan
-    fogCtx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
-    for (let f of this.fog)
-      f.draw(fogCtx, this.gridsize);
+    fogCtx.translate(
+      this.padding - this.panX * this.gridsize,
+      this.padding - this.panY * this.gridsize
+    );
+    for (let f of this.fog) f.draw(fogCtx, this.gridsize);
 
-    this.ctx.save();   
-    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
+    this.ctx.save();
+    this.ctx.translate(
+      -this.padding + this.panX * this.gridsize,
+      -this.padding + this.panY * this.gridsize
+    );
     this.ctx.globalCompositeOperation = "destination-in";
-    this.ctx.drawImage(fogCanv, 0, 0);  
+    this.ctx.drawImage(fogCanv, 0, 0);
     this.ctx.globalCompositeOperation = "destination-over";
     this.ctx.drawImage(bgCanv, 0, 0);
     this.ctx.restore();
   }
-}
+};
