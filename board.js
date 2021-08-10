@@ -2,8 +2,19 @@ const Line = require("./line.js");
 const canvas = require("canvas");
 const { Image, createCanvas } = canvas;
 
-/* Constant definitions for fonts, colors, etc. */
-const scaleMarkerColour = "#888888"; // Grey
+function hexToRGB(hex, alpha) {
+  let code = hex;
+  if (hex.length === 3) {
+    code = hex[0].repeat(2);
+    code += hex[1].repeat(2);
+    code += hex[2].repeat(2);
+  }
+  const r = parseInt(code.slice(1, 3), 16);
+  const g = parseInt(code.slice(3, 5), 16);
+  const b = parseInt(code.slice(5, 7), 16);
+
+  return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+}
 
 module.exports = class Board {
   constructor({ ctx, options }) {
@@ -123,7 +134,7 @@ module.exports = class Board {
     fillEdge(
       { x: this.padding * 0.5, y: 0 },
       { x: this.padding * 0.5, y: this.height + this.padding * 2 },
-      atLeft ? this.options.bg : bgAlpha
+      atLeft ? this.options.bg : hexToRGB(this.options.bg, this.edgeOpacity)
     );
 
     // BL -> BR
@@ -143,7 +154,7 @@ module.exports = class Board {
           x: this.width + this.padding * 0.5,
           y: this.height + this.padding * 1.5,
         },
-        bgAlpha
+        hexToRGB(this.options.bg, this.edgeOpacity)
       );
     }
 
@@ -151,7 +162,7 @@ module.exports = class Board {
     fillEdge(
       { x: this.width + this.padding * 1.5, y: 0 },
       { x: this.width + this.padding * 1.5, y: this.height + this.padding * 2 },
-      atRight ? this.options.bg : bgAlpha
+      atRight ? this.options.bg : hexToRGB(this.options.bg, this.edgeOpacity)
     );
 
     // TL -> TR
@@ -165,7 +176,7 @@ module.exports = class Board {
       fillEdge(
         { x: this.padding * 1.5, y: this.padding * 0.5 },
         { x: this.width + this.padding * 0.5, y: this.padding * 0.5 },
-        bgAlpha
+        hexToRGB(this.options.bg, this.edgeOpacity)
       );
     }
 
@@ -381,7 +392,6 @@ module.exports = class Board {
     // Scale text
     this.ctx.beginPath();
     this.ctx.fillStyle = this.options.fg;
-    console.log(this.ctx.fillStyle);
     this.ctx.textAlign = "center";
     this.ctx.fillText(
       "5ft",
