@@ -53,7 +53,7 @@ module.exports = class Options {
         case "c":
           let size = parseInt(match.substring(1), 10);
           if (size < 20) size = 20;
-          if (size > 100) size = 100;
+          if (size > 200) size = 200;
           this._cellSize = size;
           break;
 
