@@ -2,7 +2,7 @@ import tap from "tap";
 import installImageSnapshot from "tap-image-snapshot";
 import drawCanvas from "../../draw-canvas.js";
 
-installImageSnapshot(tap)
+installImageSnapshot(tap);
 
 tap.test("tokens", async (t) => {
   const tokens = [
@@ -30,7 +30,15 @@ tap.test("tokens", async (t) => {
 });
 
 tap.test("overlays", async (t) => {
-  const overlays = ["A1$tr", "B1$pr", "C1$ps", "D1$ss", "E1$fi", "F1$po", "G1$pc"];
+  const overlays = [
+    "A1$tr",
+    "B1$pr",
+    "C1$ps",
+    "D1$ss",
+    "E1$fi",
+    "F1$po",
+    "G1$pc",
+  ];
   const canvas = await drawCanvas(`/${overlays.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
@@ -48,7 +56,14 @@ tap.test("overlays: rotations", async (t) => {
 });
 
 tap.test("overlays: colors", async (t) => {
-  const overlays = ["A1b$tr", "B1r$pr", "C1y$ps", "D1~3366ff$ss", "F1o$po", "G1bn$pc"];
+  const overlays = [
+    "A1b$tr",
+    "B1r$pr",
+    "C1y$ps",
+    "D1~3366ff$ss",
+    "F1o$po",
+    "G1bn$pc",
+  ];
   const canvas = await drawCanvas(`/${overlays.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
@@ -122,7 +137,11 @@ tap.test("complex: multiple features 1", async (t) => {
   const bg =
     "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
   const settings = "@2dn";
-  const canvas = await drawCanvas(`/${tokens.join("/")}/${settings}`, { bg }, false);
+  const canvas = await drawCanvas(
+    `/${tokens.join("/")}/${settings}`,
+    { bg },
+    false
+  );
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
 
@@ -150,30 +169,43 @@ tap.test("complex: multiple features 2", async (t) => {
   const bg =
     "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
   const settings = "@3h";
-  const canvas = await drawCanvas(`/${tokens.join("/")}/${settings}`, { bg }, false);
+  const canvas = await drawCanvas(
+    `/${tokens.join("/")}/${settings}`,
+    { bg },
+    false
+  );
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
 
-tap.test("dotted lines: top right -> right & bottom left -> left", async (t) => {
-  const bg =
-    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
-  const canvas = await drawCanvas(`/`, { bg }, false);
-  t.matchImageSnapshot(canvas.toBuffer("image/png"));
-});
-
-tap.test("dotted lines: top right -> right & bottom left -> left", async (t) => {
-  const bg =
-    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+tap.test(
+  "dotted lines: top right -> right & bottom left -> left",
+  async (t) => {
+    const bg =
+      "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
     const canvas = await drawCanvas(`/`, { bg }, false);
-  t.matchImageSnapshot(canvas.toBuffer("image/png"));
-});
+    t.matchImageSnapshot(canvas.toBuffer("image/png"));
+  }
+);
 
-tap.test("dotted lines: top right -> up (pan) & bottom left -> left (pan)", async (t) => {
-  const bg =
-    "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
-  const canvas = await drawCanvas(`/o8:10x10`, { bg }, false);
-  t.matchImageSnapshot(canvas.toBuffer("image/png"));
-});
+tap.test(
+  "dotted lines: top right -> right & bottom left -> left",
+  async (t) => {
+    const bg =
+      "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+    const canvas = await drawCanvas(`/`, { bg }, false);
+    t.matchImageSnapshot(canvas.toBuffer("image/png"));
+  }
+);
+
+tap.test(
+  "dotted lines: top right -> up (pan) & bottom left -> left (pan)",
+  async (t) => {
+    const bg =
+      "https://cdn.discordapp.com/attachments/687568111498821642/714239512741412974/battlemap-3.png";
+    const canvas = await drawCanvas(`/o8:10x10`, { bg }, false);
+    t.matchImageSnapshot(canvas.toBuffer("image/png"));
+  }
+);
 
 tap.test("dotted lines: pan x only", async (t) => {
   const bg =
@@ -242,45 +274,119 @@ tap.test("edge cases: effects", async (t) => {
 
 tap.test("token image backgrounds", async (t) => {
   const tokens = [
-    'a2-skelly~n242n',
-    'a1b-broken~asd789ad',
-    'a3y-skelly~n242n',
-    'b1-skelly~n242n',
-    'a4lw-skelly~n242n',
-    'c1ho-skelly~n242n',
-    'c4gr-skelly~n242n',
-    'f1tb-skelly~n242n',
+    "a2-skelly~n242n",
+    "a1b-broken~asd789ad",
+    "a3y-skelly~n242n",
+    "b1-skelly~n242n",
+    "a4lw-skelly~n242n",
+    "c1ho-skelly~n242n",
+    "c4gr-skelly~n242n",
+    "f1tb-skelly~n242n",
   ];
   const canvas = await drawCanvas(`/${tokens.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
 
 tap.test("FoW - basic - light mode", async (t) => {
-  const bg = 'https://cdn.discordapp.com/attachments/712795723623694376/768158019535896616/Preview-Resized250percent.jpg';
+  const bg =
+    "https://cdn.discordapp.com/attachments/712795723623694376/768158019535896616/Preview-Resized250percent.jpg";
   const segments = [
-    'k9:v16',
-    '@c64',
-    '*c10rl10',
-    '*l100yj17t14',
-    '*fl10r15',
-    '*fq8t9',
-    '*fs10u13',
+    "k9:v16",
+    "@c64",
+    "*c10rl10",
+    "*l100yj17t14",
+    "*fl10r15",
+    "*fq8t9",
+    "*fs10u13",
   ];
   const canvas = await drawCanvas(`/${segments.join("/")}`, { bg }, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
 
 tap.test("FoW - basic - dark mode", async (t) => {
-  const bg = 'https://cdn.discordapp.com/attachments/712795723623694376/768158019535896616/Preview-Resized250percent.jpg';
+  const bg =
+    "https://cdn.discordapp.com/attachments/712795723623694376/768158019535896616/Preview-Resized250percent.jpg";
   const segments = [
-    'k9:v16',
-    '@c64d',
-    '*c10rl10',
-    '*l100yj17t14',
-    '*fl10r15',
-    '*fq8t9',
-    '*fs10u13',
+    "k9:v16",
+    "@c64d",
+    "*c10rl10",
+    "*l100yj17t14",
+    "*fl10r15",
+    "*fq8t9",
+    "*fs10u13",
   ];
   const canvas = await drawCanvas(`/${segments.join("/")}`, { bg }, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background color: short code", async (t) => {
+  const canvas = await drawCanvas(`/@qr`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background color: 3 char hex", async (t) => {
+  const canvas = await drawCanvas(`/@q~aaa`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background color: 6 char hex", async (t) => {
+  const canvas = await drawCanvas(`/@q~de1f6b`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("grid color: short code", async (t) => {
+  const canvas = await drawCanvas(`/@gr`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("grid color: 3 char hex", async (t) => {
+  const canvas = await drawCanvas(`/@g~aaa`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("grid color: 6 char hex", async (t) => {
+  const canvas = await drawCanvas(`/@g~de1f6b`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background and grid colors: short code", async (t) => {
+  const canvas = await drawCanvas(`/@gwqb`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background and grid colors: 3 char hex", async (t) => {
+  const canvas = await drawCanvas(`/@q~000g~fff`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background and grid colors: 6 char hex", async (t) => {
+  const canvas = await drawCanvas(`/@q~999999g~ff0000`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("background and grid colors with transparent borders", async (t) => {
+  const bg = "https://i.redd.it/14vq912dk3011.jpg";
+  const canvas = await drawCanvas(`/10x10/@qrgw`, { bg }, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("Grid size over 100", async (t) => {
+  const bg = "https://i.redd.it/14vq912dk3011.jpg";
+  const canvas = await drawCanvas(`/2x2/@c150`, { bg }, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("Setting the scale key: 5 meters", async (t) => {
+  const canvas = await drawCanvas(`/@s5m`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("Setting the scale key: 10 meters", async (t) => {
+  const canvas = await drawCanvas(`/@s10m`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("Setting the scale key: 10 feet", async (t) => {
+  const canvas = await drawCanvas(`/@s10ft`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
