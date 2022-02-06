@@ -308,6 +308,22 @@ tap.test("token parsing", async (t) => {
   );
 
   input = new InputParser();
+  await input.parse(options, "/*fa1b1");
+  t.same(
+    options.fowOpacity,
+    1,
+    "fow should be opaque"
+  );
+
+  input = new InputParser();
+  await input.parse(options, "/@w80/*fa1b1");
+  t.same(
+    options.fowOpacity,
+    0.8,
+    "fow should be 80% transparent"
+  );
+
+  input = new InputParser();
   await input.parse(options, "/@n");
   t.same(options.gridOpacity, 0.0, "grid should be invisible");
 
