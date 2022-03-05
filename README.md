@@ -1,7 +1,7 @@
 # On The Fly Battle Maps
 
 * URL: http://otfbm.com
-* JOIN OUR DISCORD: https://discord.gg/PVCtMqN
+* JOIN OUR DISCORD: https://discord.gg/fKb6gdxTTR
 * How to use OTFBM.  Docs URL: https://docs.otfbm.com
 * Avrae aliases: https://docs.otfbm.com/#/aliases
 
