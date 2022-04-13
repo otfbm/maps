@@ -25,6 +25,7 @@ module.exports = class Board {
     this.gridsize = options.cellSizePx;
     this.zoom = options.zoom;
     this.padding = options.cellSizePx;
+    this.fowOpacity = options.fowOpacity
     this.gridOpacity = options.gridOpacity;
     this.gridColour = options.gridColour;
     this.isGridUserColour = options.isGridUserColour;
@@ -402,6 +403,8 @@ module.exports = class Board {
 
         this.imgwidth = img.width;
         this.imgheight = img.height;
+        this.dWidth =  (img.width * this.backgroundZoom * this.zoom) - scaledOffsetX - scaledOffsetTrimX
+        this.dHeight = (img.height * this.backgroundZoom * this.zoom) - scaledOffsetY - scaledOffsetTrimY
 
         this.ctx.drawImage(
           img,
@@ -411,8 +414,8 @@ module.exports = class Board {
           img.height - offsetY - offsetTrimY,
           this.padding - this.panX * this.gridsize,
           this.padding - this.panY * this.gridsize,
-          (img.width * this.backgroundZoom * this.zoom) - scaledOffsetX - scaledOffsetTrimX,
-          (img.height * this.backgroundZoom * this.zoom) - scaledOffsetY - scaledOffsetTrimY,
+          this.dWidth,
+          this.dHeight,
         );
       };
       img.onerror = (err) => {
@@ -456,28 +459,20 @@ module.exports = class Board {
     if (this.fog.length == 0)
       return;
 
-    // background (fog zone with grid)
-    let bgCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
-    let bgCtx = bgCanv.getContext("2d");
-    bgCtx.beginPath();
-    bgCtx.fillStyle = this.options.bg;
-    bgCtx.fillRect(0, 0, this.width * this.gridsize, this.height * this.gridsize);
-    this.drawGridLines(bgCtx);
-
     // fog mask
-    let fogCanv = createCanvas(this.options.canvasWidth, this.options.canvasHeight);
+    // Extend fog mask over entire image to allow for panning
+    let fogCanv = createCanvas(this.dWidth, this.dHeight);
     let fogCtx = fogCanv.getContext("2d");
     // move fog ctx to account for padding and pan
-    fogCtx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
+    fogCtx.globalAlpha = this.fowOpacity;
+    fogCtx.fillStyle = this.options.bg
+    fogCtx.fillRect(0, 0, fogCanv.width, fogCanv.height);
+    fogCtx.save()
     for (let f of this.fog)
       f.draw(fogCtx, this.gridsize);
-
-    this.ctx.save();   
-    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
-    this.ctx.globalCompositeOperation = "destination-in";
+    fogCtx.translate(this.padding - this.panX * this.gridsize, this.padding - this.panY * this.gridsize);
+    fogCtx.save()
     this.ctx.drawImage(fogCanv, 0, 0);  
-    this.ctx.globalCompositeOperation = "destination-over";
-    this.ctx.drawImage(bgCanv, 0, 0);
     this.ctx.restore();
   }
 }

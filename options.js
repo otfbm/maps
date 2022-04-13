@@ -10,6 +10,7 @@ module.exports = class Options {
     this._zoom = 1;
     this._cellSize = 40;
     this._darkMode = false;
+    this._fowOpacity = 1;
     this._gridOpacity = 0.5;
     this._gridColour = "#f4f6ff"; // Powdered Sugar
     this._isGridUserColour = false;
@@ -36,7 +37,7 @@ module.exports = class Options {
 
     let parsed = this.parseZoom(str);
 
-    let matches = str.match(/(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CH][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
+    let matches = str.match(/(G(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))|[DEFN]|[CHW][0-9]*|[BZ][0-9\.]*|[O][0-9]+:[0-9]+/ig);
 
     if (!matches)
       return parsed;
@@ -82,6 +83,15 @@ module.exports = class Options {
           }
           else
             this._gridOpacity = 0.25;
+          break;
+
+        case 'w':
+          if (match.length > 1) {
+            const opacity = Number(match.substring(1), 10);
+            this._fowOpacity = opacity <= 100 ? opacity / 100 : 1;
+          }
+          else
+            this._fowOpacity = 1;
           break;
 
         case 'n':
@@ -158,6 +168,10 @@ module.exports = class Options {
 
   get darkMode() {
     return this._darkMode;
+  }
+
+  get fowOpacity() {
+    return this._fowOpacity;
   }
 
   get gridOpacity() {

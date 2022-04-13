@@ -169,6 +169,10 @@ module.exports = async function main(pathname, query, metrics = false) {
               Value: options.font,
             },
             {
+              Name: "FowOpacity",
+              Value: String(options.fowOpacity),
+            },
+            {
               Name: "GridOpacity",
               Value: String(options.gridOpacity),
             },
