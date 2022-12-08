@@ -43,13 +43,14 @@ module.exports = class InputParser {
       }
     }
 
+    
     let parts = [];
     // trim off leading /
     if (pathname[0] === "/") parts = pathname.substr(1);
     // trim of trailing /
     if (pathname[pathname.length - 1] === "/")
       pathname.substr(0, pathname.length - 1);
-    parts = pathname.split("/");
+    parts = decodeURIComponent(pathname).split("/");
 
     for (let part of parts) {
       part = part.trim();
