@@ -10,12 +10,12 @@ module.exports = class ExplosionOverlay {
   }
 
   render(cell) {
-    const width = cell.overlay.width;
-    const height = cell.overlay.height;
+    const { width, height, color } = cell.overlay;
 
     const svg = template({
       height,
       width,
+      color,
     });
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
   }
