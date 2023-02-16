@@ -34,7 +34,7 @@ def lambda_handler(event, context):
 
     response = {}
     response['statusCode'] = 301
-    response['headers'] = {'Location': f'https://{s3Url}/{imgUrlEnc}'}
+    response['headers'] = {'Location': f'https://{s3Url}/{imgUrlEnc}', 'Access-Control-Allow-Origin': '*'}
     data = {}
     response['body'] = json.dumps(data)
     return response
