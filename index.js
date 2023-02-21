@@ -1,7 +1,7 @@
-const drawCanvas = require("./draw-canvas.js");
-const drawError = require("./draw-error.js");
+import drawCanvas from "./draw-canvas.js";
+import drawError from "./draw-error.js";
 
-exports.handler = async (event, context, metrics) => {
+export const handler = async (event, context, metrics) => {
   let stripped;
   try {
     const query = (event && event.multiValueQueryStringParameters) || {};
