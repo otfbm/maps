@@ -1,4 +1,4 @@
-module.exports = class FogEffect {
+export default class FogEffect {
   constructor({ startPt, endPt }) {
     this.startPt = startPt;
     this.endPt = endPt;
@@ -14,4 +14,4 @@ module.exports = class FogEffect {
     ctx.clearRect(x1, y1, width, height)
     ctx.save()
   }
-}
+};

@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class NetOverlay {
+export default class NetOverlay {
   constructor(options) {
     this.options = options;
   }

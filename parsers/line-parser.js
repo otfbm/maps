@@ -1,7 +1,7 @@
-const CoordParser = require("./coord-parser.js");
-const ColourParser = require("./colour-parser.js");
+import CoordParser from "./coord-parser.js";
+import ColourParser from "./colour-parser.js";
 
-module.exports = class LineParser {
+export default class LineParser {
   parse(str) {
     let trimmed = str;
     if (trimmed.charAt(0) !== '_')

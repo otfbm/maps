@@ -1,11 +1,11 @@
-const Line = require("./line.js");
-const canvas = require("canvas");
+import Line from "./line.js";
+import canvas from "canvas";
 const { Image, createCanvas } = canvas;
 
 /* Constant definitions for fonts, colors, etc. */
 const scaleMarkerColour = "#888888"; // Grey
 
-module.exports = class Board {
+export default class Board {
   constructor({
     ctx,
     options

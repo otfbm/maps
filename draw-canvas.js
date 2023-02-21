@@ -1,13 +1,13 @@
-const { join } = require("path");
-const fs = require("fs").promises;
-const fetch = require("node-fetch");
-const InputParser = require("./input-parser.js");
-const Board = require("./board.js");
-const Options = require("./options.js");
-const Renderer = require("./renderer/index.js");
-const Overlay = require("./overlay.js");
-const Grid = require("./grid.js");
-const AWS = require("aws-sdk");
+import { join } from "path";
+import { promises as fs } from "fs";
+import fetch from "node-fetch";
+import InputParser from "./input-parser.js";
+import Board from "./board.js";
+import Options from "./options.js";
+import Renderer from "./renderer/index.js";
+import Overlay from "./overlay.js";
+import Grid from "./grid.js";
+import AWS from "aws-sdk";
 
 AWS.config.update({ region: "us-west-2" });
 const cw = new AWS.CloudWatch({ apiVersion: "2010-08-01" });
@@ -117,7 +117,7 @@ const getBracket = (val, brackets) => {
   }
 }
 
-module.exports = async function main(pathname, query, metrics = true) {
+export default async function main(pathname, query, metrics = true) {
   const options = new Options();
   const input = new InputParser();
   await input.parse(options, pathname, query);
@@ -337,4 +337,4 @@ module.exports = async function main(pathname, query, metrics = true) {
   board.drawBorder();
 
   return renderer.canv;
-};
+}
