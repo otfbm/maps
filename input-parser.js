@@ -1,15 +1,15 @@
-const ViewParser = require("./parsers/view-parser.js");
-const TokenParser = require("./parsers/token.js");
-const IconParser = require("./parsers/icon.js");
-const OverlayParser = require("./parsers/overlay.js");
-const BackgroundParser = require("./parsers/background.js");
-const LineParser = require("./parsers/line-parser.js");
-const Icon = require("./icon.js");
-const EffectParser = require("./parsers/effect-parser.js");
-const FogParser = require("./parsers/fog-parser.js");
-const ConfigParser = require('./parsers/config.js');
+import ViewParser from "./parsers/view-parser.js";
+import TokenParser from "./parsers/token.js";
+import IconParser from "./parsers/icon.js";
+import OverlayParser from "./parsers/overlay.js";
+import BackgroundParser from "./parsers/background.js";
+import LineParser from "./parsers/line-parser.js";
+import Icon from "./icon.js";
+import EffectParser from "./parsers/effect-parser.js";
+import FogParser from "./parsers/fog-parser.js";
+import ConfigParser from './parsers/config.js';
 
-module.exports = class InputParser {
+export default class InputParser {
   constructor() {
     this.lines = [];
     this.tokens = [];
@@ -154,4 +154,4 @@ module.exports = class InputParser {
       options.parseOptions(c.options);
     }
   }
-};
+}

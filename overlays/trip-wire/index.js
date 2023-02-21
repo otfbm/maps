@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class TripWireOverlay {
+export default class TripWireOverlay {
   constructor(options) {
     this.options = options;
   }

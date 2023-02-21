@@ -1,5 +1,5 @@
-const fastify = require('fastify');
-const func = require('./index').handler;
+import fastify from 'fastify';
+import { handler as func } from './index';
 
 const normalizeQueryParams = (query) => {
     let q = {};
@@ -32,7 +32,7 @@ const createServer = ({ logger = true } = {}) => {
     return server;
 }
 
-module.exports = createServer;
+export default createServer;
 
 if (!module.parent) {
     const server = createServer();

@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class PuddleOverlay {
+export default class PuddleOverlay {
   constructor(options) {
     this.options = options;
   }

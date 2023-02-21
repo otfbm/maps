@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class StoneThroneOverlay {
+export default class StoneThroneOverlay {
   constructor(options) {
     this.options = options;
   }

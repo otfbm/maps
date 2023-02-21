@@ -1,4 +1,4 @@
-module.exports = class Line {
+export default class Line {
   static fg;
   static bg;
 
@@ -104,4 +104,4 @@ module.exports = class Line {
       y: (1 - t) * a.y + t * b.y
     }
   }
-}
+};

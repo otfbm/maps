@@ -1,7 +1,7 @@
-const multiTemplate = require("./multi-template.js");
-const template = require("./template.js");
+import multiTemplate from "./multi-template.js";
+import template from "./template.js";
 
-module.exports = class TokenOverlay {
+export default class TokenOverlay {
   constructor(options) {
     this.options = options;
   }

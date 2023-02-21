@@ -1,6 +1,6 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-module.exports = class BackgroundParser {
+export default class BackgroundParser {
   async parse(query) {
     let backgroundImage = null;
     if (query.bg) {
@@ -26,4 +26,4 @@ module.exports = class BackgroundParser {
     }
     return backgroundImage;
   }
-};
+}

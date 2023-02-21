@@ -1,9 +1,9 @@
-const ColourParser = require("./parsers/colour-parser.js");
+import ColourParser from "./parsers/colour-parser.js";
 
 const lightColour = "#f4f6ff"; // Powdered Sugar
 const darkColour = "#07031a"; // Midnight Blue
 
-module.exports = class Options {
+export default class Options {
 
   constructor() {
     this._view = { width: 10, height: 10, panX: 0, panY: 0 };

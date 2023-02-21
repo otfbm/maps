@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit --no-cov --timeout 30000",
