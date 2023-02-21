@@ -90,7 +90,7 @@ const fetchTokenImageAsBase64 = async (code) => {
   }
 
   if (!fallbackTokenImage) {
-    const buff = await fs.readFile(join(__dirname, "missing-token.jpg"));
+    const buff = await fs.readFile(new URL('./missing-token.jpg', import.meta.url));
     fallbackTokenImage = buff.toString("base64");
   }
   return `data:image/jpeg;base64,${fallbackTokenImage}`;
