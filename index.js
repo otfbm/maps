@@ -5,7 +5,7 @@ export const handler = async (event, context, metrics) => {
   let stripped;
   try {
     const query = (event && event.multiValueQueryStringParameters) || {};
-    const path = event.rawPath || event.path;
+    const path = (event.rawPath || event.path).replace('/default/otfbm', '');
     console.log(query, path)
     const canvas = await drawCanvas(path, query, metrics);
     console.log(canvas)
