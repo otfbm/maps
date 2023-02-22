@@ -97,9 +97,10 @@ const fetchTokenImageAsBase64 = async (code) => {
 };
 
 const getBracket = (val, brackets) => {
+  console.log(brackets)
   // Given list of brackets of form "<x", "y-z", ">s"
   // return first bracket in list which returns true for val
-  for (bracket of brackets) {
+  for (let bracket of brackets) {
     if (bracket.charAt(0) === "<") {
       if (val < parseFloat(bracket.substring(1, bracket.length))) {
         return bracket;
