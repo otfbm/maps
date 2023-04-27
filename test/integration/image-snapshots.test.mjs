@@ -61,7 +61,13 @@ tap.test("walls", async (t) => {
 });
 
 tap.test("effects", async (t) => {
-  const effects = ["*s15cc1c5", "*c20rh3", "*l40,2ya6j6", "*t15f10f3"];
+  const effects = ["*s15cc1c5", "*c20rh3", "*l40,2ya6j6", "*t15f10f3", "*ct15,12oa5"];
+  const canvas = await drawCanvas(`/${effects.join("/")}`, {}, false);
+  t.matchImageSnapshot(canvas.toBuffer("image/png"));
+});
+
+tap.test("arrow effects", async (t) => {
+  const effects = ["*mrd7b2", "*mya4f4", "*aob2h4"];
   const canvas = await drawCanvas(`/${effects.join("/")}`, {}, false);
   t.matchImageSnapshot(canvas.toBuffer("image/png"));
 });
