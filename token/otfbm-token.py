@@ -227,7 +227,7 @@ def token_resize_face(buffer, size, padding, debug=False):
     elif new_width > new_height:  # landscape
         diff = new_width - new_height
         new_top = max(new_top - diff / 2, 0)
-        new_bottom = min(new_bottom + diff / 2, 0)
+        new_bottom = min(new_bottom + diff / 2, height)
 
     if debug:
         print(f"height,width=({height}, {width})")
@@ -255,7 +255,8 @@ def test():
             "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/1000/1000/636376294573239565.jpeg"),
         ("zombie", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/71/1000/1000/636252733510786769.jpeg"),
         ("ghost", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/413/1000/1000/636252786639798307.jpeg"),
-        ("ghast", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/1000/1000/636252786516023032.jpeg")
+        ("ghast", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/1000/1000/636252786516023032.jpeg"),
+        ("person", "https://media.discordapp.net/attachments/712795723623694376/820150267256242276/unknown.png")
     ]
     size = 160
 
