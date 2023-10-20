@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit --no-cov --timeout 30000",
-    "test:integration": "NODE_NO_WARNINGS=1 tap ./test/integration --no-cov --timeout 30000",
-    "test:integration:update": "NODE_NO_WARNINGS=1 TAP_SNAPSHOT=1 tap ./test/integration --no-cov --timeout 30000",
+    "test:unit": "NODE_NO_WARNINGS=1 tap ./test/unit -- --no-cov --timeout 30000",
+    "test:integration": "NODE_NO_WARNINGS=1 tap ./test/integration -- --no-cov --timeout 30000",
+    "test:integration:update": "NODE_NO_WARNINGS=1 TAP_SNAPSHOT=1 tap ./test/integration -- --no-cov --timeout 30000",
     "start": "node dev.js",
     "dev": "nodemon dev.js"
   },
