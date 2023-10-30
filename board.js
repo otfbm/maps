@@ -358,39 +358,21 @@ export default class Board {
     this.ctx.strokeStyle = atBottom ? scaleMarkerColour : this.options.fg;
 
     this.ctx.moveTo(
-      this.padding + this.width - this.gridsize,
-      this.padding + this.height + this.gridsize * 0.15
-    );
-    this.ctx.lineTo(
-      this.padding + this.width - this.gridsize,
-      this.padding + this.height + this.gridsize * 0.65
-    );
-
-    this.ctx.moveTo(
-      this.padding + this.width - this.gridsize,
-      this.padding + this.height + this.gridsize * 0.5
-    );
-    this.ctx.lineTo(
-      this.padding + this.width - this.gridsize + this.gridsize * 0.1,
-      this.padding + this.height + this.gridsize * 0.5
-    );
-
-    this.ctx.moveTo(
       this.padding + this.width,
-      this.padding + this.height + this.gridsize * 0.15
+      this.padding + this.height + this.gridsize * 0.2
     );
     this.ctx.lineTo(
       this.padding + this.width,
-      this.padding + this.height + this.gridsize * 0.65
+      this.padding + this.height + this.gridsize * 0.8
     );
 
     this.ctx.moveTo(
-      this.padding + this.width,
-      this.padding + this.height + this.gridsize * 0.5
+      this.padding + this.width + this.gridsize - 2,
+      this.padding + this.height + this.gridsize * 0.2
     );
     this.ctx.lineTo(
-      this.padding + this.width - this.gridsize * 0.1,
-      this.padding + this.height + this.gridsize * 0.5
+      this.padding + this.width + this.gridsize - 2,
+      this.padding + this.height + this.gridsize * 0.8
     );
 
     this.ctx.stroke();
@@ -401,7 +383,7 @@ export default class Board {
     this.ctx.textAlign = "center";
     this.ctx.fillText(
       "5ft",
-      this.padding + this.width - this.gridsize / 2,
+      this.padding + this.width + this.gridsize / 2,
       this.padding + this.height + this.gridsize / 2,
       this.gridsize
     );
