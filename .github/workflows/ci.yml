@@ -2,18 +2,18 @@ name: CI
 on:
   push:
     branches:
-      - '*'
-      - '!master'
+      - "*"
+      - "!master"
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup node env
-      uses: actions/setup-node@v1
-      with:
-        node-version: 18.x
-    - run: npm install
-    - run: npm run test
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Setup node env
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - run: npm install
+      - run: npm run test
+        env:
+          CI: true
