@@ -83,11 +83,16 @@ export default class Board {
 
   drawBorder() {
     // undo padding and any pan before drawing the border
-    this.ctx.translate(-this.padding + this.panX * this.gridsize, -this.padding + this.panY * this.gridsize);
+    this.ctx.translate(
+      -this.padding + this.panX * this.gridsize,
+      -this.padding + this.panY * this.gridsize
+    );
 
     const textDarkModeAlpha = `rgba(244, 246, 255, ${this.edgeOpacity})`;
     const textLightModeAlpha = `rgba(7, 3, 26, ${this.edgeOpacity})`;
-    let bgAlpha = this.options.darkMode ? textLightModeAlpha : textDarkModeAlpha;
+    let bgAlpha = this.options.darkMode
+      ? textLightModeAlpha
+      : textDarkModeAlpha;
 
     const imgheight = this.imgheight * this.backgroundZoom * this.zoom;
     const imgwidth = this.imgwidth * this.backgroundZoom * this.zoom;
@@ -95,9 +100,13 @@ export default class Board {
     const isEdgeOpaque = this.edgeOpacity == 1 || this.background === null;
 
     const atLeft = isEdgeOpaque || this.panX < 1;
-    const atRight = isEdgeOpaque || this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
+    const atRight =
+      isEdgeOpaque ||
+      this.panX * this.gridsize + this.width + this.gridsize - 1 >= imgwidth;
     const atTop = isEdgeOpaque || this.panY < 1;
-    const atBottom = isEdgeOpaque || this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
+    const atBottom =
+      isEdgeOpaque ||
+      this.panY * this.gridsize + this.height + this.gridsize - 1 >= imgheight;
 
     // fill the edges
     this.ctx.lineCap = "square";
@@ -304,12 +313,14 @@ export default class Board {
       if (num >= 26)
         character = String.fromCharCode(Math.floor(num / 26) + 64) + character;
 
+      // Top axis label
       this.ctx.fillText(
         character,
         this.padding + i - this.gridsize / 2,
         this.padding / 2
       );
 
+      // Bottom axis label
       this.ctx.fillText(
         character,
         this.padding + i - this.gridsize / 2,
@@ -324,12 +335,14 @@ export default class Board {
     for (let i = this.gridsize; i <= this.height; i += this.gridsize) {
       num += 1;
 
+      // Left axis label
       this.ctx.fillText(
         String(num),
         this.padding / 2,
         this.padding + i - this.gridsize / 2
       );
 
+      // Right axis label
       this.ctx.fillText(
         String(num),
         this.padding * 1.5 + this.width,
@@ -344,42 +357,64 @@ export default class Board {
     this.ctx.lineCap = "square";
     this.ctx.strokeStyle = atBottom ? scaleMarkerColour : this.options.fg;
 
-    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.15));
-    this.ctx.lineTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.moveTo(
+      this.padding + this.width - this.gridsize,
+      this.padding + this.height + this.gridsize * 0.15
+    );
+    this.ctx.lineTo(
+      this.padding + this.width - this.gridsize,
+      this.padding + this.height + this.gridsize * 0.65
+    );
 
-    this.ctx.moveTo(this.padding + this.width - this.gridsize, this.padding + this.height + (this.gridsize * 0.5));
-    this.ctx.lineTo(this.padding + this.width - this.gridsize + (this.gridsize * 0.1), this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.moveTo(
+      this.padding + this.width - this.gridsize,
+      this.padding + this.height + this.gridsize * 0.5
+    );
+    this.ctx.lineTo(
+      this.padding + this.width - this.gridsize + this.gridsize * 0.1,
+      this.padding + this.height + this.gridsize * 0.5
+    );
 
-    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.15));
-    this.ctx.lineTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.65));
+    this.ctx.moveTo(
+      this.padding + this.width,
+      this.padding + this.height + this.gridsize * 0.15
+    );
+    this.ctx.lineTo(
+      this.padding + this.width,
+      this.padding + this.height + this.gridsize * 0.65
+    );
 
-    this.ctx.moveTo(this.padding + this.width, this.padding + this.height + (this.gridsize * 0.5));
-    this.ctx.lineTo(this.padding + this.width - (this.gridsize * 0.1), this.padding + this.height + (this.gridsize * 0.5));
+    this.ctx.moveTo(
+      this.padding + this.width,
+      this.padding + this.height + this.gridsize * 0.5
+    );
+    this.ctx.lineTo(
+      this.padding + this.width - this.gridsize * 0.1,
+      this.padding + this.height + this.gridsize * 0.5
+    );
 
     this.ctx.stroke();
 
     // Scale text
     this.ctx.beginPath();
     this.ctx.fillStyle = atBottom ? scaleMarkerColour : this.options.fg;
-    this.ctx.textAlign = 'center';
+    this.ctx.textAlign = "center";
     this.ctx.fillText(
       "5ft",
-      this.padding + this.width - (this.gridsize / 2),
-      this.padding + this.height + (this.gridsize / 2),
-      this.gridsize,
+      this.padding + this.width - this.gridsize / 2,
+      this.padding + this.height + this.gridsize / 2,
+      this.gridsize
     );
   }
 
   drawGridLines(ctx = this.ctx) {
-    if (this.gridOpacity === 0)
-      return;
+    if (this.gridOpacity === 0) return;
 
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = this.gridColour;
     ctx.globalAlpha = this.gridOpacity;
-    if (!this.isGridUserColour)
-      ctx.globalCompositeOperation = "difference";
+    if (!this.isGridUserColour) ctx.globalCompositeOperation = "difference";
 
     for (let i = this.gridsize; i < this.width - 1; i += this.gridsize) {
       ctx.moveTo(0.5 + i + this.padding, this.padding);
