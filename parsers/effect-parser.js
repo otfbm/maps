@@ -82,7 +82,7 @@ export default class EffectParser {
         break;
       case "rectangle":
       case "line":
-        let size2 = matches[5] ? matches[5].substr(1) : 5;
+        let size2 = matches[5] ? matches[5].substring(1) : 5;
         overlay = new SquareEffect({
           width: size2,
           length: size,

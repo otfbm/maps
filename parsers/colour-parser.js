@@ -16,24 +16,32 @@ const colourCodes = new Map([
   ["GY", "#808080"], // grey
   ["BN", "#582f29"], // brown
   ["PU", "#b75897"], // purple
-  ["PK", "#ffc1fa"] // pink
+  ["PK", "#ffc1fa"], // pink
 ]);
 
 export default class ColourParser {
   /**
    * parse a colour
-   * @param {string} str colour code 
+   * @param {string} str colour code
    */
   static parse(str) {
     if (str) {
       var upper = str.toUpperCase();
       if (upper.charAt(0) === "~") {
         if (upper.length === 4)
-          return "#" + upper.charAt(1) + upper.charAt(1) + upper.charAt(2) + upper.charAt(2) + upper.charAt(3) + upper.charAt(3);
-        return "#" + upper.substr(1);
+          return (
+            "#" +
+            upper.charAt(1) +
+            upper.charAt(1) +
+            upper.charAt(2) +
+            upper.charAt(2) +
+            upper.charAt(3) +
+            upper.charAt(3)
+          );
+        return "#" + upper.substring(1);
       }
-      return colourCodes.get(upper) || "#07031a";  
+      return colourCodes.get(upper) || "#07031a";
     }
     return "#07031a";
   }
-};
+}

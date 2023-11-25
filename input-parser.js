@@ -7,7 +7,7 @@ import LineParser from "./parsers/line-parser.js";
 import Icon from "./icon.js";
 import EffectParser from "./parsers/effect-parser.js";
 import FogParser from "./parsers/fog-parser.js";
-import ConfigParser from './parsers/config.js';
+import ConfigParser from "./parsers/config.js";
 
 export default class InputParser {
   constructor() {
@@ -18,7 +18,7 @@ export default class InputParser {
     this.icons = [];
     this.overlays = [];
     this.tokenImages = {};
-  
+
     this.configParser = new ConfigParser();
     this.backgroundParser = new BackgroundParser();
     this.viewParser = new ViewParser();
@@ -43,19 +43,19 @@ export default class InputParser {
       }
     }
 
-    
     let parts = [];
     // trim off leading /
-    if (pathname[0] === "/") parts = pathname.substr(1);
+    if (pathname[0] === "/") parts = pathname.substring(1);
     // trim of trailing /
     if (pathname[pathname.length - 1] === "/")
-      pathname.substr(0, pathname.length - 1);
+      pathname.substring(0, pathname.length - 1);
     parts = decodeURIComponent(pathname).split("/");
 
     for (let part of parts) {
       part = part.trim();
-      if (part[0] === '/') part = part.substr(1);
-      if (part[part.length-1] === '/') part = part.substr(0, part.length - 1);
+      if (part[0] === "/") part = part.substring(1);
+      if (part[part.length - 1] === "/")
+        part = part.substring(0, part.length - 1);
 
       let parsed = this.viewParser.parse(part);
       if (parsed) {
@@ -107,7 +107,9 @@ export default class InputParser {
 
   async parseConfig(c, options) {
     if (c.background) {
-      options.background.image = await this.backgroundParser.parse({ bg: c.background });
+      options.background.image = await this.backgroundParser.parse({
+        bg: c.background,
+      });
     }
 
     if (c.tokenImages) {

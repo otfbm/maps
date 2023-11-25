@@ -14,20 +14,20 @@ const cw = new AWS.CloudWatch({ apiVersion: "2010-08-01" });
 
 let crypto;
 try {
-  crypto = require('crypto');
+  crypto = require("crypto");
 } catch (err) {
-  console.log('crypto support is disabled!');
+  console.log("crypto support is disabled!");
 }
 
 const scramble = (id) => {
-  if (!id) return 'N/A';
+  if (!id) return "N/A";
   if (!crypto) return String(id);
   try {
-    const hash = crypto.createHash('sha256');
+    const hash = crypto.createHash("sha256");
     hash.update(String(id));
-    return String(hash.digest('hex')).slice(0, 10);
-  } catch(err) {
-    return 'N/A';
+    return String(hash.digest("hex")).slice(0, 10);
+  } catch (err) {
+    return "N/A";
   }
 };
 
@@ -50,7 +50,10 @@ const imageCodeFetch = async (url) => {
   if (!url) return null;
   let status = 200;
   try {
-    const u = new URL(join('meta', Buffer.from(url).toString('base64')), 'https://token.otfbm.io');
+    const u = new URL(
+      join("meta", Buffer.from(url).toString("base64")),
+      "https://token.otfbm.io"
+    );
     const res = await fetch(u);
     if (res.ok) {
       const text = await res.text();
@@ -58,9 +61,9 @@ const imageCodeFetch = async (url) => {
       return code[1];
     }
     status = res.status;
-  } catch(err) {
+  } catch (err) {
     console.error(err);
-    status = 500
+    status = 500;
   }
   const error = new Error(
     `We couldn't seem to get our claws on the token code for the image you asked for`
@@ -72,8 +75,8 @@ const imageCodeFetch = async (url) => {
 let fallbackTokenImage;
 const fetchTokenImageAsBase64 = async (code) => {
   if (!code) return null;
-  const useFacialRecognition = code[code.length - 1] !== '~';
-  const c = useFacialRecognition ? code:  code.slice(0, code.length - 1);
+  const useFacialRecognition = code[code.length - 1] !== "~";
+  const c = useFacialRecognition ? code : code.slice(0, code.length - 1);
 
   if (useFacialRecognition) {
     try {
@@ -90,14 +93,16 @@ const fetchTokenImageAsBase64 = async (code) => {
   }
 
   if (!fallbackTokenImage) {
-    const buff = await fs.readFile(new URL('./missing-token.jpg', import.meta.url));
+    const buff = await fs.readFile(
+      new URL("./missing-token.jpg", import.meta.url)
+    );
     fallbackTokenImage = buff.toString("base64");
   }
   return `data:image/jpeg;base64,${fallbackTokenImage}`;
 };
 
 const getBracket = (val, brackets) => {
-  console.log(brackets)
+  console.log(brackets);
   // Given list of brackets of form "<x", "y-z", ">s"
   // return first bracket in list which returns true for val
   for (let bracket of brackets) {
@@ -113,10 +118,10 @@ const getBracket = (val, brackets) => {
     }
     const [lower, upper] = bracket.split("-");
     if (parseFloat(lower) <= val && val <= parseFloat(upper)) {
-      return bracket
+      return bracket;
     }
   }
-}
+};
 
 export default async function main(pathname, query, metrics = true) {
   const options = new Options();
@@ -124,12 +129,47 @@ export default async function main(pathname, query, metrics = true) {
   await input.parse(options, pathname, query);
 
   if (metrics) {
-    const cellsize = getBracket(options._cellSize, ["<40", "40-59", "60-79", "80-99"]);
-    const numTokens = getBracket(input.tokens.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
-    const numLines = getBracket(input.lines.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
-    const numEffects = getBracket(input.effects.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
-    const numIcons = getBracket(input.icons.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
-    const numOverlays = getBracket(input.overlays.length, ["1-5", "6-10", "11-15", "16-20", ">20"]);
+    const cellsize = getBracket(options._cellSize, [
+      "<40",
+      "40-59",
+      "60-79",
+      "80-99",
+    ]);
+    const numTokens = getBracket(input.tokens.length, [
+      "1-5",
+      "6-10",
+      "11-15",
+      "16-20",
+      ">20",
+    ]);
+    const numLines = getBracket(input.lines.length, [
+      "1-5",
+      "6-10",
+      "11-15",
+      "16-20",
+      ">20",
+    ]);
+    const numEffects = getBracket(input.effects.length, [
+      "1-5",
+      "6-10",
+      "11-15",
+      "16-20",
+      ">20",
+    ]);
+    const numIcons = getBracket(input.icons.length, [
+      "1-5",
+      "6-10",
+      "11-15",
+      "16-20",
+      ">20",
+    ]);
+    const numOverlays = getBracket(input.overlays.length, [
+      "1-5",
+      "6-10",
+      "11-15",
+      "16-20",
+      ">20",
+    ]);
 
     const datapoint = {
       MetricData: [
@@ -203,7 +243,8 @@ export default async function main(pathname, query, metrics = true) {
           Dimensions: [
             {
               Name: "DevelopmentMode",
-              Value: query.d && query.d[0] === "1" ? "development" : "production",
+              Value:
+                query.d && query.d[0] === "1" ? "development" : "production",
             },
             {
               Name: "AliasOrWebsite",
@@ -239,8 +280,8 @@ export default async function main(pathname, query, metrics = true) {
           }
         });
       });
-    } catch(err) {
-      console.log('Failed to push metrics, swallowing error', err);
+    } catch (err) {
+      console.log("Failed to push metrics, swallowing error", err);
     }
   }
 
@@ -296,7 +337,10 @@ export default async function main(pathname, query, metrics = true) {
   const tokenSpecsByCoords = new Map();
   for (const overlay of input.tokens) {
     const serializedCoord = "c:" + overlay.tl + "s:" + overlay.size;
-    tokenSpecsByCoords.set(serializedCoord, [overlay, ...(tokenSpecsByCoords.get(serializedCoord) || [])]);
+    tokenSpecsByCoords.set(serializedCoord, [
+      overlay,
+      ...(tokenSpecsByCoords.get(serializedCoord) || []),
+    ]);
   }
 
   for (const [coord, specs] of tokenSpecsByCoords) {
@@ -310,11 +354,11 @@ export default async function main(pathname, query, metrics = true) {
       // Since we are not adding sub-items to grid, apply those side-effects manually here
       // TODO: refactor side effects out of grid.add
       baseSpecAsJson.cell = baseSpecAsJson.tl;
-      specs.forEach(s => {
+      specs.forEach((s) => {
         const [w, h] = grid.getDims(s);
         s.width = w;
         s.height = h;
-      })
+      });
       const multitokenOverlay = new Overlay({
         ...baseSpecAsJson,
         type: "multitoken",
