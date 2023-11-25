@@ -1,9 +1,9 @@
 const charOffset = 64; // y coordinates start at A
 
-module.exports = class CoordParser {
+export default class CoordParser {
   /**
    * convert excel style coordinates to x,y
-   * @param {string} coord 
+   * @param {string} coord
    */
   static parse(str) {
     var upper = str.toUpperCase();
@@ -12,14 +12,14 @@ module.exports = class CoordParser {
     const reg = /[A-Z]/;
     let yIndex = 1;
     if (upper[1].match(reg)) {
-      x = (x * 26) + (upper.charCodeAt(1) - charOffset);
+      x = x * 26 + (upper.charCodeAt(1) - charOffset);
       yIndex = 2;
     }
 
     return {
       x,
-      y: parseInt(str.substr(yIndex) || "", 10)
-    }
+      y: parseInt(str.substring(yIndex) || "", 10),
+    };
   }
 
   static parseSet(str) {

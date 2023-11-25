@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 async function fetchConfig(url) {
   const res = await fetch(url);
@@ -25,7 +25,7 @@ function deepMerge(...sources) {
   return acc;
 }
 
-module.exports = class ConfigParser {
+export default class ConfigParser {
   async parse(query) {
     let config = null;
     try {
@@ -39,4 +39,4 @@ module.exports = class ConfigParser {
     }
     return config;
   }
-};
+}

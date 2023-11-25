@@ -1,4 +1,4 @@
-module.exports = ({
+export default ({
   height,
   width,
   color,
@@ -8,4 +8,4 @@ module.exports = ({
       <rect x="5" y="5" width="${width - 9}" height="${height - 9}" fill="${color}" />
     </svg>
   `;
-}
+};

@@ -1,15 +1,15 @@
-const ViewParser = require("./parsers/view-parser.js");
-const TokenParser = require("./parsers/token.js");
-const IconParser = require("./parsers/icon.js");
-const OverlayParser = require("./parsers/overlay.js");
-const BackgroundParser = require("./parsers/background.js");
-const LineParser = require("./parsers/line-parser.js");
-const Icon = require("./icon.js");
-const EffectParser = require("./parsers/effect-parser.js");
-const FogParser = require("./parsers/fog-parser.js");
-const ConfigParser = require('./parsers/config.js');
+import ViewParser from "./parsers/view-parser.js";
+import TokenParser from "./parsers/token.js";
+import IconParser from "./parsers/icon.js";
+import OverlayParser from "./parsers/overlay.js";
+import BackgroundParser from "./parsers/background.js";
+import LineParser from "./parsers/line-parser.js";
+import Icon from "./icon.js";
+import EffectParser from "./parsers/effect-parser.js";
+import FogParser from "./parsers/fog-parser.js";
+import ConfigParser from "./parsers/config.js";
 
-module.exports = class InputParser {
+export default class InputParser {
   constructor() {
     this.lines = [];
     this.tokens = [];
@@ -18,7 +18,7 @@ module.exports = class InputParser {
     this.icons = [];
     this.overlays = [];
     this.tokenImages = {};
-  
+
     this.configParser = new ConfigParser();
     this.backgroundParser = new BackgroundParser();
     this.viewParser = new ViewParser();
@@ -43,19 +43,19 @@ module.exports = class InputParser {
       }
     }
 
-    
     let parts = [];
     // trim off leading /
-    if (pathname[0] === "/") parts = pathname.substr(1);
+    if (pathname[0] === "/") parts = pathname.substring(1);
     // trim of trailing /
     if (pathname[pathname.length - 1] === "/")
-      pathname.substr(0, pathname.length - 1);
+      pathname.substring(0, pathname.length - 1);
     parts = decodeURIComponent(pathname).split("/");
 
     for (let part of parts) {
       part = part.trim();
-      if (part[0] === '/') part = part.substr(1);
-      if (part[part.length-1] === '/') part = part.substr(0, part.length - 1);
+      if (part[0] === "/") part = part.substring(1);
+      if (part[part.length - 1] === "/")
+        part = part.substring(0, part.length - 1);
 
       let parsed = this.viewParser.parse(part);
       if (parsed) {
@@ -107,7 +107,9 @@ module.exports = class InputParser {
 
   async parseConfig(c, options) {
     if (c.background) {
-      options.background.image = await this.backgroundParser.parse({ bg: c.background });
+      options.background.image = await this.backgroundParser.parse({
+        bg: c.background,
+      });
     }
 
     if (c.tokenImages) {
@@ -154,4 +156,4 @@ module.exports = class InputParser {
       options.parseOptions(c.options);
     }
   }
-};
+}

@@ -1,4 +1,4 @@
-module.exports = class Overlay {
+export default class Overlay {
   constructor({ cells = [], cell = "", type, label, color, size, imageCode, image, imageURL, width = undefined, height = undefined } = {}) {
     this._cells = cells;
     this._cell = cell;
@@ -110,4 +110,4 @@ module.exports = class Overlay {
       imageURL: this.imageURL,
     } 
   }
-}
+};

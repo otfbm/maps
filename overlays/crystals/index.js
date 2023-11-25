@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class CrystalsPitOverlay {
+export default class CrystalsPitOverlay {
   constructor(options) {
     this.options = options;
   }

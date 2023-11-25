@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class SpikedPitOverlay {
+export default class SpikedPitOverlay {
   constructor(options) {
     this.options = options;
   }

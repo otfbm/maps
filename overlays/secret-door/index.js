@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class SecretDoorOverlay {
+export default class SecretDoorOverlay {
   constructor(options) {
     this.options = options;
   }

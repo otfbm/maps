@@ -1,44 +1,42 @@
-const canvas = require("canvas");
-const SVGRenderer = require("./svg.js");
-const CanvasRenderer = require("./canvas.js");
-
-// overlays
-const assert = require("assert");
-const Options = require("../options.js");
-const Stairs = require("../overlays/stairs/index.js");
-const Token = require("../overlays/token/index.js");
-const MultiToken = require("../overlays/token/index.js");
-const Trap = require("../overlays/trap/index.js");
-const PillarRound = require("../overlays/pillar-round/index.js");
-const PillarSquare = require("../overlays/pillar-square/index.js");
-const StatueStar = require("../overlays/statue-star/index.js");
-const CoveredPit = require("../overlays/covered-pit/index.js");
-const OpenPit = require("../overlays/open-pit/index.js");
-const Ladder = require("../overlays/ladder/index.js");
-const MagicPortal = require("../overlays/magic-portal/index.js")
-const GargoyleStatue = require("../overlays/gargoyle-statue/index.js")
-const SpikedPit = require("../overlays/spiked-pit/index.js")
-const Fire = require("../overlays/fire/index.js")
-const Crystals = require("../overlays//crystals/index.js")
-const BrickWall = require("../overlays/brick-wall/index.js")
-const Lightning = require("../overlays/lightning/index.js")
-const StoneThrone = require("../overlays/stone-throne/index.js")
-const TripWire = require("../overlays/trip-wire/index.js")
-const Person = require("../overlays/person/index.js")
-const Crowd = require("../overlays/crowd/index.js")
-const Wind = require("../overlays/wind/index.js")
-const Web = require("../overlays/web/index.js")
-const Palisade = require("../overlays/palisade/index.js")
-const SpikedTrunk = require("../overlays/spiked-trunk/index.js")
-const SecretDoor = require("../overlays/secret-door/index.js")
-const Thorns = require("../overlays/thorns/index.js")
-const Column = require("../overlays/column/index.js")
-const Explosion = require("../overlays/explosion/index.js")
-const Chair = require("../overlays/chair/index.js")
-const Table = require("../overlays/table/index.js")
-const Net = require("../overlays/net/index.js")
-const Puddle = require("../overlays/puddle/index.js")
-const Chest = require("../overlays/chest/index.js")
+import canvas from "canvas";
+import SVGRenderer from "./svg.js";
+import CanvasRenderer from "./canvas.js";
+import assert from "assert";
+import Options from "../options.js";
+import Stairs from "../overlays/stairs/index.js";
+import Token from "../overlays/token/index.js";
+import MultiToken from "../overlays/token/index.js";
+import Trap from "../overlays/trap/index.js";
+import PillarRound from "../overlays/pillar-round/index.js";
+import PillarSquare from "../overlays/pillar-square/index.js";
+import StatueStar from "../overlays/statue-star/index.js";
+import CoveredPit from "../overlays/covered-pit/index.js";
+import OpenPit from "../overlays/open-pit/index.js";
+import Ladder from "../overlays/ladder/index.js";
+import MagicPortal from "../overlays/magic-portal/index.js";
+import GargoyleStatue from "../overlays/gargoyle-statue/index.js";
+import SpikedPit from "../overlays/spiked-pit/index.js";
+import Fire from "../overlays/fire/index.js";
+import Crystals from "../overlays//crystals/index.js";
+import BrickWall from "../overlays/brick-wall/index.js";
+import Lightning from "../overlays/lightning/index.js";
+import StoneThrone from "../overlays/stone-throne/index.js";
+import TripWire from "../overlays/trip-wire/index.js";
+import Person from "../overlays/person/index.js";
+import Crowd from "../overlays/crowd/index.js";
+import Wind from "../overlays/wind/index.js";
+import Web from "../overlays/web/index.js";
+import Palisade from "../overlays/palisade/index.js";
+import SpikedTrunk from "../overlays/spiked-trunk/index.js";
+import SecretDoor from "../overlays/secret-door/index.js";
+import Thorns from "../overlays/thorns/index.js";
+import Column from "../overlays/column/index.js";
+import Explosion from "../overlays/explosion/index.js";
+import Chair from "../overlays/chair/index.js";
+import Table from "../overlays/table/index.js";
+import Net from "../overlays/net/index.js";
+import Puddle from "../overlays/puddle/index.js";
+import Chest from "../overlays/chest/index.js";
 
 const { createCanvas, registerFont } = canvas;
 
@@ -68,7 +66,7 @@ registerFont('./fonts/Fleisch-Wurst.otf', {
   style: 'normal',
 });
 
-module.exports = class Renderer {
+export default class Renderer {
   constructor(options) {
     assert(
       options instanceof Options,

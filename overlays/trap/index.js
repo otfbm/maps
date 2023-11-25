@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class TrapOverlay {
+export default class TrapOverlay {
   constructor(options) {
     this.options = options;
   }

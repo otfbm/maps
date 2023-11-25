@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class WindOverlay {
+export default class WindOverlay {
   constructor(options) {
     this.options = options;
   }

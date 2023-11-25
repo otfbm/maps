@@ -1,4 +1,4 @@
-module.exports = ({
+export default ({
   height,
   width,
   color,
@@ -10,4 +10,4 @@ module.exports = ({
       <text x="50%" y="${textY}" font-family="sans-serif" font-size="16" text-anchor="middle" fill="${color}">T</text>
     </svg>
   `;
-}
+};

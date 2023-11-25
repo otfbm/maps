@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class FireOverlay {
+export default class FireOverlay {
   constructor(options) {
     this.options = options;
   }

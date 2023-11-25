@@ -1,8 +1,8 @@
-const { Image } = require('canvas')
+import { Image } from 'canvas';
 
 const subLabelFontSize = 14;
 
-module.exports = ({
+export default ({
   gridsize,
   size,
   color,
@@ -113,4 +113,4 @@ module.exports = ({
   }
   ctx.lineWidth = borderWidth;
   ctx.stroke();
-}
+};

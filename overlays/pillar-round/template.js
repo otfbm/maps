@@ -1,4 +1,4 @@
-module.exports = ({
+export default ({
   height,
   width,
   color,
@@ -9,4 +9,4 @@ module.exports = ({
       <circle cx="50%" cy="50%" r="${shortest / 2 - 5}" fill="${color}" />
     </svg>
   `;
-}
+};

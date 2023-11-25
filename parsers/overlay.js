@@ -1,4 +1,4 @@
-const ColorParser = require("./colour-parser.js");
+import ColorParser from "./colour-parser.js";
 
 const overlays = new Map([
   ["tr", "trap"],
@@ -35,9 +35,9 @@ const overlays = new Map([
   ["es", "chest"]
 ]);
 
-const Overlay = require("../overlay.js");
+import Overlay from "../overlay.js";
 
-module.exports = class OverlayParser {
+export default class OverlayParser {
   parse(str) {
     if (str.length < 4) return false;
     const reg = /^([A-Za-z][A-Za-z]?[0-9][0-9]?)([A-Za-z][A-Za-z]?[0-9][0-9]?)?(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?\$([A-Za-z]{2})?$/i;
