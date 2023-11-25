@@ -4,31 +4,29 @@ import ColourParser from "./colour-parser.js";
 export default class LineParser {
   parse(str) {
     let trimmed = str;
-    if (trimmed.charAt(0) !== '_')
-      return false;
+    if (trimmed.charAt(0) !== "_") return false;
 
     let result = [];
 
-    for (const lineStr of trimmed.substr(1).split("_")) {
-      let coords = this.parseCoords(lineStr)
-      if (coords.length)
-        result.push(coords);
+    for (const lineStr of trimmed.substring(1).split("_")) {
+      let coords = this.parseCoords(lineStr);
+      if (coords.length) result.push(coords);
     }
 
-    if (result.length)
-      return result;
+    if (result.length) return result;
     return false;
   }
 
   icons = new Map([
-    ['D', "door"],
-    ['B', "double-door"],
-    ['O', "open-door"],
-    ['S', "secret-door"]
-  ])
+    ["D", "door"],
+    ["B", "double-door"],
+    ["O", "open-door"],
+    ["S", "secret-door"],
+  ]);
 
   parseCoords(str) {
-    const reg = /(\-[BDOS])?(\-C(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))?([A-Z]{1,2}[0-9]{1,2})/gi;
+    const reg =
+      /(\-[BDOS])?(\-C(PK|PU|BK|GY|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3}))?([A-Z]{1,2}[0-9]{1,2})/gi;
     let result = [];
     let matches = str.matchAll(reg);
     for (let match of matches) {
@@ -39,14 +37,13 @@ export default class LineParser {
         icon = this.icons.get(match[1].charAt(1).toUpperCase()) || "";
 
       let colour = "";
-      if (match[3])
-        colour = ColourParser.parse(match[3]);
+      if (match[3]) colour = ColourParser.parse(match[3]);
 
       result.push({
         x: coords.x - 1,
         y: coords.y - 1,
         icon,
-        colour
+        colour,
       });
     }
 

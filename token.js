@@ -6,11 +6,11 @@ module.exports = class Token {
   }
 
   get type() {
-    return 'overlay';
+    return "overlay";
   }
 
   get name() {
-    return 'token';
+    return "token";
   }
 
   // tiny(gridsize, zoom) {
@@ -18,7 +18,7 @@ module.exports = class Token {
   //   const cy = gridsize / 2;
   //   const r = gridsize / 4 * 0.85;
   //   const sw = 1 * zoom;
-  //   const text = `${this.name.substr(0, 1)}${this.name.substr(-1)}`
+  //   const text = `${this.name.substring(0, 1)}${this.name.substring(-1)}`
   //   const fontsize = 10 * zoom;
   //   return `
   //   <svg height="${gridsize}" width="${gridsize}">
@@ -33,7 +33,7 @@ module.exports = class Token {
   //   const cy = gridsize / 2;
   //   const r = gridsize / 2 * 0.85;
   //   const sw = 2 * zoom;
-  //   const text = this.name.substr(0, 4);
+  //   const text = this.name.substring(0, 4);
   //   const fontsize = 12 * zoom;
   //   return `
   //   <svg height="${gridsize}" width="${gridsize}">
@@ -48,7 +48,7 @@ module.exports = class Token {
   //   const cy = gridsize;
   //   const r = gridsize * 0.90;
   //   const sw = 3 * zoom;
-  //   const text = this.name.substr(0, 9);
+  //   const text = this.name.substring(0, 9);
   //   const fontsize = 14 * zoom;
   //   return `
   //   <svg height="${gridsize * 2}" width="${gridsize * 2}">
@@ -63,7 +63,7 @@ module.exports = class Token {
   //   const cy = gridsize * 1.5;
   //   const r = gridsize * 1.5 * 0.92;
   //   const sw = 4 * zoom;
-  //   const text = this.name.substr(0, 14);
+  //   const text = this.name.substring(0, 14);
   //   const fontsize = 14 * zoom;
   //   return `
   //   <svg height="${gridsize * 3}" width="${gridsize * 3}">
@@ -78,7 +78,7 @@ module.exports = class Token {
   //   const cy = gridsize * 2;
   //   const r = gridsize * 2 * 0.95;
   //   const sw = 5 * zoom;
-  //   const text = this.name.substr(0, 18);
+  //   const text = this.name.substring(0, 18);
   //   const fontsize = 16 * zoom;
   //   return `
   //   <svg height="${gridsize * 4}" width="${gridsize * 4}">
@@ -116,4 +116,4 @@ module.exports = class Token {
 
   //   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
   // }
-}
+};

@@ -26,7 +26,7 @@ export default class Grid {
   getDims(overlay) {
     const coords = this.bbox(overlay.tl, overlay.br);
     const bbox = [
-      this.actualTopLeft(coords), 
+      this.actualTopLeft(coords),
       this.actualTopRight(coords),
       this.actualBottomRight(coords),
       this.actualBottomLeft(coords),
@@ -46,7 +46,7 @@ export default class Grid {
 
     const coords = this.bbox(overlay.tl, overlay.br);
     const bbox = [
-      this.actualTopLeft(coords), 
+      this.actualTopLeft(coords),
       this.actualTopRight(coords),
       this.actualBottomRight(coords),
       this.actualBottomLeft(coords),
@@ -196,7 +196,6 @@ export default class Grid {
       const height = bbox[1].x + 1 - bbox[0].x;
       return { width, height };
     }
-
   }
 
   convertCellNameToXY(cellName) {
@@ -207,7 +206,7 @@ export default class Grid {
     while (str.length) {
       if (Number.isNaN(parseInt(str[0], 10))) {
         characters.push(str[0]);
-        str = str.substr(1);
+        str = str.substring(1);
       } else {
         y = parseInt(str, 10) - 1;
         str = "";
@@ -217,7 +216,7 @@ export default class Grid {
     if (characters.length === 2) {
       const letter1 = characters[0].toUpperCase().charCodeAt(0);
       const letter2 = characters[1].toUpperCase().charCodeAt(0);
-      const x = (26 * (letter1 - 64)) + (letter2 - 65);
+      const x = 26 * (letter1 - 64) + (letter2 - 65);
       return { x, y };
     }
 

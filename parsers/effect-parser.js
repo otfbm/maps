@@ -24,7 +24,8 @@ export default class EffectParser {
     let trimmed = str.toUpperCase();
     if (trimmed.charAt(0) !== "*") return false;
 
-    const reg = /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
+    const reg =
+      /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
     if (!reg.test(trimmed)) return false;
 
     const matches = trimmed.match(reg);
@@ -76,7 +77,7 @@ export default class EffectParser {
         break;
       case "rectangle":
       case "line":
-        let size2 = matches[5] ? matches[5].substr(1) : 5;
+        let size2 = matches[5] ? matches[5].substring(1) : 5;
         overlay = new SquareEffect({
           width: size2,
           length: size,
