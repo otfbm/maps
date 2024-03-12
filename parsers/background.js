@@ -8,7 +8,9 @@ export default class BackgroundParser {
       const pathname = Buffer.from(bg).toString("base64");
       const bgBaseURL = "https://bg.otfbm.io";
       // const res = await fetch(new URL(pathname, bgBaseURL));
-      const res = await fetch(bg);
+      const res = await fetch(bg, {
+        headers: {"user-agent": "curl/8.1.1"}
+      });
 
       const contentLength = res.headers.get("content-length");
       // if (contentLength > 1102000) {
