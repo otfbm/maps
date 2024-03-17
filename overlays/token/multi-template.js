@@ -1,6 +1,39 @@
 const { Image } = require('canvas')
 
-// For rendering multiple tokens on the same space
+function replaceAccentsWithLetters(text) {
+    // Map accented characters to their regular counterparts
+    const replacements = {
+        'á': 'a',
+        'é': 'e',
+        'í': 'i',
+        'ó': 'o',
+        'ú': 'u',
+        'Á': 'A',
+        'É': 'E',
+        'Í': 'I',
+        'Ó': 'O',
+        'Ú': 'U',
+        'ü': 'u',
+        'Ü': 'U',
+        'ä': 'a',
+        'Ä': 'A',
+        'ö': 'o',
+        'Ö': 'O',
+        'à': 'a',
+        'è': 'e',
+        'ì': 'i',
+        'ò': 'o',
+        'ù': 'u',
+        'À': 'A',
+        'È': 'E',
+        'Ì': 'I',
+        'Ò': 'O',
+        'Ù': 'U',
+    };
+
+    // Replace accented characters with their regular counterparts
+    return text.replace(/[áéíóúÁÉÍÓÚüÜäÄöÖàèìòùÀÈÌÒÙ]/g, match => replacements[match] || match);
+}
 
 const subLabelFontSize = 14;
 
@@ -116,7 +149,8 @@ module.exports = ({
       // Clip text to fit inside
       ctx.save();
       ctx.clip();
-      ctx.fillText(label, xy + offsetX(radius * 0.5, angleToMiddleOfWedge), xy + offsetY(radius * 0.5, angleToMiddleOfWedge));
+      sanitized_label = replaceAccentsWithLetters(label);
+      ctx.fillText(sanitized_label, xy + offsetX(radius * 0.5, angleToMiddleOfWedge), xy + offsetY(radius * 0.5, angleToMiddleOfWedge));
       ctx.restore();
     }
   
