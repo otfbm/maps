@@ -14,7 +14,7 @@ export default class TokenOverlay {
 
     return {
       color,
-      label: `${label.substring(0, 1)}${label.substring(-1)}`,
+      label: `${label.substr(0, 1)}${label.substr(-1)}`,
       size: width / 1.5,
       image,
     };
@@ -26,7 +26,7 @@ export default class TokenOverlay {
     return {
       size: width,
       color,
-      label: label.substring(0, 4),
+      label: label.substr(0, 4),
       image,
     };
   }
@@ -37,7 +37,7 @@ export default class TokenOverlay {
     return {
       size: width * 2,
       color,
-      label: label.substring(0, 9),
+      label: label.substr(0, 9),
       image,
     };
   }
@@ -48,7 +48,7 @@ export default class TokenOverlay {
     return {
       size: width * 3,
       color,
-      label: label.substring(0, 14),
+      label: label.substr(0, 14),
       image,
     };
   }
@@ -59,7 +59,7 @@ export default class TokenOverlay {
     return {
       size: width * 4,
       color,
-      label: label.substring(0, 18),
+      label: label.substr(0, 18),
       image,
     };
   }
@@ -70,11 +70,7 @@ export default class TokenOverlay {
     const opts = this.getOverlayOpts(overlay);
     if (isMultiToken) {
       // Sub-tokens are stored in label
-      this.renderMultitoken(
-        opts,
-        item.overlay.label.map((o) => this.getOverlayOpts(o)),
-        ctx
-      );
+      this.renderMultitoken(opts, item.overlay.label.map(o => this.getOverlayOpts(o)), ctx);
     } else {
       this.renderSingleToken(opts, ctx);
     }
@@ -103,11 +99,11 @@ export default class TokenOverlay {
         break;
     }
 
-    opts.fontsize = opts.size * (8 / (opts.label.length + 4)) * 0.3;
+    opts.fontsize = opts.size * (8 / (opts.label.length + 4)) * 0.30;
     opts.fontcolor = this.pickTextColor(opts.color);
     opts.gridsize = this.options.cellSizePx;
     opts.font = this.options.font;
-
+    
     let match = overlay.label.match(/[0-9]+$/);
     if (match) {
       opts.subLabel = match[0].toUpperCase();
@@ -116,13 +112,10 @@ export default class TokenOverlay {
   }
 
   renderMultitoken(opts, tokenSpecs, ctx) {
-    multiTemplate(
-      {
-        ...opts,
-        tokenSpecs,
-      },
-      ctx
-    );
+    multiTemplate({
+      ...opts,
+      tokenSpecs
+    }, ctx);
   }
 
   renderSingleToken(opts, ctx) {
@@ -148,7 +141,9 @@ export default class TokenOverlay {
   luminanace(r, g, b) {
     var a = [r, g, b].map(function (v) {
       v /= 255;
-      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      return v <= 0.03928
+        ? v / 12.92
+        : Math.pow((v + 0.055) / 1.055, 2.4);
     });
     return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
   }
