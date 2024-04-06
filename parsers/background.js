@@ -9,16 +9,16 @@ export default class BackgroundParser {
       const bgBaseURL = "https://bg.otfbm.io";
       // const res = await fetch(new URL(pathname, bgBaseURL));
       const res = await fetch(bg, {
-        headers: {"user-agent": "curl/8.1.1"}
+        headers: { "user-agent": "curl/8.1.1" },
       });
 
       const contentLength = res.headers.get("content-length");
       // if (contentLength > 1102000) {
-        // res.destroy();
-        // throw new Error("Background image too large");
+      // res.destroy();
+      // throw new Error("Background image too large");
       // }
 
-      const buffer = await res.buffer();
+      const buffer = await res.arrayBuffer();
 
       // if (buffer.byteLength > 1102000) throw new Error("Background image too large");
 
