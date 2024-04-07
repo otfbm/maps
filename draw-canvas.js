@@ -35,9 +35,9 @@ const base64Fetch = async (url) => {
   const res = await fetch(url);
   if (res.ok) {
     const buffer = await res.arrayBuffer();
-    return `data:${res.headers.get("content-type")};base64,${buffer.toString(
-      "base64"
-    )}`;
+    return `data:${res.headers.get(
+      "content-type"
+    )};base64,${buffer.files[0].toString("base64")}`;
   }
   const err = new Error(
     `We couldn't seem to get our claws on the token image you asked for`
@@ -54,7 +54,9 @@ const imageCodeFetch = async (url) => {
       join("meta", Buffer.from(url).toString("base64")),
       "https://token.otfbm.io"
     );
-    const res = await fetch(u);
+    const res = await fetch(u, {
+      headers: { "user-agent": "curl/8.1.1" },
+    });
     if (res.ok) {
       const text = await res.text();
       const code = text.match(/<body>([A-Za-z0-9]*)<\/body>/);

@@ -24,7 +24,7 @@ export default class BackgroundParser {
 
       backgroundImage = `data:${res.headers.get(
         "content-type"
-      )};base64,${buffer.toString("base64")}`;
+      )};base64,${buffer.files[0].toString("base64")}`;
     }
     return backgroundImage;
   }
