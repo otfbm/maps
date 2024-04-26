@@ -35,9 +35,9 @@ const base64Fetch = async (url) => {
   const res = await fetch(url);
   if (res.ok) {
     const buffer = await res.arrayBuffer();
-    return `data:${res.headers.get(
-      "content-type"
-    )};base64,${buffer.files[0].toString("base64")}`;
+    return `data:${res.headers.get("content-type")};base64,${Buffer.from(
+      buffer
+    ).toString("base64")}`;
   }
   const err = new Error(
     `We couldn't seem to get our claws on the token image you asked for`
