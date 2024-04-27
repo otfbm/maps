@@ -4,29 +4,29 @@ on:
     branches:
       - development
 jobs:
-  test:
-    name: run tests
-    runs-on: macos-latest
+  run_tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup node env
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
       - run: npm install
       - run: npm run test:unit
         env:
           CI: true
   deploy_source:
-    name: deploy to lambda
-    needs: test
+    name: Deploy to Lambda
+    needs: run_tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 18.x
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v1
         with:
-          node-version: 18.x
+          node-version: 20.x
       - name: npm install and build
         run: |
           npm ci
