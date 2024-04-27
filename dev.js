@@ -1,4 +1,4 @@
 import createServer from "./server.js";
 
 const server = createServer();
-server.listen(4001);
+server.listen({ port: 4001 });
