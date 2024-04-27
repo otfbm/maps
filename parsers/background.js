@@ -21,10 +21,13 @@ export default class BackgroundParser {
       const buffer = await res.arrayBuffer();
 
       // if (buffer.byteLength > 1102000) throw new Error("Background image too large");
-
-      backgroundImage = `data:${res.headers.get(
-        "content-type"
-      )};base64,${Buffer.from(buffer).toString("base64")}`;
+      try {
+        backgroundImage = `data:${res.headers.get(
+          "content-type"
+        )};base64,${Buffer.from(buffer).toString("base64")}`;
+      } catch (err) {
+        console.log(err);
+      }
     }
     return backgroundImage;
   }
