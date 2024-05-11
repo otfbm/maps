@@ -27,7 +27,7 @@ export default class BackgroundParser {
           "content-type"
         )};base64,${Buffer.from(buffer).toString("base64")}`;
       } catch (err) {
-        console.log(err);
+        console.log("background parser error caught:", err);
       }
     }
     return backgroundImage;
