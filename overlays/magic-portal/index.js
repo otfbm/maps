@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class MagicPortalOverlay {
+export default class MagicPortalOverlay {
   constructor(options) {
     this.options = options;
   }

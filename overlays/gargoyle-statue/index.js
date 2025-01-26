@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class GargoyleStatueOverlay {
+export default class GargoyleStatueOverlay {
   constructor(options) {
     this.options = options;
   }

@@ -1,10 +1,10 @@
-const assert = require("assert");
-const Options = require("./options.js");
-const Overlay = require("./overlay.js");
+import assert from "assert";
+import Options from "./options.js";
+import Overlay from "./overlay.js";
 
 const gridDepth = 5;
 
-module.exports = class Grid {
+export default class Grid {
   constructor(options) {
     assert(
       options instanceof Options,
