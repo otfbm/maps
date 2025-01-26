@@ -16,15 +16,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.753.0",
-    "node-fetch": "^3.3.0"
+    "aws-sdk": "^2.1692.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "canvas": "^2.11.0",
-    "fastify": "^4",
+    "canvas": "^3.1.0",
+    "fastify": "^5.2.1",
     "fastify-static": "^4",
-    "nodemon": "^3.1.0",
-    "tap": "^16.3.9",
+    "nodemon": "^3.1.9",
+    "tap": "^21.0.1",
     "tap-image-snapshot": "github:gingermusketeer/tap-image-snapshot"
   }
 }
