@@ -24,7 +24,10 @@ module.exports = class EffectParser {
     let trimmed = str.toUpperCase();
     if (trimmed.charAt(0) !== "*") return false;
 
-    const reg = /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;
+    /*const reg =
+      /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;*/
+    const reg =
+      /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(\.[1-9])?(([A-Z]{1,2}[0-9]{1,2})+)/;
     if (!reg.test(trimmed)) return false;
 
     const matches = trimmed.match(reg);
@@ -33,7 +36,8 @@ module.exports = class EffectParser {
     let anchorType = matches[3];
     let size = matches[4];
     let colour = ColourParser.parse(matches[6]);
-    let coords = CoordParser.parseSet(matches[7]);
+    let alpha = "0" + (matches[7] ?? ".5");
+    let coords = CoordParser.parseSet(matches[8]);
 
     let overlay;
     switch (shape) {
@@ -43,6 +47,7 @@ module.exports = class EffectParser {
           colour,
           startPt: coords[0],
           endPt: coords[1],
+          alpha,
         });
         break;
       case "circle":
@@ -51,6 +56,7 @@ module.exports = class EffectParser {
           colour,
           anchorPt: coords[0],
           anchorType,
+          alpha,
         });
         break;
       case "square":
@@ -62,6 +68,7 @@ module.exports = class EffectParser {
             startPt: coords[0],
             endPt: coords[1],
             anchorTopLeft: false,
+            alpha,
           });
           break;
         }
@@ -72,6 +79,7 @@ module.exports = class EffectParser {
           startPt: coords[0],
           endPt: null,
           anchorTopLeft: true,
+          alpha,
         });
         break;
       case "rectangle":
@@ -84,6 +92,7 @@ module.exports = class EffectParser {
           startPt: coords[0],
           endPt: coords[1],
           anchorTopLeft: false,
+          alpha,
         });
         break;
       case "arrow":
