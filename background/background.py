@@ -41,7 +41,7 @@ def lambda_handler(event, context):
 
 
 def download_img(buffer, url):
-    resp = requests.get(url, stream=True)
+    resp = requests.get(url, stream=True, headers={"user-agent": "curl/8.1.1"})
     # TODO err handling
     if resp.status_code == 200:
         for chunk in resp:

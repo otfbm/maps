@@ -1,0 +1,48 @@
+name: Deploy to Lambda Dev
+on:
+  push:
+    branches:
+      - development
+jobs:
+  run_tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node env
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm install
+      - run: npm run test:unit
+        env:
+          CI: true
+  deploy_source:
+    name: Deploy to Lambda Dev
+    needs: run_tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: npm install and build
+        run: |
+          npm ci
+          npm prune --production
+        env:
+          CI: true
+      - name: zip
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ./app.zip board.js package.json draw-canvas.js draw-error.js effects fonts grid.js icon.js index.js input-parser.js line.js node_modules options.js overlay.js overlays parsers renderer room.js styles.css token.js 5xx.jpg missing-token.jpg
+      - name: default deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-west-2
+          s3_bucket: otfbm-deploy-dev
+          function_name: otfbm-dev
+          zip_file: app.zip

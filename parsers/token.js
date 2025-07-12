@@ -1,8 +1,8 @@
-const Overlay = require("../overlay.js");
-const ColourParser = require("./colour-parser.js");
-const SizeParser = require("./size-parser.js");
+import Overlay from "../overlay.js";
+import ColourParser from "./colour-parser.js";
+import SizeParser from "./size-parser.js";
 
-module.exports = class TokenParser {
+export default class TokenParser {
   async parse(str, tokenImages) {
     if (str.length < 2) return false;
 
@@ -58,4 +58,4 @@ module.exports = class TokenParser {
       if (regex.test(label.toLowerCase())) return url;
     }
   }
-};
+}

@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class OpenPitOverlay {
+export default class OpenPitOverlay {
   constructor(options) {
     this.options = options;
   }
