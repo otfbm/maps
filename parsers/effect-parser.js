@@ -24,8 +24,6 @@ module.exports = class EffectParser {
     let trimmed = str.toUpperCase();
     if (trimmed.charAt(0) !== "*") return false;
 
-    /*const reg =
-      /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(([A-Z]{1,2}[0-9]{1,2})+)/;*/
     const reg =
       /\*(U)?([TLSRCA])([OT]?)([0-9]*)(\,[0-9]*)?(PK|PU|GY|BK|BN|[WKEARGBYPCNOI]|~[0-9A-F]{6}|~[0-9A-F]{3})?(\.[1-9])?(([A-Z]{1,2}[0-9]{1,2})+)/;
     if (!reg.test(trimmed)) return false;
