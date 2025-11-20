@@ -7,10 +7,13 @@ import Options from "./options.js";
 import Renderer from "./renderer/index.js";
 import Overlay from "./overlay.js";
 import Grid from "./grid.js";
-import AWS from "aws-sdk";
 
-AWS.config.update({ region: "us-west-2" });
-const cw = new AWS.CloudWatch({ apiVersion: "2010-08-01" });
+// AWS-SDK v3 update.
+import { CloudWatch } from "@aws-sdk/client-cloudwatch";
+
+const cw = new CloudWatch({
+  region: "us-west-2",
+});
 
 let crypto;
 try {
