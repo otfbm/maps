@@ -1,5 +1,5 @@
 export default class CircleEffect {
-  constructor({ size, colour, anchorPt, offset, anchorType }) {
+  constructor({ size, colour, anchorPt, offset, anchorType, alpha }) {
     this.colour = colour;
     this.size = size;
     this.anchorPt = anchorPt;
@@ -37,4 +37,4 @@ export default class CircleEffect {
     ctx.fill();
     ctx.restore();
   }
-};
+}

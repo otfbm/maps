@@ -1,5 +1,5 @@
 export default class SquareEffect {
-  constructor({ width, length, colour, startPt, endPt, anchorTopLeft }) {
+  constructor({ width, length, colour, startPt, endPt, anchorTopLeft, alpha }) {
     this.colour = colour;
     this.width = width;
     this.length = length;
@@ -52,4 +52,4 @@ export default class SquareEffect {
     ctx.fill();
     ctx.restore();
   }
-};
+}

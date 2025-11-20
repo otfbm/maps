@@ -1,5 +1,5 @@
 export default class TriangleEffect {
-  constructor({ size, colour, startPt, endPt }) {
+  constructor({ size, colour, startPt, endPt, alpha }) {
     this.colour = colour;
     this.width = size;
     this.startPt = startPt;
@@ -36,4 +36,4 @@ export default class TriangleEffect {
     ctx.fill();
     ctx.restore();
   }
-};
+}
