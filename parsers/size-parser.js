@@ -8,7 +8,7 @@ const sizes = new Map([
     ["G", "gargantuan"],
   ]);
 
-module.exports = class SizeParser {
+export default class SizeParser {
   static parse(str) {
     if (str) {
       var upper = str.toUpperCase();
@@ -16,4 +16,4 @@ module.exports = class SizeParser {
     }
     return "medium";
   }
-}
+};

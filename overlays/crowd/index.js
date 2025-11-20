@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class CrowdOverlay {
+export default class CrowdOverlay {
   constructor(options) {
     this.options = options;
   }

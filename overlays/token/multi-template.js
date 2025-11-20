@@ -1,10 +1,10 @@
-const { Image } = require('canvas')
+import { Image } from 'canvas';
 
 // For rendering multiple tokens on the same space
 
 const subLabelFontSize = 14;
 
-module.exports = ({
+export default ({
   gridsize,
   size,
   tokenSpecs
@@ -171,4 +171,4 @@ module.exports = ({
       ctx.restore();
     }
   }
-}
+};

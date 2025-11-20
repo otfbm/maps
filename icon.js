@@ -1,7 +1,7 @@
-const canvas = require("canvas");
+import canvas from "canvas";
 const { Image } = canvas;
 
-module.exports = class Icon {
+export default class Icon {
   constructor({ icon } = {}) {
     this.icon = icon;
   }

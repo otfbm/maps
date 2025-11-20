@@ -1,7 +1,7 @@
-const CoordParser = require("./coord-parser.js");
-const FogEffect = require("../effects/fog-effect.js");
+import CoordParser from "./coord-parser.js";
+import FogEffect from "../effects/fog-effect.js";
 
-module.exports = class FogParser {
+export default class FogParser {
   parse(str) {
     const reg = /\*F(([A-Z]{1,2}[0-9]{1,2})+)/i;
     const matches = str.match(reg);

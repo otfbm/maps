@@ -1,4 +1,4 @@
-module.exports = class CanvasRenderer {
+export default class CanvasRenderer {
   constructor(ctx, options) {
     this.ctx = ctx;
     this.options = options;
@@ -23,4 +23,4 @@ module.exports = class CanvasRenderer {
     new renderer(this.options).render(cell, this.ctx);
     this.ctx.restore();
   }
-}
+};

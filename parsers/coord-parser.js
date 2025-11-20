@@ -1,6 +1,6 @@
 const charOffset = 64; // y coordinates start at A
 
-module.exports = class CoordParser {
+export default class CoordParser {
   /**
    * convert excel style coordinates to x,y
    * @param {string} coord 
@@ -31,4 +31,4 @@ module.exports = class CoordParser {
     }
     return result;
   }
-}
+};

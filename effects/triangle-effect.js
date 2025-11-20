@@ -1,4 +1,4 @@
-module.exports = class TriangleEffect {
+export default class TriangleEffect {
   constructor({ size, colour, startPt, endPt, alpha }) {
     this.colour = colour;
     this.width = size;
@@ -36,4 +36,4 @@ module.exports = class TriangleEffect {
     ctx.fill();
     ctx.restore();
   }
-};
+}
