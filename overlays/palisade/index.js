@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class PalisadeOverlay {
+export default class PalisadeOverlay {
   constructor(options) {
     this.options = options;
   }

@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class ThornsOverlay {
+export default class ThornsOverlay {
   constructor(options) {
     this.options = options;
   }

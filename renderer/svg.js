@@ -1,7 +1,7 @@
-const canvas = require("canvas");
+import canvas from "canvas";
 const { Image } = canvas;
 
-module.exports = class SVGRenderer {
+export default class SVGRenderer {
   constructor(ctx, options) {
     this.ctx = ctx;
     this.options = options;

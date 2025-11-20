@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class BrickWallOverlay {
+export default class BrickWallOverlay {
   constructor(options) {
     this.options = options;
   }

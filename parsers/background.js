@@ -1,6 +1,6 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-module.exports = class BackgroundParser {
+export default class BackgroundParser {
   async parse(query) {
     let backgroundImage = null;
     if (query.bg) {
@@ -8,22 +8,28 @@ module.exports = class BackgroundParser {
       const pathname = Buffer.from(bg).toString("base64");
       const bgBaseURL = "https://bg.otfbm.io";
       // const res = await fetch(new URL(pathname, bgBaseURL));
+      /*const res = await fetch(bg, {
+        headers: { "user-agent": "curl/8.1.1" },
+      });*/
       const res = await fetch(bg);
 
       const contentLength = res.headers.get("content-length");
       // if (contentLength > 1102000) {
-        // res.destroy();
-        // throw new Error("Background image too large");
+      // res.destroy();
+      // throw new Error("Background image too large");
       // }
 
-      const buffer = await res.buffer();
+      const buffer = await res.arrayBuffer();
 
       // if (buffer.byteLength > 1102000) throw new Error("Background image too large");
-
-      backgroundImage = `data:${res.headers.get(
-        "content-type"
-      )};base64,${buffer.toString("base64")}`;
+      try {
+        backgroundImage = `data:${res.headers.get(
+          "content-type"
+        )};base64,${Buffer.from(buffer).toString("base64")}`;
+      } catch (err) {
+        console.log("background parser error caught:", err);
+      }
     }
     return backgroundImage;
   }
-};
+}

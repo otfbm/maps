@@ -19,7 +19,7 @@ const colourCodes = new Map([
   ["PK", "#ffc1fa"] // pink
 ]);
 
-module.exports = class ColourParser {
+export default class ColourParser {
   /**
    * parse a colour
    * @param {string} str colour code 
@@ -36,4 +36,4 @@ module.exports = class ColourParser {
     }
     return "#07031a";
   }
-}
+};

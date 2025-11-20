@@ -1,6 +1,6 @@
-const template = require("./template.js");
+import template from "./template.js";
 
-module.exports = class ChestOverlay {
+export default class ChestOverlay {
   constructor(options) {
     this.options = options;
   }
